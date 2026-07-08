@@ -1,0 +1,182 @@
+/*
+ * Copyright 2026 Marcus Gigandet
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+module;
+#include <GLFW/glfw3.h>
+#include <cstdint>
+export module lys:input_map;
+
+namespace lys
+{
+	export enum InputState : std::uint8_t
+	{
+		Released,
+		JustPressed,
+		Pressed,
+		JustReleased
+	};
+
+	export enum Key : std::uint16_t
+	{
+		KEY_0 = GLFW_KEY_0,
+		KEY_1 = GLFW_KEY_1,
+		KEY_2 = GLFW_KEY_2,
+		KEY_3 = GLFW_KEY_3,
+		KEY_4 = GLFW_KEY_4,
+		KEY_5 = GLFW_KEY_5,
+		KEY_6 = GLFW_KEY_6,
+		KEY_7 = GLFW_KEY_7,
+		KEY_8 = GLFW_KEY_8,
+		KEY_9 = GLFW_KEY_9,
+
+		KEY_A = GLFW_KEY_A,
+		KEY_B = GLFW_KEY_B,
+		KEY_C = GLFW_KEY_C,
+		KEY_D = GLFW_KEY_D,
+		KEY_E = GLFW_KEY_E,
+		KEY_F = GLFW_KEY_F,
+		KEY_G = GLFW_KEY_G,
+		KEY_H = GLFW_KEY_H,
+		KEY_I = GLFW_KEY_I,
+		KEY_J = GLFW_KEY_J,
+		KEY_K = GLFW_KEY_K,
+		KEY_L = GLFW_KEY_L,
+		KEY_M = GLFW_KEY_M,
+		KEY_N = GLFW_KEY_N,
+		KEY_O = GLFW_KEY_O,
+		KEY_P = GLFW_KEY_P,
+		KEY_Q = GLFW_KEY_Q,
+		KEY_R = GLFW_KEY_R,
+		KEY_S = GLFW_KEY_S,
+		KEY_T = GLFW_KEY_T,
+		KEY_U = GLFW_KEY_U,
+		KEY_V = GLFW_KEY_V,
+		KEY_W = GLFW_KEY_W,
+		KEY_X = GLFW_KEY_X,
+		KEY_Y = GLFW_KEY_Y,
+		KEY_Z = GLFW_KEY_Z,
+
+		KEY_ESCAPE = GLFW_KEY_ESCAPE,
+		KEY_SPACE = GLFW_KEY_SPACE,
+
+		KEY_MINUS = GLFW_KEY_MINUS,
+		KEY_EQUAL = GLFW_KEY_EQUAL,
+		KEY_BACKSPACE = GLFW_KEY_BACKSPACE,
+		KEY_TAB = GLFW_KEY_TAB,
+
+		KEY_LEFT_SHIFT = GLFW_KEY_LEFT_SHIFT,
+		KEY_RIGHT_SHIFT = GLFW_KEY_RIGHT_SHIFT,
+
+		KEY_LEFT_CONTROL = GLFW_KEY_LEFT_CONTROL,
+		KEY_RIGHT_CONTROL = GLFW_KEY_RIGHT_CONTROL,
+
+		KEY_LEFT_ALT = GLFW_KEY_LEFT_ALT,
+		KEY_RIGHT_ALT = GLFW_KEY_RIGHT_ALT,
+
+		KEY_LEFT_SUPER = GLFW_KEY_LEFT_SUPER,
+		KEY_RIGHT_SUPER = GLFW_KEY_RIGHT_SUPER,
+
+
+		KEY_UP = GLFW_KEY_UP,
+		KEY_DOWN = GLFW_KEY_DOWN,
+		KEY_LEFT = GLFW_KEY_LEFT,
+		KEY_RIGHT = GLFW_KEY_RIGHT,
+
+		KEY_HOME = GLFW_KEY_HOME,
+		KEY_PAGEUP = GLFW_KEY_PAGE_UP,
+		KEY_PAGE_DOWN = GLFW_KEY_PAGE_DOWN,
+		KEY_END = GLFW_KEY_END,
+		KEY_INSERT = GLFW_KEY_INSERT,
+		KEY_DELETE = GLFW_KEY_DELETE,
+
+		KEY_F1 = GLFW_KEY_F1,
+		KEY_F2 = GLFW_KEY_F2,
+		KEY_F3 = GLFW_KEY_F3,
+		KEY_F4 = GLFW_KEY_F4,
+		KEY_F5 = GLFW_KEY_F5,
+		KEY_F6 = GLFW_KEY_F6,
+		KEY_F7 = GLFW_KEY_F7,
+		KEY_F8 = GLFW_KEY_F8,
+		KEY_F9 = GLFW_KEY_F9,
+		KEY_F10 = GLFW_KEY_F10,
+		KEY_F11 = GLFW_KEY_F11,
+		KEY_F12 = GLFW_KEY_F12,
+
+		MOUSE_LEFT = GLFW_MOUSE_BUTTON_LEFT,
+		MOUSE_RIGHT = GLFW_MOUSE_BUTTON_RIGHT,
+		MOUSE_MIDDLE = GLFW_MOUSE_BUTTON_MIDDLE,
+		MOUSE_KEY_1 = GLFW_MOUSE_BUTTON_1,
+		MOUSE_KEY_2 = GLFW_MOUSE_BUTTON_2,
+		MOUSE_KEY_3 = GLFW_MOUSE_BUTTON_3,
+		MOUSE_KEY_4 = GLFW_MOUSE_BUTTON_4,
+		MOUSE_KEY_5 = GLFW_MOUSE_BUTTON_5,
+		MOUSE_KEY_6 = GLFW_MOUSE_BUTTON_6,
+		MOUSE_KEY_7 = GLFW_MOUSE_BUTTON_7,
+		MOUSE_KEY_8 = GLFW_MOUSE_BUTTON_8,
+	};
+
+	export enum CursorMode
+	{
+		CURSOR_NORMAL = GLFW_CURSOR_NORMAL,
+		CURSOR_HIDDEN = GLFW_CURSOR_HIDDEN,
+		CURSOR_DISABLED = GLFW_CURSOR_DISABLED,
+		CURSOR_CAPTURED = GLFW_CURSOR_CAPTURED,
+		CURSOR_UNAVAILABLE = GLFW_CURSOR_UNAVAILABLE,
+	};
+
+	export enum class InputEdge : std::uint8_t
+	{
+		Press = GLFW_PRESS,
+		Release = GLFW_RELEASE,
+		Repeat = GLFW_REPEAT,
+	};
+
+	export struct InputEvent
+	{
+		Key key;
+		InputEdge edge;
+	};
+
+	export struct LogicalInputEvent
+	{
+		Key key;
+		InputState state;
+		bool repeat;
+	};
+
+	namespace detail
+	{
+		constexpr auto glfwKeyLast = static_cast<std::uint16_t>(GLFW_KEY_LAST);
+		constexpr auto mouseButtonFirst = static_cast<std::uint16_t>(GLFW_MOUSE_BUTTON_1);
+		constexpr auto mouseButtonLast = static_cast<std::uint16_t>(GLFW_MOUSE_BUTTON_LAST);
+
+		constexpr bool isKeyboardKey(const Key key) noexcept
+		{
+			return static_cast<std::uint16_t>(key) <= glfwKeyLast;
+		}
+
+		constexpr bool isMouseButton(const Key key) noexcept
+		{
+			const auto value = static_cast<std::uint16_t>(key);
+			return value >= mouseButtonFirst && value <= mouseButtonLast;
+		}
+	} // namespace detail
+
+	export constexpr bool isValidKey(const Key key) noexcept
+	{
+		return detail::isKeyboardKey(key) || detail::isMouseButton(key);
+	}
+} // namespace lys

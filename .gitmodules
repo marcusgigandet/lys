@@ -1,0 +1,9 @@
+[submodule "vendor/mag"]
+	path = vendor/mag
+	url = https://github.com/marcusgigandet/mag
+[submodule "vendor/toolbox"]
+	path = vendor/toolbox
+	url = https://github.com/marcusgigandet/toolbox.git
+[submodule "vendor/glfw"]
+	path = vendor/glfw
+	url = https://github.com/glfw/glfw.git
