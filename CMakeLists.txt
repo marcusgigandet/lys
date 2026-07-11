@@ -15,9 +15,12 @@ if (PROJECT_IS_TOP_LEVEL)
 endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    message(FATAL_ERROR
-            "Clang currently does not support static reflection!"
-    )
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 21)
+        message(FATAL_ERROR
+                "Clang >= 21 is required. "
+                "Detected version: ${CMAKE_CXX_COMPILER_VERSION}"
+        )
+    endif ()
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 16)
         message(FATAL_ERROR
@@ -35,6 +38,7 @@ endif ()
 # Options #
 ###########
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/lum)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/mag)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine)

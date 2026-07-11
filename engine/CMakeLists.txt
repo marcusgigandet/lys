@@ -26,6 +26,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif ()
 
 target_link_libraries(lys_engine
+        PRIVATE
+        lum::lum
         PUBLIC
         mag::mag
         glfw

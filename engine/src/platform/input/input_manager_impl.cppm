@@ -20,7 +20,6 @@ module lys:input_manager.impl;
 
 import :input_manager;
 import :input_map;
-import :window;
 import :math;
 
 namespace lys

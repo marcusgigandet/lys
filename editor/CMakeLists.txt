@@ -18,6 +18,7 @@ endif ()
 target_link_libraries(lys_editor
         PRIVATE
         lys::engine
+        lum::lum
 )
 
 enforce_clang_format(
