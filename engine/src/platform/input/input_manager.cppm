@@ -1,10 +1,14 @@
-module;
-#include <queue>
-#include <unordered_map>
+/*
+ * Copyright 2026 Marcus Gigandet
+ *
+ * All rights reserved.
+ */
+
 export module lys:input_manager;
 
 import :input_map;
-import :math;
+import mag;
+import std;
 
 namespace lys
 {

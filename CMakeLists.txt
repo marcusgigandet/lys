@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 4.2 FATAL_ERROR)
 
+# Must be enabled before `project(... LANGUAGES CXX)` so toolchain detection
+# can provide __CMAKE::CXX26 for CXX_MODULE_STD targets.
+set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
+
 project(lys LANGUAGES CXX)
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VulkanSetup.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/cmake/CodeQuality.cmake)
 
 #####################
@@ -9,6 +14,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/cmake/CodeQuality.cmake)
 #####################
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_MODULE_STD ON)
 
 if (PROJECT_IS_TOP_LEVEL)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

@@ -1,3 +1,9 @@
+/*
+ * Copyright 2026 Marcus Gigandet
+ *
+ * All rights reserved.
+ */
+
 module;
 #include <GLFW/glfw3.h>
 #include <cstdint>

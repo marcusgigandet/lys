@@ -1,10 +1,15 @@
-module;
-#include <algorithm>
+/*
+ * Copyright 2026 Marcus Gigandet
+ *
+ * All rights reserved.
+ */
+
 module lys:input_manager.impl;
 
 import :input_manager;
 import :input_map;
-import :math;
+import mag;
+import std;
 
 namespace lys
 {

@@ -4,24 +4,14 @@
  * All rights reserved.
  */
 
-#include <memory>
-
 import lys;
 import lum;
+import std;
 
 int main()
 {
-	lum::Logger logger;
-	lum::FormatOptions formatOptions{
-			{lum::LogField::Time, lum::LogField::Level},
-			"%Y-%m-%d %H:%M:%S",
-			false,
-	};
+	lys::Window window;
 
-	const auto consoleSink{std::make_shared<lum::ConsoleSink>(formatOptions)};
-	logger.addSink(consoleSink);
-
-	logger.debug("Starting editor...");
 
 	return 0;
 }

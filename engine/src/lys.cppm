@@ -6,6 +6,7 @@
 
 export module lys;
 
-export import :input_map;
 export import :input_manager;
-export import :math;
+export import :input_map;
+export import :window;
+export import mag;

@@ -1,7 +1,5 @@
 file(GLOB_RECURSE ENGINE_MODULES CONFIGURE_DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cppm
-)
-file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
@@ -11,8 +9,6 @@ target_sources(lys_engine
         FILE_SET cxx_modules
         TYPE CXX_MODULES
         FILES ${ENGINE_MODULES}
-        PRIVATE
-        ${ENGINE_SOURCES}
 )
 
 target_include_directories(lys_engine
@@ -33,7 +29,12 @@ target_link_libraries(lys_engine
         glfw
 )
 
+#link_vulkan(TARGET lys_engine)
+
 target_compile_features(mag PRIVATE cxx_std_26)
+target_compile_definitions(mag
+        PRIVATE MAG_NAMESPACE=lys
+)
 
 add_library(lys::engine ALIAS lys_engine)
 
