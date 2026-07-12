@@ -8,6 +8,7 @@ TabWidth: 4
 UseTab: Always
 ColumnLimit: 100
 NamespaceIndentation: All
+IndentPPDirectives: AfterHash
 AccessModifierOffset: -4
 
 # Braces & init lists
@@ -52,7 +53,7 @@ ConstructorInitializerAllOnOneLineOrOnePerLine: true
 # Function calls & chaining
 PenaltyBreakBeforeFirstCallParameter: 40
 BreakBeforeBinaryOperators: None
-ContinuationIndentWidth: 8
+ContinuationIndentWidth: 4
 
 # Other formatting
 AlignTrailingComments: true

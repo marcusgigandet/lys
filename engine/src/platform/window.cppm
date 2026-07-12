@@ -26,6 +26,8 @@ namespace lys
 		std::string title = "Lys";
 		Vec2u dimensions{1280, 720};
 
+		WindowState state{WindowState::Windowed};
+
 		bool resizable{true};
 		bool visible{true};
 		bool vsync{true};

@@ -5,23 +5,18 @@ function(link_vulkan)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if (TARGET VulkanCppModule)
-        target_link_libraries(${ARG_TARGET_NAME} PRIVATE Vulkan::cppm VulkanLoader)
+        target_link_libraries(${ARG_TARGET_NAME} PRIVATE Vulkan::cppm)
         return()
     endif ()
 
     find_package(Vulkan REQUIRED)
-
-    add_library(VulkanLoader SHARED IMPORTED)
-    set_target_properties(VulkanLoader PROPERTIES
-            IMPORTED_LOCATION "${Vulkan_LIBRARY}"
-    )
 
     add_library(VulkanCppModule)
     add_library(Vulkan::cppm ALIAS VulkanCppModule)
 
     target_include_directories(VulkanCppModule PRIVATE "${Vulkan_INCLUDE_DIR}")
 
-    target_link_libraries(VulkanCppModule PRIVATE Vulkan::Vulkan VulkanLoader)
+    target_link_libraries(VulkanCppModule PRIVATE Vulkan::Vulkan)
 
     set_target_properties(VulkanCppModule PROPERTIES CXX_STANDARD ${CMAKE_CXX_STANDARD})
 
@@ -39,8 +34,10 @@ function(link_vulkan)
             PUBLIC
             FILE_SET cxx_modules TYPE CXX_MODULES
             BASE_DIRS "${Vulkan_INCLUDE_DIR}"
-            FILES "${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm"
+            FILES
+            "${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm"
+            "${Vulkan_INCLUDE_DIR}/vulkan/vulkan_video.cppm"
     )
 
-    target_link_libraries(${ARG_TARGET} PRIVATE Vulkan::cppm VulkanLoader)
+    target_link_libraries(${ARG_TARGET} PRIVATE Vulkan::cppm)
 endfunction()

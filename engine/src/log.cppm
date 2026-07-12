@@ -19,17 +19,21 @@ namespace lys
 		if (!s_logger)
 		{
 			lum::FormatOptions formatOptions{
-					{
-							lum::LogField::Time,
-							lum::LogField::Level,
-							lum::LogField::Location,
-					},
-					"%Y-%m-%d %H:%M:%S",
-					false,
+				{
+					lum::LogField::Time,
+					lum::LogField::Level,
+					lum::LogField::Location,
+				},
+				"%Y-%m-%d %H:%M:%S",
+				false,
 			};
 
-			const auto consoleSink{std::make_shared<lum::ConsoleSink>(formatOptions)};
 			s_logger = std::make_shared<lum::Logger>();
+
+			const auto consoleSink{std::make_shared<lum::ConsoleSink>(formatOptions)};
+			s_logger->addSink(consoleSink);
+
+			const auto fileSink{std::make_shared<lum::FileSink>("logs.log", formatOptions)};
 			s_logger->addSink(consoleSink);
 		}
 

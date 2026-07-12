@@ -10,7 +10,15 @@ import std;
 
 int main()
 {
-	lys::Window window;
+	const lys::WindowDesc windowDesc{
+		.title = "Lys Editor",
+		.dimensions = {100, 100},
+		.state = lys::WindowState::Windowed,
+		.resizable = true,
+		.visible = true,
+		.vsync = true,
+	};
+	lys::Window window{windowDesc};
 
 
 	return 0;

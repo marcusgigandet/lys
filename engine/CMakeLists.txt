@@ -29,7 +29,7 @@ target_link_libraries(lys_engine
         glfw
 )
 
-#link_vulkan(TARGET lys_engine)
+link_vulkan(TARGET lys_engine)
 
 target_compile_features(mag PRIVATE cxx_std_26)
 target_compile_definitions(mag
