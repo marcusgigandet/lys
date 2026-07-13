@@ -48,6 +48,9 @@ namespace lys
 			glfwTerminate();
 			throw std::runtime_error("Failed to create window.");
 		}
+
+		glfwSwapInterval(desc.vsync ? GLFW_TRUE : GLFW_FALSE);
+		registerCallbacks();
 	}
 
 	void Window::initGLFW()
@@ -61,6 +64,17 @@ namespace lys
 
 	void Window::destroyWindow() const { glfwDestroyWindow(m_glfwWindow); }
 
+	void Window::registerCallbacks()
+	{
+		m_keyCallback = [this](const int key, const int scancode, const int action, const int mods)
+		{ m_inputManager._processKeyCallback(key, scancode, action, mods); };
+
+		m_cursorPosCallback = [this](const double x, const double y)
+		{ m_inputManager._processMouseCallback(x, y); };
+
+		m_mouseButtonCallback = [this](const int key, const int action, const int mods)
+		{ m_inputManager._processMouseButtonCallback(key, action, mods); };
+	}
 
 	void Window::keyCallback(GLFWwindow* window,
 							 const int key,

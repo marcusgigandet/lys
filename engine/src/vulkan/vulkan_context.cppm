@@ -4,8 +4,6 @@
  * All rights reserved.
  */
 
-module;
-#include <GLFW/glfw3.h>
 export module lys:vulkan_context;
 
 import std;
@@ -15,7 +13,7 @@ namespace lys
 {
 	export class VulkanContext
 	{
-		vk::raii::Context m_context;
+		vk::raii::Context m_context{};
 		vk::raii::Instance m_instance{nullptr};
 
 	public:
@@ -28,7 +26,7 @@ namespace lys
 		createDevice(const vk::raii::PhysicalDevice& physicalDevice,
 					 const vk::DeviceCreateInfo& deviceCreateInfo);
 
-		[[nodiscard]] std::vector<const char*> requiredVulkanInstanceExtensions() const;
+		[[nodiscard]] static std::vector<const char*> requiredVulkanInstanceExtensions();
 		[[nodiscard]] vk::raii::SurfaceKHR createVulkanSurface(vk::raii::Instance instance) const;
 	};
 } // namespace lys

@@ -4,27 +4,34 @@
  * All rights reserved.
  */
 
+export module lys.editor;
+
 import lys;
 import lum;
 import std;
 
-int main()
+extern "C++"
 {
-	const lys::WindowDesc windowDesc{
-		.title = "Lys Editor",
-		.dimensions = {100, 100},
-		.state = lys::WindowState::Windowed,
-		.resizable = true,
-		.visible = true,
-		.vsync = true,
-	};
-	lys::Window window{windowDesc};
-	window.show();
-
-	while (!window.shouldClose())
+	int main()
 	{
-		lys::Window::pollEvents();
-	}
+		const lys::WindowDesc windowDesc{
+			.title = "Lys Editor",
+			.dimensions = {100, 100},
+			.state = lys::WindowState::Windowed,
+			.resizable = true,
+			.visible = true,
+			.vsync = true,
+		};
+		lys::Window window{windowDesc};
+		window.show();
 
-	return 0;
+		while (!window.shouldClose())
+		{
+			window.update();
+
+			lys::Window::pollEvents();
+		}
+
+		return 0;
+	}
 }

@@ -40,7 +40,7 @@ namespace lys
 		 * @param action The action (press, release, repeat).
 		 * @param mods Bit field describing which modifier keys were held down.
 		 */
-		void _processInputCallback(int key, int scancode, int action, int mods);
+		void _processKeyCallback(int key, int scancode, int action, int mods);
 
 		/**
 		 * @brief Internally called by GLFW when the mouse moves.

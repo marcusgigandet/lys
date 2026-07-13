@@ -1,9 +1,14 @@
-file(GLOB_RECURSE EDITOR_SOURCES CONFIGURE_DEPENDS
+file(GLOB_RECURSE EDITOR_MODULES CONFIGURE_DEPENDS
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cppm
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
-add_executable(lys_editor
-        ${EDITOR_SOURCES}
+add_executable(lys_editor)
+target_sources(lys_editor
+        PUBLIC
+        FILE_SET cxx_modules
+        TYPE CXX_MODULES
+        FILES ${EDITOR_MODULES}
 )
 
 target_include_directories(lys_editor
@@ -23,7 +28,7 @@ target_link_libraries(lys_editor
 
 enforce_clang_format(
         TARGET lys_editor
-        FILES ${EDITOR_SOURCES}
+        FILES ${EDITOR_MODULES}
 )
 enforce_copyright(
         TARGET lys_editor

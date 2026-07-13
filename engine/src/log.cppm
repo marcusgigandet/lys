@@ -4,6 +4,8 @@
  * All rights reserved.
  */
 
+module;
+#include <format> // Fix module issue from std module
 export module lys:log;
 
 import lum;
@@ -30,11 +32,11 @@ namespace lys
 
 			s_logger = std::make_shared<lum::Logger>();
 
-			const auto consoleSink{std::make_shared<lum::ConsoleSink>(formatOptions)};
-			s_logger->addSink(consoleSink);
+			const auto stderrSink = std::make_shared<lum::ConsoleSink>(std::cerr, formatOptions);
+			s_logger->addSink(stderrSink);
 
-			const auto fileSink{std::make_shared<lum::FileSink>("logs.log", formatOptions)};
-			s_logger->addSink(consoleSink);
+			const auto fileSink = std::make_shared<lum::FileSink>("logs.log", formatOptions);
+			s_logger->addSink(fileSink);
 		}
 
 		return *s_logger;

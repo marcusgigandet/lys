@@ -14,7 +14,7 @@ namespace lys
 	{
 	public:
 		virtual ~Component() = default;
-		virtual void process(float deltaTime) {}
+		virtual void update(float deltaTime) {}
 	};
 
 	export class TransformComponent : public Component

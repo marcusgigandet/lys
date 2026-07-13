@@ -10,6 +10,8 @@ module;
 #include <vulkan/vulkan_core.h>
 export module lys:window;
 
+import :input_manager;
+import :input_map;
 import mag;
 import std;
 
@@ -32,26 +34,7 @@ namespace lys
 		bool resizable{true};
 		bool visible{true};
 		bool focused{true};
-		bool decorated{true};
-		bool autoIconify{true};
-		bool floating{false};
-		bool maximized{false};
-		bool transparentFramebuffer{false};
 		bool vsync{true};
-
-		std::optional<std::array<int, 2>> position{};
-		std::optional<Vec2u> minDimensions{};
-		std::optional<Vec2u> maxDimensions{};
-		uint32_t samples{0};
-	};
-
-	export enum CursorMode
-	{
-		CURSOR_NORMAL = GLFW_CURSOR_NORMAL,
-		CURSOR_HIDDEN = GLFW_CURSOR_HIDDEN,
-		CURSOR_DISABLED = GLFW_CURSOR_DISABLED,
-		CURSOR_CAPTURED = GLFW_CURSOR_CAPTURED,
-		CURSOR_UNAVAILABLE = GLFW_CURSOR_UNAVAILABLE,
 	};
 
 	export enum class WindowHint : std::int32_t
@@ -77,10 +60,12 @@ namespace lys
 		GLFWwindow* m_glfwWindow{nullptr};
 		WindowState m_state{WindowState::Windowed};
 
-		std::array<int, 2> m_windowedPosition{100, 100};
-		std::array<int, 2> m_windowedSize{1280, 720};
+		Vec2i m_windowedPosition{100, 100};
+		Vec2i m_windowedSize{1280, 720};
 		bool m_hasWindowedPlacement{false};
 		bool m_visible{true};
+
+		InputManager m_inputManager;
 
 	public:
 		using KeyCallback = std::function<void(int key, int scancode, int action, int mods)>;
@@ -111,6 +96,7 @@ namespace lys
 		[[nodiscard]] inline GLFWwindow* nativeHandle() const noexcept { return m_glfwWindow; }
 
 		static inline void pollEvents() { glfwPollEvents(); }
+		inline void update() { m_inputManager.update(); }
 
 		[[nodiscard]] inline bool shouldClose() const
 		{
@@ -151,7 +137,7 @@ namespace lys
 		}
 
 		[[nodiscard]] WindowState state() const noexcept { return m_state; }
-		void setState(const WindowState state);
+		void setState(WindowState state);
 
 		inline void show()
 		{

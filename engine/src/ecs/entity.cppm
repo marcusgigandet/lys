@@ -41,11 +41,11 @@ namespace lys
 			return nullptr;
 		}
 
-		void process(const float delta) const
+		void update(const float delta) const
 		{
 			for (const auto& component : m_components)
 			{
-				component->process(delta);
+				component->update(delta);
 			}
 		}
 	};

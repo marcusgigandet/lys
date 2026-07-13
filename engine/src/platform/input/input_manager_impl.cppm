@@ -13,10 +13,10 @@ import std;
 
 namespace lys
 {
-	void InputManager::_processInputCallback(const int key,
-											 [[maybe_unused]] const int scancode,
-											 const int action,
-											 [[maybe_unused]] const int mods)
+	void InputManager::_processKeyCallback(const int key,
+										   [[maybe_unused]] const int scancode,
+										   const int action,
+										   [[maybe_unused]] const int mods)
 	{
 		// Don't process invalid keys
 		if (!isValidKey(static_cast<Key>(key)))
