@@ -22,12 +22,8 @@ function(link_vulkan)
 
     target_compile_definitions(VulkanCppModule
             PRIVATE
+            VULKAN_HPP_DISPATCH_LOADER_DYNAMIC
             VULKAN_HPP_NO_STRUCT_CONSTRUCTORS
-            VULKAN_HPP_NO_STD_MODULE
-            VULKAN_HPP_NO_EXCEPTIONS
-            VULKAN_HPP_NO_SMART_HANDLE
-            VULKAN_HPP_NO_CONSTRUCTORS
-            ENABLE_CPP20_MODULE
     )
 
     target_sources(VulkanCppModule

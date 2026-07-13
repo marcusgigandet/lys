@@ -19,7 +19,12 @@ int main()
 		.vsync = true,
 	};
 	lys::Window window{windowDesc};
+	window.show();
 
+	while (!window.shouldClose())
+	{
+		lys::Window::pollEvents();
+	}
 
 	return 0;
 }
