@@ -1,9 +1,7 @@
-cmake_minimum_required(VERSION 4.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 4.3.1 FATAL_ERROR)
 
-# Must be enabled before `project(... LANGUAGES CXX)` so toolchain detection
-# can provide __CMAKE::CXX26 for CXX_MODULE_STD targets.
-set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
-
+# https://github.com/Kitware/CMake/blob/master/Help/dev/experimental.rst
+set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "451f2fe2-a8a2-47c3-bc32-94786d8fc91b")
 project(lys LANGUAGES CXX)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VulkanSetup.cmake)
@@ -27,13 +25,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
                 "Detected version: ${CMAKE_CXX_COMPILER_VERSION}"
         )
     endif ()
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 16)
-        message(FATAL_ERROR
-                "GCC >= 16 is required. "
-                "Detected version: ${CMAKE_CXX_COMPILER_VERSION}"
-        )
-    endif ()
 else ()
     message(FATAL_ERROR
             "Using an unsupported compiler!"
@@ -48,4 +39,4 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/lum)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/mag)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/editor)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/sandbox)

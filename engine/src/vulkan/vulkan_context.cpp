@@ -18,16 +18,16 @@ namespace lys
 	VulkanContext::VulkanContext()
 	{
 		m_instance = createInstance(m_context);
-		const vk::raii::PhysicalDevice physicalDevice =
-			m_instance.enumeratePhysicalDevices().front();
+		const vk::raii::PhysicalDevice physicalDevice{
+			m_instance.enumeratePhysicalDevices().front()};
 		vk::raii::Device device(physicalDevice, vk::DeviceCreateInfo{});
 	}
 
 	vk::raii::Instance VulkanContext::createInstance(const vk::raii::Context& context)
 	{
-		std::vector<char const*> requiredLayers;
 		if (enableValidationLayers)
 		{
+			std::vector<char const*> requiredLayers;
 			requiredLayers.assign(validationLayers.begin(), validationLayers.end());
 		}
 
@@ -39,12 +39,12 @@ namespace lys
 			.apiVersion = context.enumerateInstanceVersion(),
 		};
 
-		std::uint32_t glfwExtensionCount = 0;
-		auto glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+		std::uint32_t glfwExtensionCount{0};
+		auto glfwExtensions{glfwGetRequiredInstanceExtensions(&glfwExtensionCount)};
 
 		// Check if the required GLFW extensions are supported by the Vulkan implementation
-		auto extensionProperties = context.enumerateInstanceExtensionProperties();
-		for (uint32_t i = 0; i < glfwExtensionCount; ++i)
+		auto extensionProperties{context.enumerateInstanceExtensionProperties()};
+		for (uint32_t i{0}; i < glfwExtensionCount; ++i)
 		{
 			if (std::ranges::none_of(
 					extensionProperties,
@@ -79,8 +79,8 @@ namespace lys
 
 	std::vector<const char*> VulkanContext::requiredVulkanInstanceExtensions()
 	{
-		std::uint32_t glfwExtensionCount = 0;
-		const auto glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+		std::uint32_t glfwExtensionCount{0};
+		const auto glfwExtensions{glfwGetRequiredInstanceExtensions(&glfwExtensionCount)};
 
 		std::vector extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 		if (enableValidationLayers)

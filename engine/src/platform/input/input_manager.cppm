@@ -86,12 +86,18 @@ namespace lys
 		/**
 		 * @return Returns mouse movement since last update.
 		 */
-		[[nodiscard]] Vec2f mouseDelta() const noexcept { return m_mouseDelta; }
+		[[nodiscard]] Vec2f mouseDelta() const noexcept
+		{
+			return m_mouseDelta;
+		}
 
 		/**
 		 * @return Returns current mouse position.
 		 */
-		[[nodiscard]] Vec2f mousePosition() const noexcept { return m_mousePos; }
+		[[nodiscard]] Vec2f mousePosition() const noexcept
+		{
+			return m_mousePos;
+		}
 
 	private:
 		/**

@@ -14,11 +14,20 @@ import std;
 
 namespace lys
 {
-	Window::Window() { initWindow(); }
+	Window::Window()
+	{
+		initWindow();
+	}
 
-	Window::Window(const WindowDesc& desc) { initWindow(desc); }
+	Window::Window(const WindowDesc& desc)
+	{
+		initWindow(desc);
+	}
 
-	Window::~Window() { destroyWindow(); }
+	Window::~Window()
+	{
+		destroyWindow();
+	}
 
 	void Window::initWindow(const WindowDesc& desc)
 	{
@@ -60,9 +69,14 @@ namespace lys
 		{
 			throw std::runtime_error("Failed to initialize GLFW!");
 		}
+
+		logger().trace("Successfully initialized GLFW");
 	}
 
-	void Window::destroyWindow() const { glfwDestroyWindow(m_glfwWindow); }
+	void Window::destroyWindow() const
+	{
+		glfwDestroyWindow(m_glfwWindow);
+	}
 
 	void Window::registerCallbacks()
 	{

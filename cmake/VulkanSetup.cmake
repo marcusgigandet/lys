@@ -18,7 +18,10 @@ function(link_vulkan)
 
     target_link_libraries(VulkanCppModule PRIVATE Vulkan::Vulkan)
 
-    set_target_properties(VulkanCppModule PROPERTIES CXX_STANDARD ${CMAKE_CXX_STANDARD})
+    set_target_properties(VulkanCppModule
+            PROPERTIES
+            CXX_MODULE_STD ON
+    )
 
     target_compile_definitions(VulkanCppModule
             PRIVATE

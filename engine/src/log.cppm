@@ -13,6 +13,13 @@ import std;
 
 namespace lys
 {
+	/**
+	 * @brief Retrieves the global logger instance.
+	 *
+	 * Configures the logger on the first call to the function.
+	 *
+	 * @return Reference to the global lum::Logger instance.
+	 */
 	lum::Logger& logger()
 	{
 		static std::shared_ptr<lum::Logger> s_logger;
@@ -20,22 +27,26 @@ namespace lys
 		// Initialize the logger
 		if (!s_logger)
 		{
-			lum::FormatOptions formatOptions{
-				{
-					lum::LogField::Time,
-					lum::LogField::Level,
-					lum::LogField::Location,
-				},
-				"%Y-%m-%d %H:%M:%S",
-				false,
+			lum::FormatDesc formatDesc{
+				.fieldIdOrder =
+					{
+						lum::LogField::Time,
+						lum::LogField::Level,
+						lum::LogField::Location,
+					},
+				.timePattern = "%Y-%m-%d %H:%M:%S",
+				.includeMilliseconds = false,
+				.colors = {},
+				.colorAfterLogFields = false,
 			};
+			lum::FormatOptions formatOptions{formatDesc};
 
 			s_logger = std::make_shared<lum::Logger>();
 
-			const auto stderrSink = std::make_shared<lum::ConsoleSink>(std::cerr, formatOptions);
+			const auto stderrSink{std::make_shared<lum::ConsoleSink>(std::cerr, formatOptions)};
 			s_logger->addSink(stderrSink);
 
-			const auto fileSink = std::make_shared<lum::FileSink>("logs.log", formatOptions);
+			const auto fileSink{std::make_shared<lum::FileSink>("logs.log", formatOptions)};
 			s_logger->addSink(fileSink);
 		}
 

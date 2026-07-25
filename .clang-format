@@ -35,7 +35,7 @@ Cpp11BracedListStyle: true
 
 # Short constructs — always expanded
 AllowShortEnumsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: All
+AllowShortFunctionsOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: false

@@ -87,25 +87,34 @@ namespace lys
 
 		~Window();
 
-		Window(const Window&) = delete;
-		Window& operator=(const Window&) = delete;
+		[[nodiscard]] inline GLFWwindow* nativeHandle() const noexcept
+		{
+			return m_glfwWindow;
+		}
 
-		Window(Window&& other) noexcept;
-		Window& operator=(Window&& other) noexcept;
-
-		[[nodiscard]] inline GLFWwindow* nativeHandle() const noexcept { return m_glfwWindow; }
-
-		static inline void pollEvents() { glfwPollEvents(); }
-		inline void update() { m_inputManager.update(); }
+		static inline void pollEvents()
+		{
+			glfwPollEvents();
+		}
+		inline void update()
+		{
+			m_inputManager.update();
+		}
 
 		[[nodiscard]] inline bool shouldClose() const
 		{
 			return glfwWindowShouldClose(m_glfwWindow);
 		}
 
-		inline void close() const { glfwSetWindowShouldClose(m_glfwWindow, GLFW_TRUE); }
+		inline void close() const
+		{
+			glfwSetWindowShouldClose(m_glfwWindow, GLFW_TRUE);
+		}
 
-		[[nodiscard]] inline std::string title() const { return glfwGetWindowTitle(m_glfwWindow); }
+		[[nodiscard]] inline std::string title() const
+		{
+			return glfwGetWindowTitle(m_glfwWindow);
+		}
 
 		inline void setTitle(const std::string& title) const
 		{
@@ -130,13 +139,19 @@ namespace lys
 			glfwSetWindowSize(m_glfwWindow, dimensions.x, dimensions.y);
 		}
 
-		[[nodiscard]] inline float opacity() const { return glfwGetWindowOpacity(m_glfwWindow); }
+		[[nodiscard]] inline float opacity() const
+		{
+			return glfwGetWindowOpacity(m_glfwWindow);
+		}
 		inline void setOpacity(const float alpha) const
 		{
 			glfwSetWindowOpacity(m_glfwWindow, alpha);
 		}
 
-		[[nodiscard]] WindowState state() const noexcept { return m_state; }
+		[[nodiscard]] WindowState state() const noexcept
+		{
+			return m_state;
+		}
 		void setState(WindowState state);
 
 		inline void show()
@@ -151,20 +166,35 @@ namespace lys
 			m_visible = false;
 		}
 
-		inline void focus() const { glfwFocusWindow(m_glfwWindow); }
+		inline void focus() const
+		{
+			glfwFocusWindow(m_glfwWindow);
+		}
 
-		inline void requestAttention() const { glfwRequestWindowAttention(m_glfwWindow); }
+		inline void requestAttention() const
+		{
+			glfwRequestWindowAttention(m_glfwWindow);
+		}
 
-		void minimize() const { throw std::runtime_error("Unimplemented function"); }
+		void minimize() const
+		{
+			throw std::runtime_error("Unimplemented function");
+		}
 
-		void maximize() const { throw std::runtime_error("Unimplemented function"); }
+		void maximize() const
+		{
+			throw std::runtime_error("Unimplemented function");
+		}
 
 		static void setResizable(const bool resizable)
 		{
 			glfwWindowHint(GLFW_RESIZABLE, resizable);
 		}
 
-		[[nodiscard]] inline bool isVisible() const { return m_visible; }
+		[[nodiscard]] inline bool isVisible() const
+		{
+			return m_visible;
+		}
 
 		static inline void setCursorMode(const CursorMode mode)
 		{

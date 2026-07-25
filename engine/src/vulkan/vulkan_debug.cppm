@@ -26,7 +26,7 @@ namespace lys
 	const std::vector<char const*> validationLayers = {"VK_LAYER_KHRONOS_validation"};
 
 	VKAPI_ATTR vk::Bool32 VKAPI_CALL
-	debugCallback(vk::DebugUtilsMessageSeverityFlagBitsEXT severity,
+	debugCallback(const vk::DebugUtilsMessageSeverityFlagBitsEXT severity,
 				  const vk::DebugUtilsMessageTypeFlagsEXT type,
 				  const vk::DebugUtilsMessengerCallbackDataEXT* pCallbackData,
 				  void* pUserData)
@@ -62,7 +62,7 @@ namespace lys
 	std::optional<vk::raii::DebugUtilsMessengerEXT>
 	setupDebugMessenger(const vk::raii::Instance& instance)
 	{
-		if (!enableValidationLayers)
+		if constexpr (!enableValidationLayers)
 			return std::nullopt;
 
 		vk::DebugUtilsMessageSeverityFlagsEXT severityFlags{
