@@ -16,10 +16,17 @@
 
 export module lys;
 
+// Core
+export import :timer;
+
+// Platform
 export import :input_manager;
 export import :input_map;
 export import :window;
-export import mag;
 
+// Vulkan
 export import :vulkan_context;
 export import :vulkan_debug;
+
+// Other libraries
+export import mag;

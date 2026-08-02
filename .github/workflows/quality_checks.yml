@@ -1,0 +1,35 @@
+name: Code Quality Checks
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  call-verify-copyright:
+    uses: marcusgigandet/toolbox/.github/workflows/verify_copyright.yml@664e5de7f0b6098b0d292053a3c4f4d57dc5f620
+    with:
+      config: "config.toml"
+      directory: "engine" # Todo: Update toolbox to read directory from the config instead
+
+  check-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install clang-format
+        run: |
+          sudo apt-get update && sudo apt-get install -y clang-format
+
+      # Todo: This should probably be updated to a reusable workflow instead of directly calling clang-format
+      - name: Check formatting
+        run: |
+          mapfile -d '' files < <(find src tests benchmarks \
+            \( -name "*.h" -o -name "*.hpp" -o -name "*.cppm" -o -name "*.cpp" \) \
+            -print0)
+
+          status=0
+          for file in "${files[@]}"; do
+            clang-format --dry-run --Werror "$file" || status=1
+          done
+
+          exit "$status"
