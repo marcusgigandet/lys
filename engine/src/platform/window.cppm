@@ -1,13 +1,22 @@
 /*
  * Copyright 2026 Marcus Gigandet
  *
- * All rights reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 module;
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
-#include <vulkan/vulkan_core.h>
 export module lys:window;
 
 import :input_manager;
@@ -27,7 +36,7 @@ namespace lys
 	export struct WindowDesc
 	{
 		std::string title = "Lys";
-		Vec2u dimensions{1280, 720};
+		Vec2u		dimensions{1280, 720};
 
 		WindowState state{WindowState::Windowed};
 
@@ -39,22 +48,22 @@ namespace lys
 
 	export enum class WindowHint : std::int32_t
 	{
-		RedBits = GLFW_RED_BITS,
-		GreenBits = GLFW_GREEN_BITS,
-		BlueBits = GLFW_BLUE_BITS,
-		AlphaBits = GLFW_ALPHA_BITS,
-		DepthBits = GLFW_DEPTH_BITS,
-		StencilBits = GLFW_STENCIL_BITS,
-		RefreshRate = GLFW_REFRESH_RATE,
-		Samples = GLFW_SAMPLES,
-		ScaleToMonitor = GLFW_SCALE_TO_MONITOR,
+		RedBits			 = GLFW_RED_BITS,
+		GreenBits		 = GLFW_GREEN_BITS,
+		BlueBits		 = GLFW_BLUE_BITS,
+		AlphaBits		 = GLFW_ALPHA_BITS,
+		DepthBits		 = GLFW_DEPTH_BITS,
+		StencilBits		 = GLFW_STENCIL_BITS,
+		RefreshRate		 = GLFW_REFRESH_RATE,
+		Samples			 = GLFW_SAMPLES,
+		ScaleToMonitor	 = GLFW_SCALE_TO_MONITOR,
 		ScaleFramebuffer = GLFW_SCALE_FRAMEBUFFER,
-		SRGBCapable = GLFW_SRGB_CAPABLE,
+		SRGBCapable		 = GLFW_SRGB_CAPABLE,
 	};
 
 	export class Window
 	{
-		static inline bool s_glfwInitialized{false};
+		static inline bool		  s_glfwInitialized{false};
 		static inline std::size_t s_liveWindowCount{0};
 
 		GLFWwindow* m_glfwWindow{nullptr};
@@ -62,23 +71,23 @@ namespace lys
 
 		Vec2i m_windowedPosition{100, 100};
 		Vec2i m_windowedSize{1280, 720};
-		bool m_hasWindowedPlacement{false};
-		bool m_visible{true};
+		bool  m_hasWindowedPlacement{false};
+		bool  m_visible{true};
 
 		InputManager m_inputManager;
 
 	public:
 		using KeyCallback = std::function<void(int key, int scancode, int action, int mods)>;
-		using MouseButtonCallback = std::function<void(int button, int action, int mods)>;
-		using CursorPosCallback = std::function<void(double xPos, double yPos)>;
-		using WindowSizeCallback = std::function<void(int width, int height)>;
+		using MouseButtonCallback			= std::function<void(int button, int action, int mods)>;
+		using CursorPosCallback				= std::function<void(double xPos, double yPos)>;
+		using WindowSizeCallback			= std::function<void(int width, int height)>;
 		using WindowFramebufferSizeCallback = std::function<void(int width, int height)>;
 
 	private:
-		KeyCallback m_keyCallback{};
-		MouseButtonCallback m_mouseButtonCallback{};
-		CursorPosCallback m_cursorPosCallback{};
-		WindowSizeCallback m_windowSizeCallback{};
+		KeyCallback					  m_keyCallback{};
+		MouseButtonCallback			  m_mouseButtonCallback{};
+		CursorPosCallback			  m_cursorPosCallback{};
+		WindowSizeCallback			  m_windowSizeCallback{};
 		WindowFramebufferSizeCallback m_windowFramebufferSizeCallback{};
 
 	public:
@@ -87,34 +96,19 @@ namespace lys
 
 		~Window();
 
-		[[nodiscard]] inline GLFWwindow* nativeHandle() const noexcept
-		{
-			return m_glfwWindow;
-		}
+		[[nodiscard]] inline GLFWwindow* nativeHandle() const noexcept { return m_glfwWindow; }
 
-		static inline void pollEvents()
-		{
-			glfwPollEvents();
-		}
-		inline void update()
-		{
-			m_inputManager.update();
-		}
+		static inline void pollEvents() { glfwPollEvents(); }
+		inline void		   update() { m_inputManager.update(); }
 
 		[[nodiscard]] inline bool shouldClose() const
 		{
 			return glfwWindowShouldClose(m_glfwWindow);
 		}
 
-		inline void close() const
-		{
-			glfwSetWindowShouldClose(m_glfwWindow, GLFW_TRUE);
-		}
+		inline void close() const { glfwSetWindowShouldClose(m_glfwWindow, GLFW_TRUE); }
 
-		[[nodiscard]] inline std::string title() const
-		{
-			return glfwGetWindowTitle(m_glfwWindow);
-		}
+		[[nodiscard]] inline std::string title() const { return glfwGetWindowTitle(m_glfwWindow); }
 
 		inline void setTitle(const std::string& title) const
 		{
@@ -139,20 +133,14 @@ namespace lys
 			glfwSetWindowSize(m_glfwWindow, dimensions.x, dimensions.y);
 		}
 
-		[[nodiscard]] inline float opacity() const
-		{
-			return glfwGetWindowOpacity(m_glfwWindow);
-		}
-		inline void setOpacity(const float alpha) const
+		[[nodiscard]] inline float opacity() const { return glfwGetWindowOpacity(m_glfwWindow); }
+		inline void				   setOpacity(const float alpha) const
 		{
 			glfwSetWindowOpacity(m_glfwWindow, alpha);
 		}
 
-		[[nodiscard]] WindowState state() const noexcept
-		{
-			return m_state;
-		}
-		void setState(WindowState state);
+		[[nodiscard]] WindowState state() const noexcept { return m_state; }
+		void					  setState(WindowState state);
 
 		inline void show()
 		{
@@ -166,35 +154,20 @@ namespace lys
 			m_visible = false;
 		}
 
-		inline void focus() const
-		{
-			glfwFocusWindow(m_glfwWindow);
-		}
+		inline void focus() const { glfwFocusWindow(m_glfwWindow); }
 
-		inline void requestAttention() const
-		{
-			glfwRequestWindowAttention(m_glfwWindow);
-		}
+		inline void requestAttention() const { glfwRequestWindowAttention(m_glfwWindow); }
 
-		void minimize() const
-		{
-			throw std::runtime_error("Unimplemented function");
-		}
+		void minimize() const { throw std::runtime_error("Unimplemented function"); }
 
-		void maximize() const
-		{
-			throw std::runtime_error("Unimplemented function");
-		}
+		void maximize() const { throw std::runtime_error("Unimplemented function"); }
 
 		static void setResizable(const bool resizable)
 		{
 			glfwWindowHint(GLFW_RESIZABLE, resizable);
 		}
 
-		[[nodiscard]] inline bool isVisible() const
-		{
-			return m_visible;
-		}
+		[[nodiscard]] inline bool isVisible() const { return m_visible; }
 
 		static inline void setCursorMode(const CursorMode mode)
 		{

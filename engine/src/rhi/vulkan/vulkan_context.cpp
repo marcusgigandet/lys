@@ -32,15 +32,15 @@ namespace lys
 		}
 
 		vk::ApplicationInfo appInfo{
-			.pApplicationName = "Lys Engine",
+			.pApplicationName	= "Lys Engine",
 			.applicationVersion = vk::makeVersion(1, 0, 0),
-			.pEngineName = "Lys Engine",
-			.engineVersion = vk::makeVersion(1, 0, 0),
-			.apiVersion = context.enumerateInstanceVersion(),
+			.pEngineName		= "Lys Engine",
+			.engineVersion		= vk::makeVersion(1, 0, 0),
+			.apiVersion			= context.enumerateInstanceVersion(),
 		};
 
 		std::uint32_t glfwExtensionCount{0};
-		auto glfwExtensions{glfwGetRequiredInstanceExtensions(&glfwExtensionCount)};
+		auto		  glfwExtensions{glfwGetRequiredInstanceExtensions(&glfwExtensionCount)};
 
 		// Check if the required GLFW extensions are supported by the Vulkan implementation
 		auto extensionProperties{context.enumerateInstanceExtensionProperties()};
@@ -51,16 +51,16 @@ namespace lys
 					[glfwExtension = glfwExtensions[i]](auto const& extensionProperty)
 					{ return strcmp(extensionProperty.extensionName, glfwExtension) == 0; }))
 			{
-				throw std::runtime_error("Required GLFW extension not supported: " +
-										 std::string(glfwExtensions[i]));
+				throw std::runtime_error(
+					"Required GLFW extension not supported: " + std::string(glfwExtensions[i]));
 			}
 		}
 
 		const vk::InstanceCreateInfo instanceCreateInfo{
-			.pApplicationInfo = &appInfo,
-			.enabledLayerCount = glfwExtensionCount,
-			.ppEnabledLayerNames = glfwExtensions,
-			.enabledExtensionCount = 0,
+			.pApplicationInfo		 = &appInfo,
+			.enabledLayerCount		 = glfwExtensionCount,
+			.ppEnabledLayerNames	 = glfwExtensions,
+			.enabledExtensionCount	 = 0,
 			.ppEnabledExtensionNames = nullptr,
 		};
 
@@ -69,8 +69,9 @@ namespace lys
 		return instance;
 	}
 
-	vk::raii::Device VulkanContext::createDevice(const vk::raii::PhysicalDevice& physicalDevice,
-												 const vk::DeviceCreateInfo& deviceCreateInfo)
+	vk::raii::Device VulkanContext::createDevice(
+		const vk::raii::PhysicalDevice& physicalDevice,
+		const vk::DeviceCreateInfo&		deviceCreateInfo)
 	{
 		vk::raii::Device device(physicalDevice, deviceCreateInfo);
 
@@ -80,7 +81,7 @@ namespace lys
 	std::vector<const char*> VulkanContext::requiredVulkanInstanceExtensions()
 	{
 		std::uint32_t glfwExtensionCount{0};
-		const auto glfwExtensions{glfwGetRequiredInstanceExtensions(&glfwExtensionCount)};
+		const auto	  glfwExtensions{glfwGetRequiredInstanceExtensions(&glfwExtensionCount)};
 
 		std::vector extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 		if (enableValidationLayers)

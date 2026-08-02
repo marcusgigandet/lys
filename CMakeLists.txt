@@ -12,6 +12,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/cmake/CodeQuality.cmake)
 #####################
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_MODULE_STD ON)
 
 if (PROJECT_IS_TOP_LEVEL)
@@ -35,7 +36,7 @@ endif ()
 # Options #
 ###########
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/lum)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/mag)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine)

@@ -23,7 +23,7 @@ endif ()
 target_link_libraries(lys_sandbox
         PRIVATE
         lys::engine
-        lum::lum
+        spdlog::spdlog
 )
 
 enforce_clang_format(

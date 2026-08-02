@@ -10,3 +10,6 @@
 [submodule "vendor/lum"]
 	path = vendor/lum
 	url = git@github.com:marcusgigandet/lum.git
+[submodule "vendor/spdlog"]
+	path = vendor/spdlog
+	url = git@github.com:gabime/spdlog.git

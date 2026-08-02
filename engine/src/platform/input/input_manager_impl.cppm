@@ -1,7 +1,17 @@
 /*
  * Copyright 2026 Marcus Gigandet
  *
- * All rights reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 module lys:input_manager.impl;
@@ -13,10 +23,9 @@ import std;
 
 namespace lys
 {
-	void InputManager::_processKeyCallback(const int key,
-										   [[maybe_unused]] const int scancode,
-										   const int action,
-										   [[maybe_unused]] const int mods)
+	void InputManager::_processKeyCallback(
+		const int key, [[maybe_unused]] const int scancode, const int action,
+		[[maybe_unused]] const int mods)
 	{
 		// Don't process invalid keys
 		if (!isValidKey(static_cast<Key>(key)))
@@ -24,9 +33,12 @@ namespace lys
 			return;
 		}
 
-		const auto libKey{static_cast<Key>(key)};
-		const auto libEdgeAction{static_cast<InputEdge>(action)};
-		const InputEvent inputEvent{libKey, libEdgeAction};
+		const auto		 libKey{static_cast<Key>(key)};
+		const auto		 libEdgeAction{static_cast<InputEdge>(action)};
+		const InputEvent inputEvent{
+			.key  = libKey,
+			.edge = libEdgeAction,
+		};
 		m_eventQueue.push(inputEvent);
 	}
 
@@ -36,9 +48,9 @@ namespace lys
 		static bool isFirstTime{true};
 		if (isFirstTime)
 		{
-			m_mousePos = {xPosIn, yPosIn};
+			m_mousePos	 = {xPosIn, yPosIn};
 			m_mouseDelta = {};
-			isFirstTime = false;
+			isFirstTime	 = false;
 		}
 		else
 		{
@@ -57,9 +69,12 @@ namespace lys
 			return;
 		}
 
-		const auto libKey{static_cast<Key>(key)};
-		const auto libEdgeAction{static_cast<InputEdge>(action)};
-		const InputEvent inputEvent{libKey, libEdgeAction};
+		const auto		 libKey{static_cast<Key>(key)};
+		const auto		 libEdgeAction{static_cast<InputEdge>(action)};
+		const InputEvent inputEvent{
+			.key  = libKey,
+			.edge = libEdgeAction,
+		};
 		m_eventQueue.push(inputEvent);
 	}
 

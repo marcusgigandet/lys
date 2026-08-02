@@ -23,15 +23,13 @@ endif ()
 
 target_link_libraries(lys_engine
         PRIVATE
-        lum::lum
+        spdlog::spdlog
         PUBLIC
         mag::mag
         glfw
 )
 
 link_vulkan(TARGET lys_engine)
-
-target_compile_features(lum PRIVATE cxx_std_26)
 
 target_compile_features(mag PRIVATE cxx_std_26)
 target_compile_definitions(mag
