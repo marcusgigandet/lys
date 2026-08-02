@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-module;
-#include <chrono>
 export module lys:timer;
+
+import std;
 
 namespace lys
 {

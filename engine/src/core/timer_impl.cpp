@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-module;
-#include <chrono>
 module lys:timer.impl;
 
 import :timer;
+import std;
 
 namespace lys
 {

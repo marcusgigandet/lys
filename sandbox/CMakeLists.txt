@@ -1,7 +1,15 @@
+########################
+# Collect source files #
+########################
+
 file(GLOB_RECURSE SANDBOX_MODULES CONFIGURE_DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cppm
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
+
+##################################
+# Executable Setup - Lys Sandbox #
+##################################
 
 add_executable(lys_sandbox)
 target_sources(lys_sandbox
@@ -16,8 +24,9 @@ target_include_directories(lys_sandbox
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+# Add reflection if using GCC
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_compile_options(lys_sandbox PRIVATE -fmodules -freflection)
+    target_compile_options(lys_sandbox PRIVATE -freflection)
 endif ()
 
 target_link_libraries(lys_sandbox
@@ -25,6 +34,10 @@ target_link_libraries(lys_sandbox
         lys::engine
         spdlog::spdlog
 )
+
+#############################
+# Code Quality Enforcements #
+#############################
 
 enforce_clang_format(
         TARGET lys_sandbox
