@@ -2,6 +2,12 @@
 
 ## Setup
 
+- clang++-21+
+- Ninja
+- CMake 4.3.1+*
+
+**Note**: The minimum CMake version will change once `import std;` is no longer experimental!
+
 ```bash
 git submodule update --init --recursive
 ```
@@ -13,6 +19,8 @@ sudo apt install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
 ```
 
 ### macOS
+
+WIP
 
 ## Repository licenses
 
