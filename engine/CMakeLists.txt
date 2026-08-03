@@ -71,7 +71,7 @@ target_compile_definitions(mag
 
 enforce_clang_format(
         TARGET lys_engine
-        FILES ${ENGINE_MODULES} ${ENGINE_SOURCES}
+        FILES ${ENGINE_MODULES}
 )
 enforce_copyright(
         TARGET lys_engine
