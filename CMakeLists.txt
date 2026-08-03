@@ -20,15 +20,38 @@ string(REPLACE "." "_" _version "${CMAKE_VERSION}")
 
 set(_var "_experimental_hash_${_version}")
 
-if(NOT DEFINED ${_var})
+if (NOT DEFINED ${_var})
     message(FATAL_ERROR "No experimental hash for CMake ${CMAKE_VERSION}")
-endif()
+endif ()
 
 set(CMAKE_EXPERIMENTAL_EXPORT_PACKAGE_INFO "${${_var}}")
 
 project(lys LANGUAGES CXX)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VulkanSetup.cmake)
+###################
+# Project Options #
+###################
+
+option(LYS_VULKAN "Build with Vulkan support" $<NOT:$<BOOL:${APPLE}>>)
+option(LYS_METAL "Build with Metal support" $<BOOL:${APPLE}>)
+
+# Ensure that non-macOS systems are using Vulkan
+if (NOT APPLE)
+    set(LYS_METAL OFF)
+    set(LYS_VULKAN ON)
+    message("Defaulting to Vulkan due to unsupported platform for Metal.")
+endif ()
+
+##################
+# CMake includes #
+##################
+
+if (${LYS_METAL})
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/MetalSetup.cmake)
+else ()
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VulkanSetup.cmake)
+endif ()
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/vendor/toolbox/cmake/CodeQuality.cmake)
 
 #####################

@@ -7,6 +7,14 @@ file(GLOB_RECURSE ENGINE_MODULES CONFIGURE_DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
+if (NOT LYS_VULKAN)
+    list(FILTER ENGINE_MODULES EXCLUDE REGEX ".*/vulkan/.*")
+endif ()
+
+if (NOT LYS_METAL)
+    list(FILTER ENGINE_MODULES EXCLUDE REGEX ".*/metal/.*")
+endif ()
+
 ##############################
 # Library Setup - Lys Engine #
 ##############################
@@ -39,8 +47,11 @@ target_link_libraries(lys_engine
         mag::mag
 )
 
-# Todo: Add if statement for all vulkan logic to enable switching to metal-cpp on Apple
-link_vulkan(TARGET lys_engine)
+if (${LYS_VULKAN})
+    link_vulkan(TARGET lys_engine)
+else ()
+    link_metal(TARGET lys_engine)
+endif ()
 
 #################
 # Configure MAG #
@@ -48,7 +59,10 @@ link_vulkan(TARGET lys_engine)
 
 target_compile_features(mag PRIVATE cxx_std_26)
 target_compile_definitions(mag
-        PRIVATE MAG_NAMESPACE=lys
+        PRIVATE
+        MAG_NAMESPACE=lys
+        $<$<BOOL:${LYS_METAL}>:LYS_METAL=1>
+        $<$<BOOL:${LYS_VULKAN}>:LYS_VULKAN=1>
 )
 
 #############################
