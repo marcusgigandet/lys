@@ -19,6 +19,12 @@ export module lys;
 // Core
 export import :timer;
 
+// RHI
+export import :rhi_types;
+export import :rhi_device;
+export import :command_buffer;
+export import :command_queue;
+
 // Platform
 export import :input_manager;
 export import :input_map;
