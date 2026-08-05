@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 Marcus Gigandet
+* Copyright 2026 Marcus Gigandet
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-export module lys;
+module;
+#include <spdlog/spdlog.h>
+#include <Metal/Metal.hpp>
+export module lys:metal_device;
 
-// Core
-export import :timer;
+import :rhi_device;
+import std;
 
-// RHI
-export import :rhi_types;
-export import :rhi_device;
-export import :command_buffer;
-export import :command_queue;
-
-// Platform
-export import :input_manager;
-export import :input_map;
-export import :window;
-
-// Vulkan
-export import :vulkan_context;
-export import :vulkan_debug;
-export import :vulkan_device;
-
-// Other libraries
-export import mag;
+namespace lys
+{
+	export class MetalDevice final : public RHIDevice
+	{
+	public:
+		std::unique_ptr<CommandQueue> createCommandQueue(CommandQueueType type)
+		{
+			throw std::runtime_error("Unimplemented function");
+		}
+	};
+} // namespace lys

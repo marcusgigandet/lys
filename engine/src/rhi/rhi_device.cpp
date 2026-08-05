@@ -14,58 +14,27 @@
  * limitations under the License.
  */
 
-export module lys_sandbox;
+module;
+#include <cstddef>
+module lys:rhi_device.impl;
 
-import lys;
+import :rhi_device;
 import std;
 
-using namespace lys;
-
-namespace
+namespace lys
 {
-	class Application
+	CommandQueue& RHIDevice::queue(const CommandQueueType type)
 	{
-		Window m_window;
+		const auto index{static_cast<size_t>(type)};
+		auto&	   queue{m_commandQueues[index]};
 
-	public:
-		void run()
+		// Check if the queue is null
+		if (!queue)
 		{
-			init();
-
-			m_window.show();
-
-			while (!m_window.shouldClose())
-			{
-				m_window.update();
-
-				Window::pollEvents();
-			}
+			// Creat a new queue instance
+			queue = createCommandQueue(type);
 		}
 
-	private:
-		void init()
-		{
-			const WindowDesc windowDesc{
-				.title		= "Lys Sandbox",
-				.dimensions = {100, 100},
-				.state		= WindowState::Windowed,
-				.resizable	= true,
-				.visible	= true,
-				.vsync		= true,
-			};
-			m_window = Window(windowDesc);
-		}
-	};
-} // namespace
-
-extern "C++"
-{
-	int main()
-	{
-		Application app;
-
-		app.run();
-
-		return 0;
+		return *queue;
 	}
-}
+} // namespace lys

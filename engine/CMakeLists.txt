@@ -39,6 +39,13 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(lys_engine PRIVATE -freflection)
 endif ()
 
+target_compile_definitions(lys_engine
+        PRIVATE
+        $<$<BOOL:${LYS_METAL}>:LYS_METAL=1>
+        $<$<BOOL:${LYS_VULKAN}>:LYS_VULKAN=1>
+)
+
+
 target_link_libraries(lys_engine
         PRIVATE
         spdlog::spdlog
@@ -61,8 +68,6 @@ target_compile_features(mag PRIVATE cxx_std_26)
 target_compile_definitions(mag
         PRIVATE
         MAG_NAMESPACE=lys
-        $<$<BOOL:${LYS_METAL}>:LYS_METAL=1>
-        $<$<BOOL:${LYS_VULKAN}>:LYS_VULKAN=1>
 )
 
 #############################

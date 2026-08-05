@@ -14,58 +14,22 @@
  * limitations under the License.
  */
 
-export module lys_sandbox;
+module;
+#include <spdlog/spdlog.h>
+export module lys:vulkan_device;
 
-import lys;
+import :rhi_device;
 import std;
+import vulkan;
 
-using namespace lys;
-
-namespace
+namespace lys
 {
-	class Application
+	export class VulkanDevice final : public RHIDevice
 	{
-		Window m_window;
-
 	public:
-		void run()
+		std::unique_ptr<CommandQueue> createCommandQueue(CommandQueueType type)
 		{
-			init();
-
-			m_window.show();
-
-			while (!m_window.shouldClose())
-			{
-				m_window.update();
-
-				Window::pollEvents();
-			}
-		}
-
-	private:
-		void init()
-		{
-			const WindowDesc windowDesc{
-				.title		= "Lys Sandbox",
-				.dimensions = {100, 100},
-				.state		= WindowState::Windowed,
-				.resizable	= true,
-				.visible	= true,
-				.vsync		= true,
-			};
-			m_window = Window(windowDesc);
+			throw std::runtime_error("Unimplemented function");
 		}
 	};
-} // namespace
-
-extern "C++"
-{
-	int main()
-	{
-		Application app;
-
-		app.run();
-
-		return 0;
-	}
-}
+} // namespace lys

@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-export module lys;
+module;
+module lys:vulkan_device.impl;
 
-// Core
-export import :timer;
+import :vulkan_device;
+import std;
 
-// RHI
-export import :rhi_types;
-export import :rhi_device;
-export import :command_buffer;
-export import :command_queue;
-
-// Platform
-export import :input_manager;
-export import :input_map;
-export import :window;
-
-// Vulkan
-export import :vulkan_context;
-export import :vulkan_debug;
-export import :vulkan_device;
-
-// Other libraries
-export import mag;
+namespace lys
+{
+} // namespace lys
