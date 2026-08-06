@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 Marcus Gigandet
+* Copyright 2026 Marcus Gigandet
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,11 @@
  * limitations under the License.
  */
 
-export module lys:command_buffer;
+module;
+module lys:metal_device.impl;
 
 import std;
 
 namespace lys
 {
-	// Forward-declare class
-	export class CommandQueue;
-
-	export class CommandBuffer
-	{
-	public:
-		virtual ~CommandBuffer() = default;
-
-		CommandBuffer(const CommandBuffer&)			   = delete;
-		CommandBuffer& operator=(const CommandBuffer&) = delete;
-		CommandBuffer(CommandBuffer&&)				   = default;
-		CommandBuffer& operator=(CommandBuffer&&)	   = default;
-
-	protected:
-		virtual void beginImpl() = 0;
-		virtual void endImpl()	 = 0;
-	};
 } // namespace lys

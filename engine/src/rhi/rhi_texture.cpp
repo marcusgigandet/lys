@@ -14,27 +14,16 @@
  * limitations under the License.
  */
 
-export module lys:command_buffer;
+module lys:texture.impl;
 
-import std;
+import :texture;
 
 namespace lys
 {
-	// Forward-declare class
-	export class CommandQueue;
-
-	export class CommandBuffer
+	Texture::Texture(const TextureDesc& desc) :
+		m_type(desc.type), m_width(desc.width), m_height(desc.height),
+		m_depthOrLayers(desc.depthOrLayers), m_mipLevels(desc.mipLevels),
+		m_pixelFormat(desc.pixelFormat), m_depthFormat(desc.depthFormat)
 	{
-	public:
-		virtual ~CommandBuffer() = default;
-
-		CommandBuffer(const CommandBuffer&)			   = delete;
-		CommandBuffer& operator=(const CommandBuffer&) = delete;
-		CommandBuffer(CommandBuffer&&)				   = default;
-		CommandBuffer& operator=(CommandBuffer&&)	   = default;
-
-	protected:
-		virtual void beginImpl() = 0;
-		virtual void endImpl()	 = 0;
-	};
+	}
 } // namespace lys

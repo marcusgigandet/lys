@@ -14,27 +14,13 @@
  * limitations under the License.
  */
 
-export module lys:command_buffer;
+module lys:shader.impl;
 
-import std;
+import :shader;
 
 namespace lys
 {
-	// Forward-declare class
-	export class CommandQueue;
-
-	export class CommandBuffer
+	Shader::Shader(const ShaderDesc& desc) : m_stage(desc.stage), m_entryPoint(desc.entryPoint)
 	{
-	public:
-		virtual ~CommandBuffer() = default;
-
-		CommandBuffer(const CommandBuffer&)			   = delete;
-		CommandBuffer& operator=(const CommandBuffer&) = delete;
-		CommandBuffer(CommandBuffer&&)				   = default;
-		CommandBuffer& operator=(CommandBuffer&&)	   = default;
-
-	protected:
-		virtual void beginImpl() = 0;
-		virtual void endImpl()	 = 0;
-	};
+	}
 } // namespace lys

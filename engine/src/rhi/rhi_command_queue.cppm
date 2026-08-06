@@ -21,6 +21,9 @@ import std;
 
 namespace lys
 {
+	/**
+	 * @brief Types of command queues supported by the RHI.
+	 */
 	export enum class CommandQueueType
 	{
 		Graphics,

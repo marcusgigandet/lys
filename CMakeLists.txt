@@ -32,8 +32,13 @@ project(lys LANGUAGES CXX)
 # Project Options #
 ###################
 
-option(LYS_VULKAN "Build with Vulkan support" $<NOT:$<BOOL:${APPLE}>>)
-option(LYS_METAL "Build with Metal support" $<BOOL:${APPLE}>)
+if (APPLE)
+    option(LYS_VULKAN "Build with Vulkan support" OFF)
+    option(LYS_METAL "Build with Metal support" ON)
+else ()
+    option(LYS_VULKAN "Build with Vulkan support" ON)
+    option(LYS_METAL "Build with Metal support" OFF)
+endif ()
 
 # Ensure that non-macOS systems are using Vulkan
 if (NOT APPLE)
@@ -46,7 +51,7 @@ endif ()
 # CMake includes #
 ##################
 
-if (${LYS_METAL})
+if (LYS_METAL)
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/MetalSetup.cmake)
 else ()
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/VulkanSetup.cmake)

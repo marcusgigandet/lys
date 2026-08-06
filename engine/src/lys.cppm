@@ -22,6 +22,10 @@ export import :timer;
 // RHI
 export import :rhi_types;
 export import :rhi_device;
+export import :buffer;
+export import :texture;
+export import :shader;
+export import :pipeline_state;
 export import :command_buffer;
 export import :command_queue;
 

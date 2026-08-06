@@ -23,6 +23,37 @@ import std;
 
 namespace lys
 {
+	RHIDevice::RHIDevice(const RHIDeviceDesc& desc) : m_desc(desc)
+	{
+	}
+
+	std::unique_ptr<Buffer> RHIDevice::createBufferImpl([[maybe_unused]] const BufferDesc& desc)
+	{
+		throw std::runtime_error("Unimplemented function");
+	}
+
+	std::unique_ptr<Texture> RHIDevice::createTextureImpl([[maybe_unused]] const TextureDesc& desc)
+	{
+		throw std::runtime_error("Unimplemented function");
+	}
+
+	std::unique_ptr<Shader> RHIDevice::createShaderImpl([[maybe_unused]] const ShaderDesc& desc)
+	{
+		throw std::runtime_error("Unimplemented function");
+	}
+
+	std::unique_ptr<GraphicsPipelineState>
+	RHIDevice::createGraphicsPipelineImpl([[maybe_unused]] const GraphicsPipelineDesc& desc)
+	{
+		throw std::runtime_error("Unimplemented function");
+	}
+
+	std::unique_ptr<ComputePipelineState>
+	RHIDevice::createComputePipelineImpl([[maybe_unused]] const ComputePipelineDesc& desc)
+	{
+		throw std::runtime_error("Unimplemented function");
+	}
+
 	CommandQueue& RHIDevice::queue(const CommandQueueType type)
 	{
 		const auto index{static_cast<size_t>(type)};

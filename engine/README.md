@@ -15,7 +15,7 @@ graph TB
     App["Application Layer"]
     
     subgraph RHI["Render Hardware Interface (RHI)"]
-        RHITypes["RHI Types Module"]
+        RHITypes["RHI Modules"]
         subgraph Platform["Platform Implementations"]
             Metal["Metal<br/>(macOS)"]
             Vulkan["Vulkan<br/>(Cross-Platform)"]
@@ -28,18 +28,16 @@ graph TB
     end
     
     subgraph Resources["GPU Resources"]
-        Buffers["Buffers<br/>PixelFormat, MemoryUsage"]
-        Textures["Textures<br/>PixelFormat, DepthFormat"]
-        Shaders["Shaders"]
-        Pipeline["Pipeline State<br/>FillMode, CullMode, Winding"]
+        Resources_A["RHI Types"]
+        Resources_B["RHI Classes"]
     end
     
     App -->|Uses| RHI
     RHITypes -->|Defines| Resources
-    Metal -->|Implements| MetalAPI
-    Vulkan -->|Implements| VulkanAPI
-    MetalAPI -->|Manages| Resources
-    VulkanAPI -->|Manages| Resources
+    Metal -->|Uses| MetalAPI
+    Vulkan -->|Uses| VulkanAPI
+    MetalAPI -->|Implements| Resources
+    VulkanAPI -->|Implements| Resources
     
     style App fill:#1976d2,stroke:#0d47a1,stroke-width:2px,color:#000000
     style RHI fill:#e1f5ff,stroke:#0277bd,stroke-width:2px,color:#000000
@@ -51,8 +49,6 @@ graph TB
     style MetalAPI fill:#ffe0b2,stroke:#f57c00,stroke-width:2px,color:#000000
     style VulkanAPI fill:#ffe0b2,stroke:#f57c00,stroke-width:2px,color:#000000
     style Resources fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000000
-    style Buffers fill:#e1bee7,stroke:#6a1b9a,stroke-width:2px,color:#000000
-    style Textures fill:#e1bee7,stroke:#6a1b9a,stroke-width:2px,color:#000000
-    style Shaders fill:#e1bee7,stroke:#6a1b9a,stroke-width:2px,color:#000000
-    style Pipeline fill:#e1bee7,stroke:#6a1b9a,stroke-width:2px,color:#000000
+    style Resources_A fill:#e1bee7,stroke:#6a1b9a,stroke-width:2px,color:#000000
+    style Resources_B fill:#e1bee7,stroke:#6a1b9a,stroke-width:2px,color:#000000
 ```

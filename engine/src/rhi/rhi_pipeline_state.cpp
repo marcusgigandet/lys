@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-export module lys:command_buffer;
+module lys:pipeline_state.impl;
 
-import std;
+import :pipeline_state;
 
 namespace lys
 {
-	// Forward-declare class
-	export class CommandQueue;
-
-	export class CommandBuffer
+	GraphicsPipelineState::GraphicsPipelineState(const GraphicsPipelineDesc& desc) :
+		PipelineState(), m_desc(desc)
 	{
-	public:
-		virtual ~CommandBuffer() = default;
+	}
 
-		CommandBuffer(const CommandBuffer&)			   = delete;
-		CommandBuffer& operator=(const CommandBuffer&) = delete;
-		CommandBuffer(CommandBuffer&&)				   = default;
-		CommandBuffer& operator=(CommandBuffer&&)	   = default;
-
-	protected:
-		virtual void beginImpl() = 0;
-		virtual void endImpl()	 = 0;
-	};
+	ComputePipelineState::ComputePipelineState(const ComputePipelineDesc& desc) : m_desc(desc)
+	{
+	}
 } // namespace lys

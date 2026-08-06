@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-module;
-#include <cstddef>
 export module lys:rhi_device;
 
+import :buffer;
 import :command_queue;
+import :pipeline_state;
+import :shader;
+import :texture;
 import std;
 
 namespace lys
@@ -33,19 +35,21 @@ namespace lys
 		Metal,	///< Apple-only
 	};
 
-	export struct RHIDeviceConfig
+	export struct RHIDeviceDesc
 	{
 		RHIBackend backend{RHIBackend::Auto};
 	};
 
 	export class RHIDevice
 	{
+		RHIDeviceDesc m_desc;
+
 		/// Command queue instances
 		std::array<std::unique_ptr<CommandQueue>, 3> m_commandQueues{};
 
 	public:
 		RHIDevice() = default;
-		RHIDevice(const RHIDeviceConfig& config);
+		RHIDevice(const RHIDeviceDesc& desc);
 
 		RHIDevice(const RHIDevice&)			   = delete;
 		RHIDevice& operator=(const RHIDevice&) = delete;
@@ -59,6 +63,33 @@ namespace lys
 		[[nodiscard]] CommandQueue& computeQueue() { return queue(CommandQueueType::Compute); }
 		[[nodiscard]] CommandQueue& transferQueue() { return queue(CommandQueueType::Transfer); }
 
+		[[nodiscard]] std::unique_ptr<Buffer> createBuffer(const BufferDesc& desc)
+		{
+			return createBufferImpl(desc);
+		}
+
+		[[nodiscard]] std::unique_ptr<Texture> createTexture(const TextureDesc& desc)
+		{
+			return createTextureImpl(desc);
+		}
+
+		[[nodiscard]] std::unique_ptr<Shader> createShader(const ShaderDesc& desc)
+		{
+			return createShaderImpl(desc);
+		}
+
+		[[nodiscard]] std::unique_ptr<GraphicsPipelineState>
+		createGraphicsPipeline(const GraphicsPipelineDesc& desc)
+		{
+			return createGraphicsPipelineImpl(desc);
+		}
+
+		[[nodiscard]] std::unique_ptr<ComputePipelineState>
+		createComputePipeline(const ComputePipelineDesc& desc)
+		{
+			return createComputePipelineImpl(desc);
+		}
+
 	protected:
 		/**
 		 * @brief Creates a new instance of a CommandQueue.
@@ -69,5 +100,13 @@ namespace lys
 		 */
 		[[nodiscard]] virtual std::unique_ptr<CommandQueue>
 		createCommandQueue(CommandQueueType type) = 0;
+
+		[[nodiscard]] virtual std::unique_ptr<Buffer>  createBufferImpl(const BufferDesc& desc);
+		[[nodiscard]] virtual std::unique_ptr<Texture> createTextureImpl(const TextureDesc& desc);
+		[[nodiscard]] virtual std::unique_ptr<Shader>  createShaderImpl(const ShaderDesc& desc);
+		[[nodiscard]] virtual std::unique_ptr<GraphicsPipelineState>
+		createGraphicsPipelineImpl(const GraphicsPipelineDesc& desc);
+		[[nodiscard]] virtual std::unique_ptr<ComputePipelineState>
+		createComputePipelineImpl(const ComputePipelineDesc& desc);
 	};
 } // namespace lys

@@ -1,5 +1,5 @@
 /*
-* Copyright 2026 Marcus Gigandet
+ * Copyright 2026 Marcus Gigandet
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-module;
-module lys:metal_device.impl;
+module lys:buffer.impl;
 
-import :metal_device;
-import std;
+import :buffer;
 
 namespace lys
 {
+	Buffer::Buffer(const BufferDesc& desc) :
+		m_size(desc.size), m_usage(desc.usage), m_memoryUsage(desc.memoryUsage)
+	{
+	}
 } // namespace lys

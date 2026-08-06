@@ -16,8 +16,9 @@
 
 module;
 #include <GLFW/glfw3.h>
-#include <cstdint>
 export module lys:input_map;
+
+import std;
 
 namespace lys
 {
