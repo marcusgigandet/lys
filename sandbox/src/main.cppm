@@ -25,7 +25,8 @@ namespace
 {
 	class Application
 	{
-		Window m_window;
+		Window					   m_window;
+		std::unique_ptr<RHIDevice> m_device;
 
 	public:
 		void run()
@@ -45,6 +46,10 @@ namespace
 	private:
 		void init()
 		{
+			m_device = createRHIDevice({
+				.backend = RHIBackend::Auto,
+			});
+
 			const WindowDesc windowDesc{
 				.title		= "Lys Sandbox",
 				.dimensions = {100, 100},

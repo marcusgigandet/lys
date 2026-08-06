@@ -7,6 +7,7 @@ file(GLOB_RECURSE ENGINE_MODULES CONFIGURE_DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
+# Filter out files from disabled features from build
 if (NOT LYS_VULKAN)
     list(FILTER ENGINE_MODULES EXCLUDE REGEX ".*/vulkan/.*")
 endif ()
@@ -31,7 +32,6 @@ target_sources(lys_engine
 target_include_directories(lys_engine
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
-        ${CMAKE_CURRENT_SOURCE_DIR}/../vendor/glfw/include
 )
 
 # Add reflection if using GCC

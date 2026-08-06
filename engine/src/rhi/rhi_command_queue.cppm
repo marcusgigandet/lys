@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-export module lys:command_queue;
+export module lys:rhi_command_queue;
 
-import :command_buffer;
+import :rhi_command_buffer;
 import std;
 
 namespace lys

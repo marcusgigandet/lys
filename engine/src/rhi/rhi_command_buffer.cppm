@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export module lys:command_buffer;
+export module lys:rhi_command_buffer;
 
 import std;
 

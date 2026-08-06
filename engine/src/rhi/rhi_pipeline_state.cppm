@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-export module lys:pipeline_state;
+export module lys:rhi_pipeline_state;
 
 import :rhi_types;
-import :shader;
+import :rhi_shader;
 
 namespace lys
 {

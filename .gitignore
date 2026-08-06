@@ -92,3 +92,6 @@ _build/
 pages/
 pages-local/
 *.mo
+
+# --- Vcpkg ---
+vcpkg_installed/

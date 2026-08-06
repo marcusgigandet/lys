@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-module lys:texture.impl;
+module lys:rhi_texture.impl;
 
-import :texture;
+import :rhi_texture;
 
 namespace lys
 {

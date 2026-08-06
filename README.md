@@ -24,12 +24,12 @@ WIP
 
 ## Repository licenses
 
-| Repository                                           | Path             | License                                        |
-|------------------------------------------------------|------------------|------------------------------------------------|
-| [spdlog](https://github.com/gabime/spdlog)           | `vendor/spdlog`  | MIT ([LICENSE](vendor/spdlog/LICENSE))         |
-| [MAG](https://github.com/marcusgigandet/mag)         | `vendor/mag`     | Apache-2.0 ([LICENSE](vendor/mag/LICENSE))     |
-| [Toolbox](https://github.com/marcusgigandet/toolbox) | `vendor/toolbox` | Apache-2.0 ([LICENSE](vendor/toolbox/LICENSE)) |
-| [GLFW](https://github.com/glfw/glfw)                 | `vendor/glfw`    | Zlib ([LICENSE](vendor/glfw/LICENSE.md))       |
+| Repository                                           | License                                        |
+|------------------------------------------------------|------------------------------------------------|
+| [MAG](https://github.com/marcusgigandet/mag)         | Apache-2.0 ([LICENSE](vendor/mag/LICENSE))     |
+| [Toolbox](https://github.com/marcusgigandet/toolbox) | Apache-2.0 ([LICENSE](vendor/toolbox/LICENSE)) |
+| [spdlog](https://github.com/gabime/spdlog)           | MIT                                            |
+| [GLFW](https://github.com/glfw/glfw)                 | Zlib                                           |
 
 ## License
 

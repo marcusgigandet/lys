@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-module;
-#include <cstddef>
 module lys:rhi_device.impl;
 
 import :rhi_device;
 import std;
+
+#if defined(LYS_VULKAN)
+import :vulkan_device;
+#endif
+
+#if defined(LYS_METAL)
+import :metal_device;
+#endif
 
 namespace lys
 {
@@ -56,7 +62,7 @@ namespace lys
 
 	CommandQueue& RHIDevice::queue(const CommandQueueType type)
 	{
-		const auto index{static_cast<size_t>(type)};
+		const auto index{static_cast<std::size_t>(type)};
 		auto&	   queue{m_commandQueues[index]};
 
 		// Check if the queue is null
@@ -67,5 +73,43 @@ namespace lys
 		}
 
 		return *queue;
+	}
+
+	std::unique_ptr<RHIDevice> createRHIDevice(const RHIDeviceDesc& desc)
+	{
+		switch (desc.backend)
+		{
+		case RHIBackend::Auto:
+#if defined(LYS_VULKAN) && defined(LYS_METAL)
+#	ifdef __APPLE__
+			return std::make_unique<MetalDevice>(desc);
+#	else
+			return std::make_unique<VulkanDevice>(desc);
+#	endif
+#elif defined(LYS_VULKAN)
+			return std::make_unique<VulkanDevice>(desc);
+#elif defined(LYS_METAL)
+			return std::make_unique<MetalDevice>(desc);
+#else
+			throw std::runtime_error("No RHI backend available.");
+#endif
+
+		case RHIBackend::Vulkan:
+#if defined(LYS_VULKAN)
+			return std::make_unique<VulkanDevice>(desc);
+#else
+			throw std::runtime_error("Vulkan backend is not enabled in this build.");
+#endif
+
+		case RHIBackend::Metal:
+#if defined(LYS_METAL)
+			return std::make_unique<MetalDevice>(desc);
+#else
+			throw std::runtime_error("Metal backend is not enabled in this build.");
+#endif
+
+		default:
+			throw std::runtime_error("Invalid RHI backend selection.");
+		}
 	}
 } // namespace lys

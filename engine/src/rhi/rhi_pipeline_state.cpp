@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-module lys:pipeline_state.impl;
+module lys:rhi_pipeline_state.impl;
 
-import :pipeline_state;
+import :rhi_pipeline_state;
 
 namespace lys
 {

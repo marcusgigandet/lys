@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export module lys:texture;
+export module lys:rhi_texture;
 
 import :rhi_types;
 import std;

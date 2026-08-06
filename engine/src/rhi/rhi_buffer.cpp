@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-module lys:buffer.impl;
+module lys:rhi_buffer.impl;
 
-import :buffer;
+import :rhi_buffer;
 
 namespace lys
 {

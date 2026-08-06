@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export module lys:shader;
+export module lys:rhi_shader;
 
 import std;
 

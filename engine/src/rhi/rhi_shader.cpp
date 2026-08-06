@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-module lys:shader.impl;
+module lys:rhi_shader.impl;
 
-import :shader;
+import :rhi_shader;
 
 namespace lys
 {

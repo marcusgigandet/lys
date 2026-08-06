@@ -26,6 +26,22 @@ endif ()
 
 set(CMAKE_EXPERIMENTAL_EXPORT_PACKAGE_INFO "${${_var}}")
 
+###################
+# Configure Vcpkg #
+###################
+
+if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    if (DEFINED ENV{VCPKG_ROOT})
+        set(_vcpkg_toolchain "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+    elseif (DEFINED ENV{VCPKG_INSTALLATION_ROOT})
+        set(_vcpkg_toolchain "$ENV{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake")
+    endif ()
+
+    if (DEFINED _vcpkg_toolchain AND EXISTS "${_vcpkg_toolchain}")
+        set(CMAKE_TOOLCHAIN_FILE "${_vcpkg_toolchain}" CACHE FILEPATH "Vcpkg toolchain file")
+    endif ()
+endif ()
+
 project(lys LANGUAGES CXX)
 
 ###################
@@ -85,12 +101,17 @@ else ()
     )
 endif ()
 
+#################
+# Find packages #
+#################
+
+find_package(glfw3 CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
+
 ##################
 # Subdirectories #
 ##################
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/mag)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/sandbox)

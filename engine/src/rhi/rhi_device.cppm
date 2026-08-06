@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
+module;
+#include <typedefs.hpp>
 export module lys:rhi_device;
 
-import :buffer;
-import :command_queue;
-import :pipeline_state;
-import :shader;
-import :texture;
+import :rhi_buffer;
+import :rhi_command_queue;
+import :rhi_pipeline_state;
+import :rhi_shader;
+import :rhi_texture;
 import std;
 
 namespace lys
@@ -48,14 +50,14 @@ namespace lys
 		std::array<std::unique_ptr<CommandQueue>, 3> m_commandQueues{};
 
 	public:
-		RHIDevice() = default;
-		RHIDevice(const RHIDeviceDesc& desc);
+		explicit RHIDevice(const RHIDeviceDesc& desc = {});
 
 		RHIDevice(const RHIDevice&)			   = delete;
 		RHIDevice& operator=(const RHIDevice&) = delete;
 		RHIDevice(RHIDevice&&)				   = default;
 		RHIDevice& operator=(RHIDevice&&)	   = default;
-		virtual ~RHIDevice()				   = default;
+
+		virtual ~RHIDevice() = default;
 
 		[[nodiscard]] CommandQueue& queue(CommandQueueType type);
 
@@ -63,29 +65,29 @@ namespace lys
 		[[nodiscard]] CommandQueue& computeQueue() { return queue(CommandQueueType::Compute); }
 		[[nodiscard]] CommandQueue& transferQueue() { return queue(CommandQueueType::Transfer); }
 
-		[[nodiscard]] std::unique_ptr<Buffer> createBuffer(const BufferDesc& desc)
+		[[nodiscard]] LYS_INLINE std::unique_ptr<Buffer> createBuffer(const BufferDesc& desc)
 		{
 			return createBufferImpl(desc);
 		}
 
-		[[nodiscard]] std::unique_ptr<Texture> createTexture(const TextureDesc& desc)
+		[[nodiscard]] LYS_INLINE std::unique_ptr<Texture> createTexture(const TextureDesc& desc)
 		{
 			return createTextureImpl(desc);
 		}
 
-		[[nodiscard]] std::unique_ptr<Shader> createShader(const ShaderDesc& desc)
+		[[nodiscard]] LYS_INLINE std::unique_ptr<Shader> createShader(const ShaderDesc& desc)
 		{
 			return createShaderImpl(desc);
 		}
 
-		[[nodiscard]] std::unique_ptr<GraphicsPipelineState>
-		createGraphicsPipeline(const GraphicsPipelineDesc& desc)
+		[[nodiscard]] LYS_INLINE std::unique_ptr<GraphicsPipelineState>
+								 createGraphicsPipeline(const GraphicsPipelineDesc& desc)
 		{
 			return createGraphicsPipelineImpl(desc);
 		}
 
-		[[nodiscard]] std::unique_ptr<ComputePipelineState>
-		createComputePipeline(const ComputePipelineDesc& desc)
+		[[nodiscard]] LYS_INLINE std::unique_ptr<ComputePipelineState>
+								 createComputePipeline(const ComputePipelineDesc& desc)
 		{
 			return createComputePipelineImpl(desc);
 		}
@@ -101,12 +103,18 @@ namespace lys
 		[[nodiscard]] virtual std::unique_ptr<CommandQueue>
 		createCommandQueue(CommandQueueType type) = 0;
 
-		[[nodiscard]] virtual std::unique_ptr<Buffer>  createBufferImpl(const BufferDesc& desc);
+		[[nodiscard]] virtual std::unique_ptr<Buffer> createBufferImpl(const BufferDesc& desc);
+
 		[[nodiscard]] virtual std::unique_ptr<Texture> createTextureImpl(const TextureDesc& desc);
-		[[nodiscard]] virtual std::unique_ptr<Shader>  createShaderImpl(const ShaderDesc& desc);
+
+		[[nodiscard]] virtual std::unique_ptr<Shader> createShaderImpl(const ShaderDesc& desc);
+
 		[[nodiscard]] virtual std::unique_ptr<GraphicsPipelineState>
 		createGraphicsPipelineImpl(const GraphicsPipelineDesc& desc);
+
 		[[nodiscard]] virtual std::unique_ptr<ComputePipelineState>
 		createComputePipelineImpl(const ComputePipelineDesc& desc);
 	};
+
+	export [[nodiscard]] std::unique_ptr<RHIDevice> createRHIDevice(const RHIDeviceDesc& desc);
 } // namespace lys

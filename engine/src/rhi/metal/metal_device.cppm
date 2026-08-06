@@ -27,6 +27,8 @@ namespace lys
 	export class MetalDevice final : public RHIDevice
 	{
 	public:
+		explicit MetalDevice(const RHIDeviceDesc& desc) : RHIDevice(desc) {}
+
 		std::unique_ptr<CommandQueue> createCommandQueue(CommandQueueType type)
 		{
 			throw std::runtime_error("Unimplemented function");

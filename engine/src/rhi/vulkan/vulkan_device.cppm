@@ -27,6 +27,8 @@ namespace lys
 	export class VulkanDevice final : public RHIDevice
 	{
 	public:
+		explicit VulkanDevice(const RHIDeviceDesc& desc) : RHIDevice(desc) {}
+
 		std::unique_ptr<CommandQueue> createCommandQueue(CommandQueueType type)
 		{
 			throw std::runtime_error("Unimplemented function");

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export module lys:buffer;
+export module lys:rhi_buffer;
 
 import :rhi_types;
 import std;
