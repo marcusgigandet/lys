@@ -40,24 +40,41 @@ namespace lys
 			.edge = libEdgeAction,
 		};
 		m_eventQueue.push(inputEvent);
+
+		if (m_dispatchEvents)
+		{
+			emitKeyEvent({
+				.key	  = libKey,
+				.scancode = scancode,
+				.action	  = libEdgeAction,
+				.mods	  = mods,
+			});
+		}
 	}
 
 	void InputManager::_processMouseCallback(const double xPosIn, const double yPosIn)
 	{
-		// Initialize mouse position on first callback to avoid a large initial delta.
-		static bool isFirstTime{true};
-		if (isFirstTime)
+		const Vec2f posIn{xPosIn, yPosIn};
+		Vec2f		delta{};
+
+		if (!m_hasMousePosition)
 		{
-			m_mousePos	 = {xPosIn, yPosIn};
-			m_mouseDelta = {};
-			isFirstTime	 = false;
+			m_hasMousePosition = true;
+			m_mousePos		   = posIn;
 		}
 		else
 		{
-			// Accumulate per-frame mouse movement
-			const Vec2f posIn{xPosIn, yPosIn};
-			m_mouseDelta += posIn - m_mousePos;
+			delta = posIn - m_mousePos;
+			m_mouseDelta += delta;
 			m_mousePos = posIn;
+		}
+
+		if (m_dispatchEvents)
+		{
+			emitMouseMoveEvent({
+				.position = m_mousePos,
+				.delta	  = delta,
+			});
 		}
 	}
 
@@ -76,6 +93,35 @@ namespace lys
 			.edge = libEdgeAction,
 		};
 		m_eventQueue.push(inputEvent);
+
+		if (m_dispatchEvents)
+		{
+			emitMouseButtonEvent({
+				.button = libKey,
+				.action = libEdgeAction,
+				.mods	= mods,
+			});
+		}
+	}
+
+	void InputManager::addKeyEventListener(KeyEventCallback callback)
+	{
+		m_keyListeners.push_back(std::move(callback));
+	}
+
+	void InputManager::addMouseButtonListener(MouseButtonEventCallback callback)
+	{
+		m_mouseButtonListeners.push_back(std::move(callback));
+	}
+
+	void InputManager::addMouseMoveListener(MouseMoveEventCallback callback)
+	{
+		m_mouseMoveListeners.push_back(std::move(callback));
+	}
+
+	void InputManager::enableEventDispatch() noexcept
+	{
+		m_dispatchEvents = true;
 	}
 
 	void InputManager::update() noexcept
@@ -236,6 +282,30 @@ namespace lys
 			{
 				++it;
 			}
+		}
+	}
+
+	void InputManager::emitKeyEvent(const KeyInputEvent& event) const
+	{
+		for (const auto& callback : m_keyListeners)
+		{
+			callback(event);
+		}
+	}
+
+	void InputManager::emitMouseButtonEvent(const MouseButtonInputEvent& event) const
+	{
+		for (const auto& callback : m_mouseButtonListeners)
+		{
+			callback(event);
+		}
+	}
+
+	void InputManager::emitMouseMoveEvent(const MouseMoveEvent& event) const
+	{
+		for (const auto& callback : m_mouseMoveListeners)
+		{
+			callback(event);
 		}
 	}
 } // namespace lys

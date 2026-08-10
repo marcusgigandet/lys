@@ -79,16 +79,10 @@ namespace lys
 		InputManager m_inputManager;
 
 	public:
-		using KeyCallback = std::function<void(int key, int scancode, int action, int mods)>;
-		using MouseButtonCallback			= std::function<void(int button, int action, int mods)>;
-		using CursorPosCallback				= std::function<void(double xPos, double yPos)>;
 		using WindowSizeCallback			= std::function<void(int width, int height)>;
 		using WindowFramebufferSizeCallback = std::function<void(int width, int height)>;
 
 	private:
-		KeyCallback					  m_keyCallback{};
-		MouseButtonCallback			  m_mouseButtonCallback{};
-		CursorPosCallback			  m_cursorPosCallback{};
 		WindowSizeCallback			  m_windowSizeCallback{};
 		WindowFramebufferSizeCallback m_windowFramebufferSizeCallback{};
 
@@ -98,10 +92,19 @@ namespace lys
 
 		~Window();
 
-		[[nodiscard]] inline GLFWwindow* nativeHandle() const noexcept { return m_glfwWindow; }
+		[[nodiscard]] inline GLFWwindow*   nativeHandle() const noexcept { return m_glfwWindow; }
+		[[nodiscard]] inline InputManager& inputManager() noexcept { return m_inputManager; }
+		[[nodiscard]] inline const InputManager& inputManager() const noexcept
+		{
+			return m_inputManager;
+		}
 
 		static inline void pollEvents() { glfwPollEvents(); }
-		inline void		   update() { m_inputManager.update(); }
+		inline void		   update()
+		{
+			m_inputManager.update();
+			m_inputManager.enableEventDispatch();
+		}
 
 		[[nodiscard]] inline bool shouldClose() const
 		{
@@ -109,6 +112,14 @@ namespace lys
 		}
 
 		inline void close() const { glfwSetWindowShouldClose(m_glfwWindow, GLFW_TRUE); }
+
+		static inline void terminate()
+		{
+			glfwTerminate();
+
+			// Update glfw initialization status
+			s_glfwInitialized = false;
+		}
 
 		[[nodiscard]] inline std::string title() const { return glfwGetWindowTitle(m_glfwWindow); }
 

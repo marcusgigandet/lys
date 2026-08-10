@@ -34,12 +34,21 @@ namespace lys
 		/* Event queues and management */
 		std::queue<InputEvent>					   m_eventQueue{}; ///< New, unprocessed events
 		std::unordered_map<Key, LogicalInputEvent> m_events; ///< Current collection of key events
+		std::vector<std::function<void(const KeyInputEvent&)>>		   m_keyListeners;
+		std::vector<std::function<void(const MouseButtonInputEvent&)>> m_mouseButtonListeners;
+		std::vector<std::function<void(const MouseMoveEvent&)>>		   m_mouseMoveListeners;
 
 		/* Mouse related data */
 		Vec2f m_mouseDelta{}; ///< Change in mouse position since last frame
 		Vec2f m_mousePos{};	  ///< Current mouse position
+		bool  m_hasMousePosition{false};
+		bool  m_dispatchEvents{false};
 
 	public:
+		using KeyEventCallback		   = std::function<void(const KeyInputEvent&)>;
+		using MouseButtonEventCallback = std::function<void(const MouseButtonInputEvent&)>;
+		using MouseMoveEventCallback   = std::function<void(const MouseMoveEvent&)>;
+
 		/**
 		 * @brief Internally called by GLFW when a key event occurs.
 		 *
@@ -68,6 +77,11 @@ namespace lys
 		 * @param mods Bit field describing which modifier keys were held down.
 		 */
 		void _processMouseButtonCallback(int key, int action, int mods);
+
+		void addKeyEventListener(KeyEventCallback callback);
+		void addMouseButtonListener(MouseButtonEventCallback callback);
+		void addMouseMoveListener(MouseMoveEventCallback callback);
+		void enableEventDispatch() noexcept;
 
 		/**
 		 * @brief Updates input states and processes queued events.
@@ -117,5 +131,23 @@ namespace lys
 		 * Handles state transitions (JustPressed -> Pressed, etc.) and cleanup.
 		 */
 		void updateEventStates() noexcept;
+
+		/**
+		 * @brief Processes all key event callbacks.
+		 * @param event Input event to emit.
+		 */
+		void emitKeyEvent(const KeyInputEvent& event) const;
+
+		/**
+		 * @brief Processes all mouse button event callbacks.
+		 * @param event Input event to emit.
+		 */
+		void emitMouseButtonEvent(const MouseButtonInputEvent& event) const;
+
+		/**
+		 * @brief Processes all mouse move event callbacks.
+		 * @param event Input event to emit.
+		 */
+		void emitMouseMoveEvent(const MouseMoveEvent& event) const;
 	};
 } // namespace lys

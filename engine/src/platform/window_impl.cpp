@@ -86,14 +86,12 @@ namespace lys
 
 	void Window::registerCallbacks()
 	{
-		m_keyCallback = [this](const int key, const int scancode, const int action, const int mods)
-		{ m_inputManager._processKeyCallback(key, scancode, action, mods); };
-
-		m_cursorPosCallback = [this](const double x, const double y)
-		{ m_inputManager._processMouseCallback(x, y); };
-
-		m_mouseButtonCallback = [this](const int key, const int action, const int mods)
-		{ m_inputManager._processMouseButtonCallback(key, action, mods); };
+		glfwSetWindowUserPointer(m_glfwWindow, this);
+		glfwSetKeyCallback(m_glfwWindow, &Window::keyCallback);
+		glfwSetMouseButtonCallback(m_glfwWindow, &Window::mouseButtonCallback);
+		glfwSetCursorPosCallback(m_glfwWindow, &Window::cursorPosCallback);
+		glfwSetWindowSizeCallback(m_glfwWindow, &Window::windowSizeCallback);
+		glfwSetFramebufferSizeCallback(m_glfwWindow, &Window::windowFramebufferSizeCallback);
 	}
 
 	void Window::keyCallback(
@@ -101,10 +99,7 @@ namespace lys
 	{
 		if (const auto self = static_cast<Window*>(glfwGetWindowUserPointer(window)))
 		{
-			if (self->m_keyCallback)
-			{
-				self->m_keyCallback(key, scancode, action, mods);
-			}
+			self->m_inputManager._processKeyCallback(key, scancode, action, mods);
 		}
 	}
 
@@ -113,10 +108,7 @@ namespace lys
 	{
 		if (const auto self = static_cast<Window*>(glfwGetWindowUserPointer(window)))
 		{
-			if (self->m_mouseButtonCallback)
-			{
-				self->m_mouseButtonCallback(button, action, mods);
-			}
+			self->m_inputManager._processMouseButtonCallback(button, action, mods);
 		}
 	}
 
@@ -124,10 +116,7 @@ namespace lys
 	{
 		if (const auto self = static_cast<Window*>(glfwGetWindowUserPointer(window)))
 		{
-			if (self->m_cursorPosCallback)
-			{
-				self->m_cursorPosCallback(xPos, yPos);
-			}
+			self->m_inputManager._processMouseCallback(xPos, yPos);
 		}
 	}
 

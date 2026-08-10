@@ -25,21 +25,22 @@ namespace
 {
 	class Application
 	{
-		Window						 m_window;
+		std::unique_ptr<Window>		 m_window;
 		std::unique_ptr<rhi::Device> m_device;
 
 	public:
+		~Application() { shutdown(); }
+
 		void run()
 		{
 			init();
 
-			m_window.show();
+			m_window->show();
 
-			while (!m_window.shouldClose())
+			while (!m_window->shouldClose())
 			{
-				m_window.update();
-
 				Window::pollEvents();
+				m_window->update();
 			}
 		}
 
@@ -58,7 +59,27 @@ namespace
 				.visible	= true,
 				.vsync		= true,
 			};
-			m_window = Window(windowDesc);
+			m_window = std::make_unique<Window>(windowDesc);
+
+			register_callbacks();
+		}
+
+		void shutdown()
+		{
+			m_window.reset();
+			Window::terminate();
+		}
+
+		void register_callbacks() const
+		{
+			m_window->inputManager().addKeyEventListener(
+				[this](const KeyInputEvent& event)
+				{
+					if (event.key == KEY_ESCAPE && event.action == InputEdge::Press)
+					{
+						m_window->close();
+					}
+				});
 		}
 	};
 } // namespace

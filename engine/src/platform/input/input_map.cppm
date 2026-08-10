@@ -18,6 +18,7 @@ module;
 #include <GLFW/glfw3.h>
 export module lys:input_map;
 
+import mag;
 import std;
 
 namespace lys
@@ -151,6 +152,27 @@ namespace lys
 		InputEdge edge;
 	};
 
+	export struct KeyInputEvent
+	{
+		Key		  key;
+		int		  scancode;
+		InputEdge action;
+		int		  mods;
+	};
+
+	export struct MouseButtonInputEvent
+	{
+		Key		  button;
+		InputEdge action;
+		int		  mods;
+	};
+
+	export struct MouseMoveEvent
+	{
+		Vec2f position;
+		Vec2f delta;
+	};
+
 	export struct LogicalInputEvent
 	{
 		Key		   key;
@@ -158,26 +180,23 @@ namespace lys
 		bool	   repeat;
 	};
 
-	namespace detail
+	constexpr auto glfwKeyLast		= static_cast<std::uint16_t>(GLFW_KEY_LAST);
+	constexpr auto mouseButtonFirst = static_cast<std::uint16_t>(GLFW_MOUSE_BUTTON_1);
+	constexpr auto mouseButtonLast	= static_cast<std::uint16_t>(GLFW_MOUSE_BUTTON_LAST);
+
+	constexpr bool isKeyboardKey(const Key key) noexcept
 	{
-		constexpr auto glfwKeyLast		= static_cast<std::uint16_t>(GLFW_KEY_LAST);
-		constexpr auto mouseButtonFirst = static_cast<std::uint16_t>(GLFW_MOUSE_BUTTON_1);
-		constexpr auto mouseButtonLast	= static_cast<std::uint16_t>(GLFW_MOUSE_BUTTON_LAST);
+		return static_cast<std::uint16_t>(key) <= glfwKeyLast;
+	}
 
-		constexpr bool isKeyboardKey(const Key key) noexcept
-		{
-			return static_cast<std::uint16_t>(key) <= glfwKeyLast;
-		}
-
-		constexpr bool isMouseButton(const Key key) noexcept
-		{
-			const auto value = static_cast<std::uint16_t>(key);
-			return value >= mouseButtonFirst && value <= mouseButtonLast;
-		}
-	} // namespace detail
+	constexpr bool isMouseButton(const Key key) noexcept
+	{
+		const auto value = static_cast<std::uint16_t>(key);
+		return value >= mouseButtonFirst && value <= mouseButtonLast;
+	}
 
 	export constexpr bool isValidKey(const Key key) noexcept
 	{
-		return detail::isKeyboardKey(key) || detail::isMouseButton(key);
+		return isKeyboardKey(key) || isMouseButton(key);
 	}
 } // namespace lys
