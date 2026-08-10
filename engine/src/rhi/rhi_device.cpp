@@ -19,48 +19,48 @@ module lys:rhi_device.impl;
 import :rhi_device;
 import std;
 
-#if defined(LYS_VULKAN)
+#ifdef LYS_VULKAN
 import :vulkan_device;
 #endif
 
-#if defined(LYS_METAL)
+#ifdef LYS_METAL
 import :metal_device;
 #endif
 
-namespace lys
+namespace lys::rhi
 {
-	RHIDevice::RHIDevice(const RHIDeviceDesc& desc) : m_desc(desc)
+	Device::Device(const DeviceDesc& desc) : m_desc(desc)
 	{
 	}
 
-	std::unique_ptr<Buffer> RHIDevice::createBufferImpl([[maybe_unused]] const BufferDesc& desc)
-	{
-		throw std::runtime_error("Unimplemented function");
-	}
-
-	std::unique_ptr<Texture> RHIDevice::createTextureImpl([[maybe_unused]] const TextureDesc& desc)
+	std::unique_ptr<Buffer> Device::createBufferImpl([[maybe_unused]] const BufferDesc& desc)
 	{
 		throw std::runtime_error("Unimplemented function");
 	}
 
-	std::unique_ptr<Shader> RHIDevice::createShaderImpl([[maybe_unused]] const ShaderDesc& desc)
+	std::unique_ptr<Texture> Device::createTextureImpl([[maybe_unused]] const TextureDesc& desc)
+	{
+		throw std::runtime_error("Unimplemented function");
+	}
+
+	std::unique_ptr<Shader> Device::createShaderImpl([[maybe_unused]] const ShaderDesc& desc)
 	{
 		throw std::runtime_error("Unimplemented function");
 	}
 
 	std::unique_ptr<GraphicsPipelineState>
-	RHIDevice::createGraphicsPipelineImpl([[maybe_unused]] const GraphicsPipelineDesc& desc)
+	Device::createGraphicsPipelineImpl([[maybe_unused]] const GraphicsPipelineDesc& desc)
 	{
 		throw std::runtime_error("Unimplemented function");
 	}
 
 	std::unique_ptr<ComputePipelineState>
-	RHIDevice::createComputePipelineImpl([[maybe_unused]] const ComputePipelineDesc& desc)
+	Device::createComputePipelineImpl([[maybe_unused]] const ComputePipelineDesc& desc)
 	{
 		throw std::runtime_error("Unimplemented function");
 	}
 
-	CommandQueue& RHIDevice::queue(const CommandQueueType type)
+	CommandQueue& Device::queue(const CommandQueueType type)
 	{
 		const auto index{static_cast<std::size_t>(type)};
 		auto&	   queue{m_commandQueues[index]};
@@ -75,35 +75,35 @@ namespace lys
 		return *queue;
 	}
 
-	std::unique_ptr<RHIDevice> createRHIDevice(const RHIDeviceDesc& desc)
+	std::unique_ptr<Device> createDevice(const DeviceDesc& desc)
 	{
 		switch (desc.backend)
 		{
-		case RHIBackend::Auto:
+		case Backend::Auto:
 #if defined(LYS_VULKAN) && defined(LYS_METAL)
 #	ifdef __APPLE__
-			return std::make_unique<MetalDevice>(desc);
+			return std::make_unique<mtl::Device>(desc);
 #	else
-			return std::make_unique<VulkanDevice>(desc);
+			return std::make_unique<vk::Device>(desc);
 #	endif
-#elif defined(LYS_VULKAN)
-			return std::make_unique<VulkanDevice>(desc);
-#elif defined(LYS_METAL)
-			return std::make_unique<MetalDevice>(desc);
+#elifdef LYS_VULKAN
+			return std::make_unique<vk::Device>(desc);
+#elifdef LYS_METAL
+			return std::make_unique<mtl::Device>(desc);
 #else
 			throw std::runtime_error("No RHI backend available.");
 #endif
 
-		case RHIBackend::Vulkan:
-#if defined(LYS_VULKAN)
-			return std::make_unique<VulkanDevice>(desc);
+		case Backend::Vulkan:
+#ifdef LYS_VULKAN
+			return std::make_unique<vk::Device>(desc);
 #else
 			throw std::runtime_error("Vulkan backend is not enabled in this build.");
 #endif
 
-		case RHIBackend::Metal:
-#if defined(LYS_METAL)
-			return std::make_unique<MetalDevice>(desc);
+		case Backend::Metal:
+#ifdef LYS_METAL
+			return std::make_unique<mtl::Device>(desc);
 #else
 			throw std::runtime_error("Metal backend is not enabled in this build.");
 #endif
@@ -112,4 +112,4 @@ namespace lys
 			throw std::runtime_error("Invalid RHI backend selection.");
 		}
 	}
-} // namespace lys
+} // namespace lys::rhi

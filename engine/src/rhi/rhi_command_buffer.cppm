@@ -18,7 +18,7 @@ export module lys:rhi_command_buffer;
 
 import std;
 
-namespace lys
+namespace lys::rhi
 {
 	// Forward-declare class
 	export class CommandQueue;
@@ -37,4 +37,4 @@ namespace lys
 		virtual void beginImpl() = 0;
 		virtual void endImpl()	 = 0;
 	};
-} // namespace lys
+} // namespace lys::rhi

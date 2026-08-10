@@ -18,7 +18,7 @@ export module lys:rhi_shader;
 
 import std;
 
-namespace lys
+namespace lys::rhi
 {
 	export enum class ShaderStage
 	{
@@ -52,4 +52,4 @@ namespace lys
 		[[nodiscard]] ShaderStage	   stage() const noexcept { return m_stage; }
 		[[nodiscard]] std::string_view entryPoint() const noexcept { return m_entryPoint; }
 	};
-} // namespace lys
+} // namespace lys::rhi

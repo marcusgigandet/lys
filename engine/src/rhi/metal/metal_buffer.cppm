@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-module lys:rhi_buffer.impl;
+module;
+#include <Metal/Metal.hpp>
+export module lys:metal_buffer;
 
 import :rhi_buffer;
 
-namespace lys::rhi
+namespace lys::mtl
 {
-	Buffer::Buffer(const BufferDesc& desc) :
-		m_size(desc.size), m_usage(desc.usage), m_memoryUsage(desc.memoryUsage)
+	export class Buffer
 	{
-	}
-} // namespace lys::rhi
+		MTL::Device&			   m_device;
+		NS::SharedPtr<MTL::Buffer> m_buffer;
+
+	public:
+		explicit Buffer(MTL::Device& device) : m_device(device) {}
+	};
+} // namespace lys::mtl

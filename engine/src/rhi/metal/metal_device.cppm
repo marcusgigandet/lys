@@ -1,5 +1,5 @@
 /*
-* Copyright 2026 Marcus Gigandet
+ * Copyright 2026 Marcus Gigandet
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,23 @@
  */
 
 module;
-#include <spdlog/spdlog.h>
 #include <Metal/Metal.hpp>
 export module lys:metal_device;
 
 import :rhi_device;
 import std;
 
-namespace lys
+namespace lys::mtl
 {
-	export class MetalDevice final : public RHIDevice
+	export class Device final : public rhi::Device
 	{
-	public:
-		explicit MetalDevice(const RHIDeviceDesc& desc) : RHIDevice(desc) {}
+		NS::SharedPtr<MTL::Device> m_device{};
 
-		std::unique_ptr<CommandQueue> createCommandQueue(CommandQueueType type)
-		{
-			throw std::runtime_error("Unimplemented function");
-		}
+	public:
+		explicit Device(const rhi::DeviceDesc& desc) : rhi::Device(desc) {}
+
+	protected:
+		[[nodiscard]] std::unique_ptr<rhi::CommandQueue>
+		createCommandQueue(rhi::CommandQueueType type) override;
 	};
-} // namespace lys
+} // namespace lys::mtl

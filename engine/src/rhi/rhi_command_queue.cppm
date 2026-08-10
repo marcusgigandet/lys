@@ -19,7 +19,7 @@ export module lys:rhi_command_queue;
 import :rhi_command_buffer;
 import std;
 
-namespace lys
+namespace lys::rhi
 {
 	/**
 	 * @brief Types of command queues supported by the RHI.
@@ -50,4 +50,4 @@ namespace lys
 
 		virtual void waitIdleImpl() = 0;
 	};
-} // namespace lys
+} // namespace lys::rhi

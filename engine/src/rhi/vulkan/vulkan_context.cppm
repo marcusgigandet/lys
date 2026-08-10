@@ -9,7 +9,7 @@ export module lys:vulkan_context;
 import std;
 import vulkan;
 
-namespace lys
+namespace lys::vk
 {
 	export class VulkanContext
 	{

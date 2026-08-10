@@ -19,7 +19,7 @@ export module lys:rhi_texture;
 import :rhi_types;
 import std;
 
-namespace lys
+namespace lys::rhi
 {
 	/**
 	 * @brief Texture types supported by the RHI.
@@ -70,4 +70,4 @@ namespace lys
 		[[nodiscard]] PixelFormat	pixelFormat() const noexcept { return m_pixelFormat; }
 		[[nodiscard]] DepthFormat	depthFormat() const noexcept { return m_depthFormat; }
 	};
-} // namespace lys
+} // namespace lys::rhi

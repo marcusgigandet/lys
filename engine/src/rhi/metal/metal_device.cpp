@@ -1,5 +1,5 @@
 /*
-* Copyright 2026 Marcus Gigandet
+ * Copyright 2026 Marcus Gigandet
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,14 @@
 module;
 module lys:metal_device.impl;
 
+import :metal_device;
 import std;
 
-namespace lys
+namespace lys::mtl
 {
-} // namespace lys
+	std::unique_ptr<rhi::CommandQueue>
+	Device::createCommandQueue([[maybe_unused]] const rhi::CommandQueueType type)
+	{
+		throw std::runtime_error("Metal command queues are not implemented yet.");
+	}
+} // namespace lys::mtl

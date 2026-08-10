@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-module lys:rhi_buffer.impl;
+module;
+#include <Metal/Metal.hpp>
+export module lys:metal_command_buffer;
 
-import :rhi_buffer;
+import :rhi_command_buffer;
 
-namespace lys::rhi
+namespace lys::mtl
 {
-	Buffer::Buffer(const BufferDesc& desc) :
-		m_size(desc.size), m_usage(desc.usage), m_memoryUsage(desc.memoryUsage)
+	export class CommandBuffer
 	{
-	}
-} // namespace lys::rhi
+		NS::SharedPtr<MTL4::CommandBuffer> m_commandBuffer;
+
+	public:
+	};
+} // namespace lys::mtl

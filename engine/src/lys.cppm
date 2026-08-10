@@ -34,10 +34,19 @@ export import :input_manager;
 export import :input_map;
 export import :window;
 
+// Metal
+#ifdef LYS_METAL
+export import :metal_buffer;
+export import :metal_command_buffer;
+export import :metal_device;
+#endif
+
 // Vulkan
+#ifdef LYS_VULKAN
 export import :vulkan_context;
 export import :vulkan_debug;
 export import :vulkan_device;
+#endif
 
 // Other libraries
 export import mag;

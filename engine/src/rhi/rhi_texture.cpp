@@ -18,7 +18,7 @@ module lys:rhi_texture.impl;
 
 import :rhi_texture;
 
-namespace lys
+namespace lys::rhi
 {
 	Texture::Texture(const TextureDesc& desc) :
 		m_type(desc.type), m_width(desc.width), m_height(desc.height),
@@ -26,4 +26,4 @@ namespace lys
 		m_pixelFormat(desc.pixelFormat), m_depthFormat(desc.depthFormat)
 	{
 	}
-} // namespace lys
+} // namespace lys::rhi

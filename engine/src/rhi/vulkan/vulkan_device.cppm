@@ -22,14 +22,14 @@ import :rhi_device;
 import std;
 import vulkan;
 
-namespace lys
+namespace lys::vk
 {
-	export class VulkanDevice final : public RHIDevice
+	export class Device final : public rhi::Device
 	{
 	public:
-		explicit VulkanDevice(const RHIDeviceDesc& desc) : RHIDevice(desc) {}
+		explicit Device(const rhi::DeviceDesc& desc) : rhi::Device(desc) {}
 
-		std::unique_ptr<CommandQueue> createCommandQueue(CommandQueueType type)
+		std::unique_ptr<rhi::CommandQueue> createCommandQueue(rhi::CommandQueueType type)
 		{
 			throw std::runtime_error("Unimplemented function");
 		}

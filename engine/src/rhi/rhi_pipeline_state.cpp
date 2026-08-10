@@ -18,7 +18,7 @@ module lys:rhi_pipeline_state.impl;
 
 import :rhi_pipeline_state;
 
-namespace lys
+namespace lys::rhi
 {
 	GraphicsPipelineState::GraphicsPipelineState(const GraphicsPipelineDesc& desc) :
 		PipelineState(), m_desc(desc)
@@ -28,4 +28,4 @@ namespace lys
 	ComputePipelineState::ComputePipelineState(const ComputePipelineDesc& desc) : m_desc(desc)
 	{
 	}
-} // namespace lys
+} // namespace lys::rhi

@@ -6,40 +6,36 @@
 cmake_minimum_required(VERSION 4.3.1 FATAL_ERROR)
 
 # https://github.com/Kitware/CMake/blob/master/Help/dev/experimental.rst
-set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "451f2fe2-a8a2-47c3-bc32-94786d8fc91b")
-
-set(_experimental_hash_4_3_1 "451f2fe2-a8a2-47c3-bc32-94786d8fc91b")
-set(_experimental_hash_4_3_2 "451f2fe2-a8a2-47c3-bc32-94786d8fc91b")
-set(_experimental_hash_4_3_3 "451f2fe2-a8a2-47c3-bc32-94786d8fc91b")
-set(_experimental_hash_4_3_4 "451f2fe2-a8a2-47c3-bc32-94786d8fc91b")
-set(_experimental_hash_4_4_0 "1942b4fa-b2c5-4546-9385-83f254070067")
-set(_experimental_hash_4_4_1 "f35a9ac6-8463-4d38-8eec-5d6008153e7d")
-set(_experimental_hash_4_4_2 "f35a9ac6-8463-4d38-8eec-5d6008153e7d")
+set(_experimental_import_std_hash_4_3_1 "451f2fe2-a8a2-47c3-bc32-94786d8fc91b")
+set(_experimental_import_std_hash_4_3_2 "451f2fe2-a8a2-47c3-bc32-94786d8fc91b")
+set(_experimental_import_std_hash_4_3_3 "451f2fe2-a8a2-47c3-bc32-94786d8fc91b")
+set(_experimental_import_std_hash_4_3_4 "451f2fe2-a8a2-47c3-bc32-94786d8fc91b")
+set(_experimental_import_std_hash_4_4_0 "f35a9ac6-8463-4d38-8eec-5d6008153e7d")
+set(_experimental_import_std_hash_4_4_1 "f35a9ac6-8463-4d38-8eec-5d6008153e7d")
+set(_experimental_import_std_hash_4_4_2 "f35a9ac6-8463-4d38-8eec-5d6008153e7d")
 
 string(REPLACE "." "_" _version "${CMAKE_VERSION}")
 
-set(_var "_experimental_hash_${_version}")
+set(_import_std_var "_experimental_import_std_hash_${_version}")
 
-if (NOT DEFINED ${_var})
-    message(FATAL_ERROR "No experimental hash for CMake ${CMAKE_VERSION}")
+if (NOT DEFINED ${_import_std_var})
+    message(FATAL_ERROR "No import std experimental hash for CMake ${CMAKE_VERSION}")
 endif ()
 
-set(CMAKE_EXPERIMENTAL_EXPORT_PACKAGE_INFO "${${_var}}")
+set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "${${_import_std_var}}")
 
-###################
-# Configure Vcpkg #
-###################
+# On macOS, the libc++.modules.json may not be found, so this check resolves it using absolute pathing
+if (APPLE AND NOT DEFINED CMAKE_CXX_STDLIB_MODULES_JSON)
+    foreach (_modules_json_candidate
+            "/opt/homebrew/opt/llvm/lib/c++/libc++.modules.json"
+            "/usr/local/opt/llvm/lib/c++/libc++.modules.json")
+        if (EXISTS "${_modules_json_candidate}")
+            set(CMAKE_CXX_STDLIB_MODULES_JSON "${_modules_json_candidate}")
+            break()
+        endif ()
+    endforeach ()
 
-if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    if (DEFINED ENV{VCPKG_ROOT})
-        set(_vcpkg_toolchain "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
-    elseif (DEFINED ENV{VCPKG_INSTALLATION_ROOT})
-        set(_vcpkg_toolchain "$ENV{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake")
-    endif ()
-
-    if (DEFINED _vcpkg_toolchain AND EXISTS "${_vcpkg_toolchain}")
-        set(CMAKE_TOOLCHAIN_FILE "${_vcpkg_toolchain}" CACHE FILEPATH "Vcpkg toolchain file")
-    endif ()
+    add_compile_options(-Wno-reserved-module-identifier)
 endif ()
 
 project(lys LANGUAGES CXX)

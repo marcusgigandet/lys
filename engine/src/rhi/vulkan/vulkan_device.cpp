@@ -20,6 +20,6 @@ module lys:vulkan_device.impl;
 import :vulkan_device;
 import std;
 
-namespace lys
+namespace lys::vk
 {
 } // namespace lys

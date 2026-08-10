@@ -25,8 +25,8 @@ namespace
 {
 	class Application
 	{
-		Window					   m_window;
-		std::unique_ptr<RHIDevice> m_device;
+		Window						 m_window;
+		std::unique_ptr<rhi::Device> m_device;
 
 	public:
 		void run()
@@ -46,8 +46,8 @@ namespace
 	private:
 		void init()
 		{
-			m_device = createRHIDevice({
-				.backend = RHIBackend::Auto,
+			m_device = rhi::createDevice({
+				.backend = rhi::Backend::Auto,
 			});
 
 			const WindowDesc windowDesc{

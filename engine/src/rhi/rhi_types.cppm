@@ -18,7 +18,7 @@ module;
 #include <cstdint>
 export module lys:rhi_types;
 
-namespace lys
+namespace lys::rhi
 {
 	export enum class PixelFormat
 	{
@@ -149,4 +149,4 @@ namespace lys
 			return 0;
 		}
 	}
-} // namespace lys
+} // namespace lys::rhi

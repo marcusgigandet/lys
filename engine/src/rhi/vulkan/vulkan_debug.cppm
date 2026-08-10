@@ -14,7 +14,7 @@ import mag;
 import std;
 import vulkan;
 
-namespace lys
+namespace lys::vk
 {
 
 #ifdef NDEBUG

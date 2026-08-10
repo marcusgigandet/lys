@@ -6,8 +6,8 @@
       "hidden": true,
       "generator": "Ninja",
       "cacheVariables": {
-        "VCPKG_INSTALLED_DIR": "${sourceDir}/vcpkg_installed",
-        "VCPKG_OVERLAY_TRIPLETS": "${sourceDir}/vcpkg-triplets"
+        "CMAKE_TOOLCHAIN_FILE": "~/.vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_INSTALLED_DIR": "${sourceDir}/vcpkg_installed"
       }
     },
     {

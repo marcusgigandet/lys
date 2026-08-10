@@ -13,7 +13,7 @@ import :vulkan_debug;
 import vulkan;
 import std;
 
-namespace lys
+namespace lys::vk
 {
 	VulkanContext::VulkanContext()
 	{

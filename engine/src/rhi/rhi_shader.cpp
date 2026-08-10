@@ -18,9 +18,9 @@ module lys:rhi_shader.impl;
 
 import :rhi_shader;
 
-namespace lys
+namespace lys::rhi
 {
 	Shader::Shader(const ShaderDesc& desc) : m_stage(desc.stage), m_entryPoint(desc.entryPoint)
 	{
 	}
-} // namespace lys
+} // namespace lys::rhi

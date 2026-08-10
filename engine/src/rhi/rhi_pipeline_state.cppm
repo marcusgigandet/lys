@@ -19,7 +19,7 @@ export module lys:rhi_pipeline_state;
 import :rhi_types;
 import :rhi_shader;
 
-namespace lys
+namespace lys::rhi
 {
 	export struct GraphicsPipelineDesc
 	{
@@ -80,4 +80,4 @@ namespace lys
 
 		[[nodiscard]] const ComputePipelineDesc& desc() const noexcept { return m_desc; }
 	};
-} // namespace lys
+} // namespace lys::rhi

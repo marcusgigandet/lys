@@ -46,11 +46,6 @@ namespace lys
 			initGLFW();
 		}
 
-		if (!glfwVulkanSupported())
-		{
-			throw std::runtime_error("Vulkan is not supported.");
-		}
-
 		// Configure window for Vulkan
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);

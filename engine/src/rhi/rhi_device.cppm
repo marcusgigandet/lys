@@ -25,39 +25,39 @@ import :rhi_shader;
 import :rhi_texture;
 import std;
 
-namespace lys
+namespace lys::rhi
 {
 	/**
 	 * @brief RHI backend options.
 	 */
-	export enum class RHIBackend
+	export enum class Backend
 	{
 		Auto,	/// Automatically decide which backend to use at runtime
 		Vulkan, /// Cross-platform
 		Metal,	///< Apple-only
 	};
 
-	export struct RHIDeviceDesc
+	export struct DeviceDesc
 	{
-		RHIBackend backend{RHIBackend::Auto};
+		Backend backend{Backend::Auto};
 	};
 
-	export class RHIDevice
+	export class Device
 	{
-		RHIDeviceDesc m_desc;
+		DeviceDesc m_desc;
 
 		/// Command queue instances
 		std::array<std::unique_ptr<CommandQueue>, 3> m_commandQueues{};
 
 	public:
-		explicit RHIDevice(const RHIDeviceDesc& desc = {});
+		explicit Device(const DeviceDesc& desc = {});
 
-		RHIDevice(const RHIDevice&)			   = delete;
-		RHIDevice& operator=(const RHIDevice&) = delete;
-		RHIDevice(RHIDevice&&)				   = default;
-		RHIDevice& operator=(RHIDevice&&)	   = default;
+		Device(const Device&)			 = delete;
+		Device& operator=(const Device&) = delete;
+		Device(Device&&)				 = default;
+		Device& operator=(Device&&)		 = default;
 
-		virtual ~RHIDevice() = default;
+		virtual ~Device() = default;
 
 		[[nodiscard]] CommandQueue& queue(CommandQueueType type);
 
@@ -116,5 +116,5 @@ namespace lys
 		createComputePipelineImpl(const ComputePipelineDesc& desc);
 	};
 
-	export [[nodiscard]] std::unique_ptr<RHIDevice> createRHIDevice(const RHIDeviceDesc& desc);
-} // namespace lys
+	export [[nodiscard]] std::unique_ptr<Device> createDevice(const DeviceDesc& desc);
+} // namespace lys::rhi

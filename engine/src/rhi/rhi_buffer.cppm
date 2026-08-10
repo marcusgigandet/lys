@@ -19,7 +19,7 @@ export module lys:rhi_buffer;
 import :rhi_types;
 import std;
 
-namespace lys
+namespace lys::rhi
 {
 	export enum class BufferUsage
 	{
@@ -56,4 +56,4 @@ namespace lys
 		[[nodiscard]] BufferUsage usage() const noexcept { return m_usage; }
 		[[nodiscard]] MemoryUsage memoryUsage() const noexcept { return m_memoryUsage; }
 	};
-} // namespace lys
+} // namespace lys::rhi
