@@ -22,4 +22,4 @@ import std;
 
 namespace lys::vk
 {
-} // namespace lys
+} // namespace lys::vk

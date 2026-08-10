@@ -25,33 +25,33 @@ namespace lys::vk
 
 	const std::vector<char const*> validationLayers = {"VK_LAYER_KHRONOS_validation"};
 
-	VKAPI_ATTR vk::Bool32 VKAPI_CALL debugCallback(
-		const vk::DebugUtilsMessageSeverityFlagBitsEXT severity,
-		const vk::DebugUtilsMessageTypeFlagsEXT		   type,
-		const vk::DebugUtilsMessengerCallbackDataEXT*  pCallbackData,
-		[[maybe_unused]] void*						   pUserData)
+	VKAPI_ATTR ::vk::Bool32 VKAPI_CALL debugCallback(
+		const ::vk::DebugUtilsMessageSeverityFlagBitsEXT severity,
+		const ::vk::DebugUtilsMessageTypeFlagsEXT		 type,
+		const ::vk::DebugUtilsMessengerCallbackDataEXT*	 pCallbackData,
+		[[maybe_unused]] void*							 pUserData)
 	{
 		switch (severity)
 		{
-		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eError:
+		case ::vk::DebugUtilsMessageSeverityFlagBitsEXT::eError:
 			spdlog::error(
 				"Validation layer: {} - {}\n",
 				to_string(type),
 				std::string(pCallbackData->pMessage));
 			break;
-		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning:
+		case ::vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning:
 			spdlog::warn(
 				"Validation layer: {} - {}\n",
 				to_string(type),
 				std::string(pCallbackData->pMessage));
 			break;
-		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eInfo:
+		case ::vk::DebugUtilsMessageSeverityFlagBitsEXT::eInfo:
 			spdlog::info(
 				"Validation layer: {} - {}\n",
 				to_string(type),
 				std::string(pCallbackData->pMessage));
 			break;
-		case vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose:
+		case ::vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose:
 		default:
 			spdlog::debug(
 				"Validation layer: {} - {}\n",
@@ -60,27 +60,27 @@ namespace lys::vk
 			break;
 		}
 
-		return vk::False;
+		return ::vk::False;
 	}
 
-	std::optional<vk::raii::DebugUtilsMessengerEXT>
-	setupDebugMessenger(const vk::raii::Instance& instance)
+	std::optional<::vk::raii::DebugUtilsMessengerEXT>
+	setupDebugMessenger(const ::vk::raii::Instance& instance)
 	{
 		if constexpr (!enableValidationLayers)
 		{
 			return std::nullopt;
 		}
 
-		vk::DebugUtilsMessageSeverityFlagsEXT severityFlags{
-			vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning |
-				vk::DebugUtilsMessageSeverityFlagBitsEXT::eError,
+		::vk::DebugUtilsMessageSeverityFlagsEXT severityFlags{
+			::vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning |
+				::vk::DebugUtilsMessageSeverityFlagBitsEXT::eError,
 		};
-		vk::DebugUtilsMessageTypeFlagsEXT messageTypeFlags{
-			vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral |
-				vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance |
-				vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation,
+		::vk::DebugUtilsMessageTypeFlagsEXT messageTypeFlags{
+			::vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral |
+				::vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance |
+				::vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation,
 		};
-		const vk::DebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfoEXT{
+		const ::vk::DebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfoEXT{
 			.messageSeverity = severityFlags,
 			.messageType	 = messageTypeFlags,
 			.pfnUserCallback = &debugCallback,
@@ -89,4 +89,4 @@ namespace lys::vk
 			instance.createDebugUtilsMessengerEXT(debugUtilsMessengerCreateInfoEXT);
 		return debugMessenger;
 	}
-} // namespace lys
+} // namespace lys::vk

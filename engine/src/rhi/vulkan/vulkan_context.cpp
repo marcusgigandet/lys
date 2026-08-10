@@ -18,12 +18,12 @@ namespace lys::vk
 	VulkanContext::VulkanContext()
 	{
 		m_instance = createInstance(m_context);
-		const vk::raii::PhysicalDevice physicalDevice{
+		const ::vk::raii::PhysicalDevice physicalDevice{
 			m_instance.enumeratePhysicalDevices().front()};
-		vk::raii::Device device(physicalDevice, vk::DeviceCreateInfo{});
+		::vk::raii::Device device(physicalDevice, ::vk::DeviceCreateInfo{});
 	}
 
-	vk::raii::Instance VulkanContext::createInstance(const vk::raii::Context& context)
+	::vk::raii::Instance VulkanContext::createInstance(const ::vk::raii::Context& context)
 	{
 		if (enableValidationLayers)
 		{
@@ -31,11 +31,11 @@ namespace lys::vk
 			requiredLayers.assign(validationLayers.begin(), validationLayers.end());
 		}
 
-		vk::ApplicationInfo appInfo{
+		::vk::ApplicationInfo appInfo{
 			.pApplicationName	= "Lys Engine",
-			.applicationVersion = vk::makeVersion(1, 0, 0),
+			.applicationVersion = ::vk::makeVersion(1, 0, 0),
 			.pEngineName		= "Lys Engine",
-			.engineVersion		= vk::makeVersion(1, 0, 0),
+			.engineVersion		= ::vk::makeVersion(1, 0, 0),
 			.apiVersion			= context.enumerateInstanceVersion(),
 		};
 
@@ -56,7 +56,7 @@ namespace lys::vk
 			}
 		}
 
-		const vk::InstanceCreateInfo instanceCreateInfo{
+		const ::vk::InstanceCreateInfo instanceCreateInfo{
 			.pApplicationInfo		 = &appInfo,
 			.enabledLayerCount		 = glfwExtensionCount,
 			.ppEnabledLayerNames	 = glfwExtensions,
@@ -64,16 +64,16 @@ namespace lys::vk
 			.ppEnabledExtensionNames = nullptr,
 		};
 
-		vk::raii::Instance instance(context, instanceCreateInfo);
+		::vk::raii::Instance instance(context, instanceCreateInfo);
 
 		return instance;
 	}
 
-	vk::raii::Device VulkanContext::createDevice(
-		const vk::raii::PhysicalDevice& physicalDevice,
-		const vk::DeviceCreateInfo&		deviceCreateInfo)
+	::vk::raii::Device VulkanContext::createDevice(
+		const ::vk::raii::PhysicalDevice& physicalDevice,
+		const ::vk::DeviceCreateInfo&	  deviceCreateInfo)
 	{
-		vk::raii::Device device(physicalDevice, deviceCreateInfo);
+		::vk::raii::Device device(physicalDevice, deviceCreateInfo);
 
 		return device;
 	}
@@ -86,9 +86,9 @@ namespace lys::vk
 		std::vector extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 		if (enableValidationLayers)
 		{
-			extensions.push_back(vk::EXTDebugUtilsExtensionName);
+			extensions.push_back(::vk::EXTDebugUtilsExtensionName);
 		}
 
 		return extensions;
 	}
-} // namespace lys
+} // namespace lys::vk

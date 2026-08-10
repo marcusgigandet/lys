@@ -34,4 +34,4 @@ namespace lys::vk
 			throw std::runtime_error("Unimplemented function");
 		}
 	};
-} // namespace lys
+} // namespace lys::vk
