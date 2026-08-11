@@ -23,8 +23,8 @@ namespace lys
 {
 	void Timer::start()
 	{
-		m_start	   = std::chrono::high_resolution_clock::now();
-		m_prevTime = m_start;
+		m_startTime = std::chrono::high_resolution_clock::now();
+		m_prevTime	= m_startTime;
 	}
 
 	double Timer::delta()
@@ -47,14 +47,14 @@ namespace lys
 	{
 		const auto	 now{std::chrono::high_resolution_clock::now()};
 		const double time{
-			std::chrono::duration_cast<std::chrono::duration<double>>(now - m_start).count()};
-		m_start = now;
+			std::chrono::duration_cast<std::chrono::duration<double>>(now - m_startTime).count()};
+		m_startTime = now;
 		return time;
 	}
 
 	double Timer::peekElapsed() const
 	{
 		const auto now{std::chrono::high_resolution_clock::now()};
-		return std::chrono::duration_cast<std::chrono::duration<double>>(now - m_start).count();
+		return std::chrono::duration_cast<std::chrono::duration<double>>(now - m_startTime).count();
 	}
 } // namespace lys
