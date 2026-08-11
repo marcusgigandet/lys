@@ -19,6 +19,7 @@ module;
 export module lys:rhi_device;
 
 import :rhi_buffer;
+import :rhi_error;
 import :rhi_command_queue;
 import :rhi_pipeline_state;
 import :rhi_shader;
@@ -32,8 +33,8 @@ namespace lys::rhi
 	 */
 	export enum class Backend
 	{
-		Auto,	/// Automatically decide which backend to use at runtime
-		Vulkan, /// Cross-platform
+		Auto,	///< Automatically decide which backend to use at runtime
+		Vulkan, ///< Cross-platform
 		Metal,	///< Apple-only
 	};
 

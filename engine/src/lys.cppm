@@ -20,6 +20,7 @@ export module lys;
 export import :timer;
 
 // RHI
+export import :rhi_error;
 export import :rhi_types;
 export import :rhi_device;
 export import :rhi_buffer;

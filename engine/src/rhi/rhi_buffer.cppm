@@ -16,6 +16,7 @@
 
 export module lys:rhi_buffer;
 
+import :rhi_error;
 import :rhi_types;
 import std;
 
@@ -39,6 +40,7 @@ namespace lys::rhi
 
 	export class Buffer
 	{
+	protected:
 		std::size_t m_size;
 		BufferUsage m_usage;
 		MemoryUsage m_memoryUsage;
@@ -51,6 +53,11 @@ namespace lys::rhi
 		Buffer& operator=(const Buffer&) = delete;
 		Buffer(Buffer&&)				 = default;
 		Buffer& operator=(Buffer&&)		 = default;
+
+		virtual Result<void>
+		upload(const void* pData, std::uint32_t size, std::uint32_t offset) = 0;
+
+		virtual std::span<const std::byte> data() const = 0;
 
 		[[nodiscard]] std::size_t size() const noexcept { return m_size; }
 		[[nodiscard]] BufferUsage usage() const noexcept { return m_usage; }

@@ -16,6 +16,7 @@
 
 export module lys:rhi_texture;
 
+import :rhi_error;
 import :rhi_types;
 import std;
 

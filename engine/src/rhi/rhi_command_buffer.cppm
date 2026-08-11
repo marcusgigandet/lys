@@ -26,15 +26,12 @@ namespace lys::rhi
 	export class CommandBuffer
 	{
 	public:
+		CommandBuffer()			 = default;
 		virtual ~CommandBuffer() = default;
 
 		CommandBuffer(const CommandBuffer&)			   = delete;
 		CommandBuffer& operator=(const CommandBuffer&) = delete;
 		CommandBuffer(CommandBuffer&&)				   = default;
 		CommandBuffer& operator=(CommandBuffer&&)	   = default;
-
-	protected:
-		virtual void beginImpl() = 0;
-		virtual void endImpl()	 = 0;
 	};
 } // namespace lys::rhi

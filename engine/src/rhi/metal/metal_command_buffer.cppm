@@ -22,10 +22,12 @@ import :rhi_command_buffer;
 
 namespace lys::mtl
 {
-	export class CommandBuffer
+	export class CommandBuffer final : rhi::CommandBuffer
 	{
+		MTL::Device&					   m_device;
 		NS::SharedPtr<MTL4::CommandBuffer> m_commandBuffer;
 
 	public:
+		explicit CommandBuffer(MTL::Device& device) : rhi::CommandBuffer(), m_device(device) {}
 	};
 } // namespace lys::mtl

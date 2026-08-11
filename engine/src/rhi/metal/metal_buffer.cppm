@@ -19,15 +19,31 @@ module;
 export module lys:metal_buffer;
 
 import :rhi_buffer;
+import :rhi_error;
+import :metal_types;
 
 namespace lys::mtl
 {
-	export class Buffer
+	export class Buffer final : public rhi::Buffer
 	{
 		MTL::Device&			   m_device;
 		NS::SharedPtr<MTL::Buffer> m_buffer;
 
 	public:
-		explicit Buffer(MTL::Device& device) : m_device(device) {}
+		explicit Buffer(const rhi::BufferDesc& desc, MTL::Device& device) :
+			rhi::Buffer(desc), m_device(device)
+		{
+			m_buffer =
+				NS::TransferPtr(m_device.newBuffer(desc.size, toMetalEnum(desc.memoryUsage)));
+		}
+
+		rhi::Result<void>
+		upload(const void* pData, std::uint32_t size, std::uint32_t offset) override;
+
+		std::span<const std::byte> data() const override;
+
+	private:
+		void uploadToCPUAccessibleBuffer(
+			const void* pData, std::uint32_t size, std::uint32_t offset) const;
 	};
 } // namespace lys::mtl

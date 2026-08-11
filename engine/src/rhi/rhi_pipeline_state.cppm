@@ -16,6 +16,7 @@
 
 export module lys:rhi_pipeline_state;
 
+import :rhi_error;
 import :rhi_types;
 import :rhi_shader;
 

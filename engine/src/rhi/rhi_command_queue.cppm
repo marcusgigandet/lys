@@ -16,6 +16,7 @@
 
 export module lys:rhi_command_queue;
 
+import :rhi_error;
 import :rhi_command_buffer;
 import std;
 
