@@ -40,6 +40,9 @@ namespace
 			while (!m_window->shouldClose())
 			{
 				Window::pollEvents();
+
+				render();
+
 				m_window->update();
 			}
 		}
@@ -61,6 +64,12 @@ namespace
 			};
 			m_window = std::make_unique<Window>(windowDesc);
 
+			constexpr rhi::DeviceDesc deviceDesc{
+				.backend		   = rhi::Backend::Auto,
+				.maxFramesInFlight = 3,
+			};
+			m_device = createDevice(deviceDesc);
+
 			register_callbacks();
 		}
 
@@ -81,6 +90,8 @@ namespace
 					}
 				});
 		}
+
+		void render() { auto& graphicsQueue{m_device->graphicsQueue()}; }
 	};
 } // namespace
 

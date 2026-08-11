@@ -46,9 +46,10 @@ namespace lys::rhi
 
 		virtual ~CommandQueue() = default;
 
-	protected:
-		virtual void submitImpl(std::span<CommandBuffer* const> commandBuffers) = 0;
+		virtual void submit(std::span<CommandBuffer* const> commandBuffers) = 0;
 
-		virtual void waitIdleImpl() = 0;
+		virtual void wait() = 0;
+
+	protected:
 	};
 } // namespace lys::rhi

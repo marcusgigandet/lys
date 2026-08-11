@@ -15,11 +15,26 @@
  */
 
 module;
-#define NS_PRIVATE_IMPLEMENTATION
-#define CA_PRIVATE_IMPLEMENTATION
-#define MTL_PRIVATE_IMPLEMENTATION
-
-#include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
-#include <QuartzCore/QuartzCore.hpp>
-export module lys:metal;
+export module lys:metal_pipeline_state;
+
+import :rhi_pipeline_state;
+import std;
+
+namespace lys::mtl
+{
+	export class GraphicsPipelineState final : public rhi::GraphicsPipelineState
+	{
+		MTL::Device&							  m_device;
+		NS::SharedPtr<MTL4::RenderCommandEncoder> m_commandEncoder;
+		NS::SharedPtr<MTL::DepthStencilState>	  m_depthStencilState;
+
+	public:
+		explicit GraphicsPipelineState(const rhi::GraphicsPipelineDesc& desc, MTL::Device& device);
+
+	private:
+		void configureEncoder() const;
+
+		void setDepthStencilState();
+	};
+} // namespace lys::mtl

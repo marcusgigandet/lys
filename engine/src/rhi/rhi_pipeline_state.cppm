@@ -52,8 +52,9 @@ namespace lys::rhi
 		PipelineState& operator=(PipelineState&&)	   = default;
 	};
 
-	export class GraphicsPipelineState final : public PipelineState
+	export class GraphicsPipelineState : public PipelineState
 	{
+	protected:
 		GraphicsPipelineDesc m_desc;
 
 	public:
@@ -67,8 +68,9 @@ namespace lys::rhi
 		[[nodiscard]] const GraphicsPipelineDesc& desc() const noexcept { return m_desc; }
 	};
 
-	export class ComputePipelineState final : public PipelineState
+	export class ComputePipelineState : public PipelineState
 	{
+	protected:
 		ComputePipelineDesc m_desc;
 
 	public:

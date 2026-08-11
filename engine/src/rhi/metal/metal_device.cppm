@@ -15,7 +15,13 @@
  */
 
 module;
+#define NS_PRIVATE_IMPLEMENTATION
+#define CA_PRIVATE_IMPLEMENTATION
+#define MTL_PRIVATE_IMPLEMENTATION
+
+#include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
+#include <QuartzCore/QuartzCore.hpp>
 export module lys:metal_device;
 
 import :rhi_device;
@@ -25,13 +31,27 @@ namespace lys::mtl
 {
 	export class Device final : public rhi::Device
 	{
-		NS::SharedPtr<MTL::Device> m_device{};
+		NS::SharedPtr<MTL::Device> m_device;
 
 	public:
-		explicit Device(const rhi::DeviceDesc& desc) : rhi::Device(desc) {}
+		explicit Device(const rhi::DeviceDesc& desc);
 
-	protected:
 		[[nodiscard]] std::unique_ptr<rhi::CommandQueue>
 		createCommandQueue(rhi::CommandQueueType type) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::Buffer>
+		createBuffer(const rhi::BufferDesc& desc) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::Texture>
+		createTexture(const rhi::TextureDesc& desc) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::Shader>
+		createShader(const rhi::ShaderDesc& desc) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::GraphicsPipelineState>
+		createGraphicsPipeline(const rhi::GraphicsPipelineDesc& desc) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::ComputePipelineState>
+		createComputePipeline(const rhi::ComputePipelineDesc& desc) override;
 	};
 } // namespace lys::mtl

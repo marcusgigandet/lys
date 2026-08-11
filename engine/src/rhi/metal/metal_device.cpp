@@ -15,16 +15,49 @@
  */
 
 module;
+#include <Metal/Metal.hpp>
 module lys:metal_device.impl;
 
 import :metal_device;
+import :metal_command_queue;
 import std;
 
 namespace lys::mtl
 {
-	std::unique_ptr<rhi::CommandQueue>
-	Device::createCommandQueue([[maybe_unused]] const rhi::CommandQueueType type)
+	Device::Device(const rhi::DeviceDesc& desc) :
+		rhi::Device(desc), m_device(NS::TransferPtr(MTL::CreateSystemDefaultDevice()))
 	{
-		throw std::runtime_error("Metal command queues are not implemented yet.");
+	}
+
+	std::unique_ptr<rhi::CommandQueue> Device::createCommandQueue(const rhi::CommandQueueType type)
+	{
+		return std::make_unique<CommandQueue>(*m_device.get(), type);
+	}
+
+	std::unique_ptr<rhi::Buffer> Device::createBuffer(const rhi::BufferDesc& desc)
+	{
+		return nullptr;
+	}
+
+	std::unique_ptr<rhi::Texture> Device::createTexture(const rhi::TextureDesc& desc)
+	{
+		return nullptr;
+	}
+
+	std::unique_ptr<rhi::Shader> Device::createShader(const rhi::ShaderDesc& desc)
+	{
+		return nullptr;
+	}
+
+	std::unique_ptr<rhi::GraphicsPipelineState>
+	Device::createGraphicsPipeline(const rhi::GraphicsPipelineDesc& desc)
+	{
+		return nullptr;
+	}
+
+	std::unique_ptr<rhi::ComputePipelineState>
+	Device::createComputePipeline(const rhi::ComputePipelineDesc& desc)
+	{
+		return nullptr;
 	}
 } // namespace lys::mtl

@@ -16,26 +16,25 @@
 
 module;
 #include <Metal/Metal.hpp>
-export module lys:metal_command_buffer;
+export module lys:metal_shader;
 
-import :rhi_command_buffer;
+import :rhi_error;
+import :rhi_shader;
 
-namespace lys::mtl
+namespace lys::metal
 {
-	export class CommandBuffer final : public rhi::CommandBuffer
+	export class Shader : public rhi::Shader
 	{
-		MTL::Device&						  m_device;
-		MTL4::CommandQueue&					  m_commandQueue;
-		NS::SharedPtr<MTL4::CommandBuffer>	  m_commandBuffer;
-		NS::SharedPtr<MTL4::CommandAllocator> m_commandAllocator;
+		NS::SharedPtr<MTL::Library>										 m_library;
+		std::map<std::string, NS::SharedPtr<MTL::Function>, std::less<>> m_functions;
 
 	public:
-		explicit CommandBuffer(MTL::Device& device, MTL4::CommandQueue& commandQueue);
+		explicit Shader(const rhi::ShaderDesc& desc) : rhi::Shader(desc) {}
 
-		[[nodiscard]] MTL4::CommandBuffer* commandBuffer() const;
+	private:
+		void loadLibrary();
+		void unloadLibrary() { m_library.reset(); }
 
-		void begin() override;
-		void end() override;
-		void commit() override;
+		rhi::Result<void> loadFunction(const std::string& entryPoint);
 	};
-} // namespace lys::mtl
+} // namespace lys::metal

@@ -5,6 +5,7 @@
 - clang++-21+
 - Ninja
 - CMake 4.3.1+*
+- Vcpkg
 
 **Note**: The minimum CMake version will change once `import std;` is no longer experimental!
 

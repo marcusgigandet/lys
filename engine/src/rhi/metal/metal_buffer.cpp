@@ -59,7 +59,7 @@ namespace lys::mtl
 	{
 		// Cast buffer to bytes and copy data directly to buffer
 		void* dst{static_cast<std::byte*>(m_buffer->contents()) + offset};
-		memcpy(dst, pData, size);
+		(void)memcpy(dst, pData, size);
 
 		if (m_buffer->storageMode() == MTL::StorageModeManaged)
 		{

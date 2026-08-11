@@ -17,6 +17,7 @@
 export module lys;
 
 // Core
+export import :file;
 export import :timer;
 
 // RHI
@@ -39,6 +40,7 @@ export import :window;
 #ifdef LYS_METAL
 export import :metal_buffer;
 export import :metal_command_buffer;
+export import :metal_command_queue;
 export import :metal_device;
 #endif
 

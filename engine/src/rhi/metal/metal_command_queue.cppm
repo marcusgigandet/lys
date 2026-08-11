@@ -16,26 +16,27 @@
 
 module;
 #include <Metal/Metal.hpp>
-export module lys:metal_command_buffer;
+export module lys:metal_command_queue;
 
-import :rhi_command_buffer;
+import :rhi_command_queue;
+import std;
 
 namespace lys::mtl
 {
-	export class CommandBuffer final : public rhi::CommandBuffer
+	export class CommandQueue final : public rhi::CommandQueue
 	{
-		MTL::Device&						  m_device;
-		MTL4::CommandQueue&					  m_commandQueue;
-		NS::SharedPtr<MTL4::CommandBuffer>	  m_commandBuffer;
-		NS::SharedPtr<MTL4::CommandAllocator> m_commandAllocator;
+		MTL::Device&					  m_device;
+		NS::SharedPtr<MTL4::CommandQueue> m_commandQueue;
+		NS::SharedPtr<MTL::SharedEvent>	  m_idleEvent;
+		uint64_t						  m_idleCounter{0};
 
 	public:
-		explicit CommandBuffer(MTL::Device& device, MTL4::CommandQueue& commandQueue);
+		explicit CommandQueue(MTL::Device& device, rhi::CommandQueueType type);
 
-		[[nodiscard]] MTL4::CommandBuffer* commandBuffer() const;
+		[[nodiscard]] MTL4::CommandQueue& commandQueue() const { return *m_commandQueue.get(); }
 
-		void begin() override;
-		void end() override;
-		void commit() override;
+		void submit(std::span<rhi::CommandBuffer* const> commandBuffers) override;
+
+		void wait() override;
 	};
 } // namespace lys::mtl

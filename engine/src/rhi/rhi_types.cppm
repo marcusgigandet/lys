@@ -20,9 +20,9 @@ export module lys:rhi_types;
 
 namespace lys::rhi
 {
-	export enum class PixelFormat
+	export enum class PixelFormat : std::uint8_t
 	{
-		Undefined = 0,
+		Undefined = 0u,
 
 		R8_UNorm,
 		RG8_UNorm,
@@ -42,24 +42,24 @@ namespace lys::rhi
 	};
 
 
-	export enum class DepthFormat
+	export enum class DepthFormat : std::uint8_t
 	{
-		Undefined = 0,
+		Undefined = 0u,
 		Depth16_UNorm,
 		Depth32_Float,
 	};
 
 
-	export enum class StencilFormat
+	export enum class StencilFormat : std::uint8_t
 	{
-		Undefined = 0,
+		Undefined = 0u,
 		Stencil8_UNorm,
 	};
 
 
-	export enum class PrimitiveType
+	export enum class PrimitiveType : std::uint8_t
 	{
-		Point,
+		Point = 0u,
 		Line,
 		LineStrip,
 		Triangle,
@@ -67,14 +67,14 @@ namespace lys::rhi
 	};
 
 
-	export enum class FillMode
+	export enum class FillMode : std::uint8_t
 	{
-		Fill,
+		Fill = 0u,
 		Line
 	};
 
 
-	export enum class CullMode
+	export enum class CullMode : std::uint8_t
 	{
 		None = 0,
 		Front,
@@ -82,9 +82,9 @@ namespace lys::rhi
 	};
 
 
-	export enum class Winding
+	export enum class Winding : std::uint8_t
 	{
-		Clockwise,
+		Clockwise = 0u,
 		CounterClockwise
 	};
 
@@ -94,9 +94,9 @@ namespace lys::rhi
 	 *
 	 * Used during rendering draws.
 	 */
-	export enum class CompareFunction
+	export enum class CompareFunction : std::uint8_t
 	{
-		Less,
+		Less = 0u,
 		LessEqual,
 		Equal,
 		NotEqual,
@@ -114,9 +114,9 @@ namespace lys::rhi
 	 */
 	export enum class MemoryUsage
 	{
-		Private, ///< GPU local memory
-		Managed, ///< Both the GPU and CPU maintain separate copies of the data
-		Shared,	 ///< Both CPU and GPU can read and write
+		Private = 0u, ///< GPU local memory
+		Managed,	  ///< Both the GPU and CPU maintain separate copies of the data
+		Shared,		  ///< Both CPU and GPU can read and write
 	};
 
 

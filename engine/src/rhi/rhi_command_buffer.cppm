@@ -33,5 +33,9 @@ namespace lys::rhi
 		CommandBuffer& operator=(const CommandBuffer&) = delete;
 		CommandBuffer(CommandBuffer&&)				   = default;
 		CommandBuffer& operator=(CommandBuffer&&)	   = default;
+
+		virtual void begin()  = 0;
+		virtual void end()	  = 0;
+		virtual void commit() = 0;
 	};
 } // namespace lys::rhi
