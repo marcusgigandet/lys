@@ -18,7 +18,7 @@ module;
 #include <Metal/Metal.hpp>
 export module lys:metal_shader;
 
-import :rhi_error;
+import :error;
 import :rhi_shader;
 
 namespace lys::metal
@@ -35,6 +35,6 @@ namespace lys::metal
 		void loadLibrary();
 		void unloadLibrary() { m_library.reset(); }
 
-		rhi::Result<void> loadFunction(const std::string& entryPoint);
+		Result<void> loadFunction(const std::string& entryPoint);
 	};
 } // namespace lys::metal

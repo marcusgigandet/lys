@@ -18,7 +18,7 @@ export module lys:rhi_device;
 
 import :rhi_buffer;
 import :rhi_command_queue;
-import :rhi_error;
+import :error;
 import :rhi_pipeline_state;
 import :rhi_shader;
 import :rhi_texture;

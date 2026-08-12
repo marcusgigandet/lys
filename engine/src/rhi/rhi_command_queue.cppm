@@ -16,7 +16,7 @@
 
 export module lys:rhi_command_queue;
 
-import :rhi_error;
+import :error;
 import :rhi_command_buffer;
 import std;
 
@@ -34,6 +34,7 @@ namespace lys::rhi
 
 	export class CommandQueue
 	{
+	protected:
 		CommandQueueType m_type;
 
 	public:
@@ -46,10 +47,10 @@ namespace lys::rhi
 
 		virtual ~CommandQueue() = default;
 
+		[[nodiscard]] virtual std::unique_ptr<CommandBuffer> createCommandBuffer() = 0;
+
 		virtual void submit(std::span<CommandBuffer* const> commandBuffers) = 0;
 
 		virtual void wait() = 0;
-
-	protected:
 	};
 } // namespace lys::rhi

@@ -55,7 +55,7 @@ namespace lys::rhi
 			return load(std::span<const std::byte>{m_byteCode});
 		}
 
-		return rhi::makeUnexpected(
+		return makeUnexpected(
 			ErrorCode::InvalidArgument,
 			"Cannot reload shader without source file or bytecode.");
 	}

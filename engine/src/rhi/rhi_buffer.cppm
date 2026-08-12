@@ -16,7 +16,7 @@
 
 export module lys:rhi_buffer;
 
-import :rhi_error;
+import :error;
 import :rhi_types;
 import std;
 

@@ -18,6 +18,7 @@ module;
 #include <Metal/Metal.hpp>
 export module lys:metal_command_queue;
 
+import :metal_command_buffer;
 import :rhi_command_queue;
 import std;
 
@@ -34,6 +35,8 @@ namespace lys::mtl
 		explicit CommandQueue(MTL::Device& device, rhi::CommandQueueType type);
 
 		[[nodiscard]] MTL4::CommandQueue& commandQueue() const { return *m_commandQueue.get(); }
+
+		[[nodiscard]] std::unique_ptr<rhi::CommandBuffer> createCommandBuffer() override;
 
 		void submit(std::span<rhi::CommandBuffer* const> commandBuffers) override;
 

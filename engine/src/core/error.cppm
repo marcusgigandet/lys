@@ -16,21 +16,24 @@
 
 module;
 #include <typedefs.hpp>
-export module lys:rhi_error;
+export module lys:error;
 
 import std;
 
-namespace lys::rhi
+namespace lys
 {
-	export enum class ErrorCode : std::uint8_t
+	export enum class ErrorCode : std::uint16_t
 	{
 		Unknown,
 		InvalidArgument,
 		Unsupported,
 		NotImplemented,
 		InitializationFailed,
-		DeviceLost,
 		OutOfMemory,
+		FileNotFound,
+		FileReadFailure,
+		FileWriteFailure,
+		FailedToOpenFile,
 	};
 
 	export constexpr std::string_view defaultErrorMessage(const ErrorCode code) noexcept
@@ -45,10 +48,16 @@ namespace lys::rhi
 			return "Not implemented.";
 		case ErrorCode::InitializationFailed:
 			return "Initialization failed.";
-		case ErrorCode::DeviceLost:
-			return "Device lost.";
 		case ErrorCode::OutOfMemory:
 			return "Out of memory.";
+		case ErrorCode::FileNotFound:
+			return "Invalid file path.";
+		case ErrorCode::FileReadFailure:
+			return "An error occurred when reading the file.";
+		case ErrorCode::FileWriteFailure:
+			return "An error occurred when writing to the file.";
+		case ErrorCode::FailedToOpenFile:
+			return "An error occurred when opening the file.";
 		case ErrorCode::Unknown:
 		default:
 			return "Unknown error.";
@@ -96,4 +105,4 @@ namespace lys::rhi
 	{
 		return std::unexpected<Error>(Error{code, std::move(message)});
 	}
-} // namespace lys::rhi
+} // namespace lys

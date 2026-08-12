@@ -21,6 +21,7 @@ export module lys:metal_shader.impl;
 
 import :metal_shader;
 import :rhi_shader;
+import :error;
 
 namespace lys::metal
 {
@@ -30,12 +31,12 @@ namespace lys::metal
 		m_library.reset();
 	}
 
-	rhi::Result<void> Shader::loadFunction(const std::string& entryPoint)
+	Result<void> Shader::loadFunction(const std::string& entryPoint)
 	{
 		if (!m_library) // Sanity check to prevent segfault
 		{
 			spdlog::error("MetalShader::loadFunction: No library.");
-			return rhi::makeUnexpected(rhi::ErrorCode::Unknown);
+			return makeUnexpected(ErrorCode::Unknown);
 		}
 
 		const auto	   nsEntryPoint{NS::String::string(entryPoint.c_str(), NS::UTF8StringEncoding)};
@@ -45,7 +46,7 @@ namespace lys::metal
 			spdlog::error(
 				"MetalShader::loadFunction: Failed to create Metal function: '{}'",
 				entryPoint);
-			return rhi::makeUnexpected(rhi::ErrorCode::Unknown);
+			return makeUnexpected(ErrorCode::Unknown);
 		}
 
 		if (m_functions.contains(entryPoint))

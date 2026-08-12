@@ -19,7 +19,7 @@ module;
 export module lys:metal_buffer;
 
 import :rhi_buffer;
-import :rhi_error;
+import :error;
 import :metal_types;
 
 namespace lys::mtl
@@ -37,8 +37,7 @@ namespace lys::mtl
 				NS::TransferPtr(m_device.newBuffer(desc.size, toMetalEnum(desc.memoryUsage)));
 		}
 
-		rhi::Result<void>
-		upload(const void* pData, std::uint32_t size, std::uint32_t offset) override;
+		Result<void> upload(const void* pData, std::uint32_t size, std::uint32_t offset) override;
 
 		std::span<const std::byte> data() const override;
 

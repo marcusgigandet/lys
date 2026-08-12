@@ -91,7 +91,11 @@ namespace
 				});
 		}
 
-		void render() { auto& graphicsQueue{m_device->graphicsQueue()}; }
+		void render()
+		{
+			auto& graphicsQueue{m_device->graphicsQueue()};
+			auto  commandQueue{graphicsQueue.createCommandBuffer()};
+		}
 	};
 } // namespace
 

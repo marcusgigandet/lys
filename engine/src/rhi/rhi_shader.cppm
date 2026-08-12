@@ -16,7 +16,7 @@
 
 export module lys:rhi_shader;
 
-import :rhi_error;
+import :error;
 import std;
 
 namespace lys::rhi

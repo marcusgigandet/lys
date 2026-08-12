@@ -21,17 +21,17 @@ export module lys:metal_buffer.impl;
 import :metal_buffer;
 import :metal_types;
 import :rhi_buffer;
-import :rhi_error;
+import :error;
 
 namespace lys::mtl
 {
-	rhi::Result<void>
+	Result<void>
 	Buffer::upload(const void* pData, const std::uint32_t size, const std::uint32_t offset)
 	{
 		// Check for nullptr
 		if (!pData)
 		{
-			return rhi::makeUnexpected(rhi::ErrorCode::InvalidArgument);
+			return makeUnexpected(ErrorCode::InvalidArgument);
 		}
 
 		switch (m_buffer->storageMode())
@@ -40,7 +40,7 @@ namespace lys::mtl
 			uploadToCPUAccessibleBuffer(pData, size, offset);
 			break;
 		default:
-			return rhi::makeUnexpected(rhi::ErrorCode::NotImplemented);
+			return makeUnexpected(ErrorCode::NotImplemented);
 		}
 
 		return {};
