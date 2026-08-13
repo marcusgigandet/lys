@@ -25,7 +25,7 @@ import std;
 namespace lys::mtl
 {
 	CommandBuffer::CommandBuffer(MTL::Device& device, MTL4::CommandQueue& commandQueue) :
-		rhi::CommandBuffer(), m_device(device), m_commandQueue(commandQueue)
+		Object(device), rhi::CommandBuffer(), m_commandQueue(commandQueue)
 	{
 		m_commandAllocator = NS::TransferPtr(m_device.newCommandAllocator());
 		m_commandBuffer	   = NS::TransferPtr(m_device.newCommandBuffer());
@@ -45,10 +45,5 @@ namespace lys::mtl
 	{
 		const MTL4::CommandBuffer* buf{m_commandBuffer.get()};
 		m_commandQueue.commit(&buf, 1);
-	}
-
-	MTL4::CommandBuffer* CommandBuffer::commandBuffer() const
-	{
-		return m_commandBuffer.get();
 	}
 } // namespace lys::mtl

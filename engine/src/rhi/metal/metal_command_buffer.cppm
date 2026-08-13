@@ -19,12 +19,12 @@ module;
 export module lys:metal_command_buffer;
 
 import :rhi_command_buffer;
+import :metal_object;
 
 namespace lys::mtl
 {
-	export class CommandBuffer final : public rhi::CommandBuffer
+	export class CommandBuffer final : public Object, public rhi::CommandBuffer
 	{
-		MTL::Device&						  m_device;
 		MTL4::CommandQueue&					  m_commandQueue;
 		NS::SharedPtr<MTL4::CommandBuffer>	  m_commandBuffer;
 		NS::SharedPtr<MTL4::CommandAllocator> m_commandAllocator;
@@ -32,7 +32,10 @@ namespace lys::mtl
 	public:
 		explicit CommandBuffer(MTL::Device& device, MTL4::CommandQueue& commandQueue);
 
-		[[nodiscard]] MTL4::CommandBuffer* commandBuffer() const;
+		[[nodiscard]] MTL4::CommandBuffer* commandBuffer() const noexcept
+		{
+			return m_commandBuffer.get();
+		}
 
 		void begin() override;
 		void end() override;

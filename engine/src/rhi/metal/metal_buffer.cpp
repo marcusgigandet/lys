@@ -34,6 +34,7 @@ namespace lys::mtl
 			return makeUnexpected(ErrorCode::InvalidArgument);
 		}
 
+		// Upload data based on the storage mode
 		switch (m_buffer->storageMode())
 		{
 		case MTL::StorageModeShared:
@@ -48,6 +49,7 @@ namespace lys::mtl
 
 	std::span<const std::byte> Buffer::data() const
 	{
+		// Todo: make functional for private memory
 		return std::span{
 			static_cast<const std::byte*>(m_buffer->contents()),
 			m_buffer->allocatedSize(),

@@ -23,7 +23,7 @@ import :metal_shader;
 import :rhi_shader;
 import :error;
 
-namespace lys::metal
+namespace lys::mtl
 {
 	void Shader::loadLibrary()
 	{
@@ -58,4 +58,4 @@ namespace lys::metal
 		return {};
 	}
 
-} // namespace lys::metal
+} // namespace lys::mtl

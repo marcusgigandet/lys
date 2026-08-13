@@ -25,7 +25,7 @@ import std;
 namespace lys::mtl
 {
 	CommandQueue::CommandQueue(MTL::Device& device, const rhi::CommandQueueType type) :
-		rhi::CommandQueue(type), m_device(device)
+		Object(device), rhi::CommandQueue(type)
 	{
 		m_commandQueue = NS::TransferPtr(m_device.newMTL4CommandQueue());
 		m_idleEvent	   = NS::TransferPtr(m_device.newSharedEvent());

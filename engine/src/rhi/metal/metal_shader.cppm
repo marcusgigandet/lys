@@ -19,17 +19,21 @@ module;
 export module lys:metal_shader;
 
 import :error;
+import :metal_object;
 import :rhi_shader;
 
-namespace lys::metal
+namespace lys::mtl
 {
-	export class Shader : public rhi::Shader
+	export class Shader : public Object, rhi::Shader
 	{
 		NS::SharedPtr<MTL::Library>										 m_library;
 		std::map<std::string, NS::SharedPtr<MTL::Function>, std::less<>> m_functions;
 
 	public:
-		explicit Shader(const rhi::ShaderDesc& desc) : rhi::Shader(desc) {}
+		explicit Shader(MTL::Device& device, const rhi::ShaderDesc& desc) :
+			Object(device), rhi::Shader(desc)
+		{
+		}
 
 	private:
 		void loadLibrary();
@@ -37,4 +41,4 @@ namespace lys::metal
 
 		Result<void> loadFunction(const std::string& entryPoint);
 	};
-} // namespace lys::metal
+} // namespace lys::mtl

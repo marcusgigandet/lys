@@ -36,6 +36,8 @@ namespace lys::mtl
 	public:
 		explicit Device(const rhi::DeviceDesc& desc);
 
+		[[nodiscard]] MTL::Device* device() const noexcept { return m_device.get(); }
+
 		[[nodiscard]] std::unique_ptr<rhi::CommandQueue>
 		createCommandQueue(rhi::CommandQueueType type) override;
 

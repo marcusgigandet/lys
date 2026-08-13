@@ -27,7 +27,7 @@ namespace lys::mtl
 {
 	GraphicsPipelineState::GraphicsPipelineState(
 		const rhi::GraphicsPipelineDesc& desc, MTL::Device& device) :
-		rhi::GraphicsPipelineState(desc), m_device(device)
+		Object(device), rhi::GraphicsPipelineState(desc)
 	{
 		configureEncoder();
 		setDepthStencilState();

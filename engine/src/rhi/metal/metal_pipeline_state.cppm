@@ -19,18 +19,23 @@ module;
 export module lys:metal_pipeline_state;
 
 import :rhi_pipeline_state;
+import :metal_object;
 import std;
 
 namespace lys::mtl
 {
-	export class GraphicsPipelineState final : public rhi::GraphicsPipelineState
+	export class GraphicsPipelineState final : public Object, public rhi::GraphicsPipelineState
 	{
-		MTL::Device&							  m_device;
 		NS::SharedPtr<MTL4::RenderCommandEncoder> m_commandEncoder;
 		NS::SharedPtr<MTL::DepthStencilState>	  m_depthStencilState;
 
 	public:
 		explicit GraphicsPipelineState(const rhi::GraphicsPipelineDesc& desc, MTL::Device& device);
+
+		[[nodiscard]] MTL4::RenderCommandEncoder* renderCommandEncoder() const noexcept
+		{
+			return m_commandEncoder.get();
+		}
 
 	private:
 		void configureEncoder() const;
