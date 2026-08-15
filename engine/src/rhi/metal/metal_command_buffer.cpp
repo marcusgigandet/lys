@@ -41,12 +41,6 @@ namespace lys::mtl
 		m_commandBuffer->endCommandBuffer();
 	}
 
-	void CommandBuffer::commit()
-	{
-		const MTL4::CommandBuffer* buf{m_commandBuffer.get()};
-		m_commandQueue.commit(&buf, 1);
-	}
-
 	void CommandBuffer::generateMipmaps(const rhi::Texture& texture)
 	{
 		// Generate mipmaps

@@ -75,6 +75,8 @@ namespace lys::rhi
 		[[nodiscard]] virtual std::unique_ptr<CommandQueue>
 		createCommandQueue(CommandQueueType type) = 0;
 
+		[[nodiscard]] virtual std::unique_ptr<CommandBuffer> createCommandBuffer() = 0;
+
 		[[nodiscard]] virtual std::unique_ptr<Buffer> createBuffer(const BufferDesc& desc) = 0;
 
 		[[nodiscard]] virtual std::unique_ptr<Texture> createTexture(const TextureDesc& desc) = 0;

@@ -40,7 +40,6 @@ namespace lys::mtl
 
 		void begin() override;
 		void end() override;
-		void commit() override;
 
 		void generateMipmaps(const rhi::Texture& texture) override;
 	};

@@ -94,7 +94,7 @@ namespace
 		void render()
 		{
 			auto& graphicsQueue{m_device->graphicsQueue()};
-			auto  commandQueue{graphicsQueue.createCommandBuffer()};
+			auto  commandBuffer{m_device->createCommandBuffer()};
 		}
 	};
 } // namespace

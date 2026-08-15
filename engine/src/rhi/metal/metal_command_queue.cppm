@@ -39,8 +39,6 @@ namespace lys::mtl
 			return m_commandQueue.get();
 		}
 
-		[[nodiscard]] std::unique_ptr<rhi::CommandBuffer> createCommandBuffer() override;
-
 		void submit(std::span<rhi::CommandBuffer* const> commandBuffers) override;
 
 		void wait() override;

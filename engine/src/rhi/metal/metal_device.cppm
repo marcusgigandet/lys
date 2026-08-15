@@ -41,6 +41,8 @@ namespace lys::mtl
 		[[nodiscard]] std::unique_ptr<rhi::CommandQueue>
 		createCommandQueue(rhi::CommandQueueType type) override;
 
+		[[nodiscard]] std::unique_ptr<rhi::CommandBuffer> createCommandBuffer() override;
+
 		[[nodiscard]] std::unique_ptr<rhi::Buffer>
 		createBuffer(const rhi::BufferDesc& desc) override;
 

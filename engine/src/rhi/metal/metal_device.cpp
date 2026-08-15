@@ -38,6 +38,13 @@ namespace lys::mtl
 		return std::make_unique<CommandQueue>(*m_device.get(), type);
 	}
 
+	std::unique_ptr<rhi::CommandBuffer> Device::createCommandBuffer()
+	{
+		return std::make_unique<CommandBuffer>(
+			*m_device.get(),
+			*static_cast<CommandQueue&>(transferQueue()).commandQueue());
+	}
+
 	std::unique_ptr<rhi::Buffer> Device::createBuffer(const rhi::BufferDesc& desc)
 	{
 		return std::make_unique<Buffer>(*m_device.get(), desc);

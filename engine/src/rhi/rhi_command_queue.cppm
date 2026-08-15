@@ -47,8 +47,6 @@ namespace lys::rhi
 
 		virtual ~CommandQueue() = default;
 
-		[[nodiscard]] virtual std::unique_ptr<CommandBuffer> createCommandBuffer() = 0;
-
 		virtual void submit(std::span<CommandBuffer* const> commandBuffers) = 0;
 
 		virtual void wait() = 0;

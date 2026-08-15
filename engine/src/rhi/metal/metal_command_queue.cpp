@@ -31,11 +31,6 @@ namespace lys::mtl
 		m_idleEvent	   = NS::TransferPtr(m_device.newSharedEvent());
 	}
 
-	std::unique_ptr<rhi::CommandBuffer> CommandQueue::createCommandBuffer()
-	{
-		return std::make_unique<CommandBuffer>(m_device, *m_commandQueue.get());
-	}
-
 	void CommandQueue::submit(const std::span<rhi::CommandBuffer* const> commandBuffers)
 	{
 		std::vector<const MTL4::CommandBuffer*> metalBuffers;
