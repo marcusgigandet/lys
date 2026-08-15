@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+module;
+#include <spdlog/spdlog.h>
 export module lys_sandbox;
 
 import lys;
@@ -25,12 +27,15 @@ namespace
 {
 	class Renderer
 	{
-		std::unique_ptr<rhi::Device> m_device;
-		std::unique_ptr<rhi::Shader> m_vertShader;
-		std::unique_ptr<rhi::Shader> m_fragShader;
+		std::unique_ptr<rhi::Device>	m_device;
+		std::unique_ptr<rhi::Shader>	m_vertShader;
+		std::unique_ptr<rhi::Shader>	m_fragShader;
+		std::unique_ptr<rhi::Surface>	m_surface;
+		std::unique_ptr<rhi::Swapchain> m_swapchain;
+		Window&							m_window;
 
 	public:
-		Renderer()
+		explicit Renderer(Window& window) : m_window(window)
 		{
 			constexpr rhi::DeviceDesc deviceDesc{
 				.backend		   = rhi::Backend::Auto,
@@ -45,18 +50,34 @@ namespace
 				.source		= std::filesystem::path("shaders/generic_shader.metal"),
 			});
 			m_fragShader = m_device->createShader({
-				.stage		= rhi::ShaderStage::Vertex,
+				.stage		= rhi::ShaderStage::Fragment,
 				.language	= rhi::ShaderLanguage::Metal,
 				.entryPoint = "fragmentMain",
 				.source		= std::filesystem::path("shaders/generic_shader.metal"),
 			});
-			m_vertShader->reload();
-			m_fragShader->reload();
+
+			m_surface = m_device->createSurface(m_window);
+
+			constexpr rhi::SwapchainDesc swapChainDesc{
+				.width		 = 1,
+				.height		 = 1,
+				.imageCount	 = 3,
+				.pixelFormat = rhi::PixelFormat::BGRA8_sRGB,
+				.vsync		 = true,
+			};
+			m_swapchain = m_device->createSwapchain(*m_surface, swapChainDesc);
 		}
+
+		~Renderer() = default;
 
 		void render() const
 		{
-			auto&	   graphicsQueue{m_device->graphicsQueue()};
+			// Update the swapchain
+			const Vec2i size{m_window.framebufferDimensions()};
+			m_swapchain->resize(size.x, size.y);
+			m_swapchain->acquireNextImage();
+
+			auto&	   graphicsQueue{m_device->renderQueue()};
 			const auto commandBuffer{m_device->createCommandBuffer()};
 			const auto renderPipelineState{m_device->createRenderPipeline({
 				.vertexShader	= m_vertShader.get(),
@@ -68,6 +89,9 @@ namespace
 			commandBuffer->end();
 
 			graphicsQueue.submit(*commandBuffer);
+
+			// Present the swapchain after processing rendering
+			m_swapchain->present();
 		}
 	};
 
@@ -106,13 +130,15 @@ namespace
 				.visible	= true,
 				.vsync		= true,
 			};
-			m_window = std::make_unique<Window>(windowDesc);
+			m_window   = std::make_unique<Window>(windowDesc);
+			m_renderer = std::make_unique<Renderer>(*m_window);
 
 			registerCallbacks();
 		}
 
 		void shutdown()
 		{
+			m_renderer.reset();
 			m_window.reset();
 			Window::terminate();
 		}
@@ -135,8 +161,12 @@ extern "C++"
 {
 	int main()
 	{
-		Application app;
+		// Configure spdlog
+		spdlog::set_pattern("[%H:%M:%S.%e] [%^%l%$] [%s:%#] %v");
+		spdlog::set_level(spdlog::level::trace);
 
+		// Run the app
+		Application app;
 		app.run();
 
 		return 0;

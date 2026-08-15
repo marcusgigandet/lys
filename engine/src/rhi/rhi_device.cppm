@@ -21,7 +21,10 @@ import :rhi_command_queue;
 import :error;
 import :rhi_pipeline_state;
 import :rhi_shader;
+import :rhi_surface;
+import :rhi_swapchain;
 import :rhi_texture;
+import :window;
 import std;
 
 namespace lys::rhi
@@ -61,7 +64,7 @@ namespace lys::rhi
 
 		[[nodiscard]] CommandQueue& queue(CommandQueueType type);
 
-		[[nodiscard]] CommandQueue& graphicsQueue() { return queue(CommandQueueType::Graphics); }
+		[[nodiscard]] CommandQueue& renderQueue() { return queue(CommandQueueType::Render); }
 		[[nodiscard]] CommandQueue& computeQueue() { return queue(CommandQueueType::Compute); }
 		[[nodiscard]] CommandQueue& transferQueue() { return queue(CommandQueueType::Transfer); }
 
@@ -88,6 +91,11 @@ namespace lys::rhi
 
 		[[nodiscard]] virtual std::unique_ptr<ComputePipelineState>
 		createComputePipeline(const ComputePipelineDesc& desc) = 0;
+
+		[[nodiscard]] virtual std::unique_ptr<Surface> createSurface(const Window& window) = 0;
+
+		[[nodiscard]] virtual std::unique_ptr<Swapchain>
+		createSwapchain(Surface& surface, const SwapchainDesc& desc) = 0;
 	};
 
 	export [[nodiscard]] std::unique_ptr<Device> createDevice(const DeviceDesc& desc);

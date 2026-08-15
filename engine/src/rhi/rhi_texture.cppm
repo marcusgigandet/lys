@@ -64,6 +64,9 @@ namespace lys::rhi
 		Texture(Texture&&)				   = default;
 		Texture& operator=(Texture&&)	   = default;
 
+		virtual Result<void>
+		upload(std::span<const std::byte> data, std::size_t bytesPerRow) noexcept = 0;
+
 		[[nodiscard]] TextureType	type() const noexcept { return m_type; }
 		[[nodiscard]] std::uint32_t width() const noexcept { return m_width; }
 		[[nodiscard]] std::uint32_t height() const noexcept { return m_height; }
@@ -71,8 +74,5 @@ namespace lys::rhi
 		[[nodiscard]] std::uint32_t mipLevels() const noexcept { return m_mipLevels; }
 		[[nodiscard]] PixelFormat	pixelFormat() const noexcept { return m_pixelFormat; }
 		[[nodiscard]] DepthFormat	depthFormat() const noexcept { return m_depthFormat; }
-
-		virtual Result<void>
-		upload(std::span<const std::byte> data, std::size_t bytesPerRow) noexcept = 0;
 	};
 } // namespace lys::rhi

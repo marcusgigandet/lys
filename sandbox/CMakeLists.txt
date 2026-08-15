@@ -28,11 +28,6 @@ target_include_directories(lys_sandbox
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-# Add reflection if using GCC
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_compile_options(lys_sandbox PRIVATE -freflection)
-endif ()
-
 target_link_libraries(lys_sandbox
         PRIVATE
         lys::engine
@@ -47,10 +42,10 @@ if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     foreach(dir assets shaders)
         add_custom_command(
                 TARGET lys_sandbox POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E remove_directory $<TARGET_FILE_DIR:${PROJECT_NAME}>/${dir}
+                COMMAND ${CMAKE_COMMAND} -E remove_directory $<TARGET_FILE_DIR:lys_sandbox>/${dir}
                 COMMAND ${CMAKE_COMMAND} -E create_symlink
                 ${CMAKE_CURRENT_SOURCE_DIR}/${dir}
-                $<TARGET_FILE_DIR:${PROJECT_NAME}>/${dir}
+                $<TARGET_FILE_DIR:lys_sandbox>/${dir}
                 COMMENT "Symlinking ./${dir} -> build/Debug/${dir}"
         )
     endforeach()

@@ -16,33 +16,35 @@
 
 module;
 #include <Metal/Metal.hpp>
-export module lys:metal_shader;
+#include <QuartzCore/CAMetalLayer.hpp>
+#include <objc/objc.h>
+export module lys:metal_surface;
 
-import :error;
 import :metal_object;
-import :rhi_shader;
+import :rhi_surface;
+import :window;
 
 namespace lys::mtl
 {
-	export class Shader final : public Object, public rhi::Shader
+	export class Surface : public Object, public rhi::Surface
 	{
-		NS::SharedPtr<MTL::Library>										 m_library;
-		std::map<std::string, NS::SharedPtr<MTL::Function>, std::less<>> m_functions;
+		NS::SharedPtr<CA::MetalLayer> m_layer;
 
 	public:
-		explicit Shader(MTL::Device& device, const rhi::ShaderDesc& desc);
+		explicit Surface(MTL::Device& device, const Window& window) :
+			Object(device), rhi::Surface(window)
+		{
+			attachToWindow(m_window);
+		}
 
-		~Shader() override;
+		~Surface() = default;
 
-		Result<void> load(std::span<const std::byte> byteCode) override;
-		Result<void> load(const std::filesystem::path& path) override;
-		void		 reload() override;
+		[[nodiscard]] CA::MetalLayer* layer() const noexcept { return m_layer.get(); }
+
+		void attachToWindow(const Window& window);
 
 	private:
-		ErrorCode loadLibrary(const NS::String* nsString);
-		void	  unloadLibrary() { m_library.reset(); }
-
-		ErrorCode				 loadFunction(const std::string& entryPoint);
-		std::vector<std::string> functionNames() const;
+		void createLayer();
+		void attachLayer(const id& nsWindow) const;
 	};
 } // namespace lys::mtl

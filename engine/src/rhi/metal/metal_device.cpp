@@ -24,6 +24,8 @@ import :metal_command_queue;
 import :metal_device;
 import :metal_pipeline_state;
 import :metal_shader;
+import :metal_surface;
+import :metal_swapchain;
 import :metal_texture;
 import std;
 
@@ -71,5 +73,17 @@ namespace lys::mtl
 	Device::createComputePipeline(const rhi::ComputePipelineDesc& desc)
 	{
 		return std::make_unique<ComputePipelineState>(*m_device.get(), desc);
+	}
+
+	std::unique_ptr<rhi::Surface> Device::createSurface(const Window& window)
+	{
+		return std::make_unique<Surface>(*m_device.get(), window);
+	}
+
+	std::unique_ptr<rhi::Swapchain>
+	Device::createSwapchain(rhi::Surface& surface, const rhi::SwapchainDesc& desc)
+	{
+		auto& metalSurface{static_cast<Surface&>(surface)};
+		return std::make_unique<Swapchain>(metalSurface, desc);
 	}
 } // namespace lys::mtl

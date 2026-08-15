@@ -49,26 +49,26 @@ namespace lys
 #ifdef LYS_DEBUG
 		if (!obj)
 		{
-			spdlog::warn("objcCall: called with null object for selector '{}'", selector);
+			SPDLOG_WARN("objcCall: called with null object for selector '{}'", selector);
 			return Ret{};
 		}
 
 		if (!selector)
 		{
-			spdlog::warn("objcCall: null selector passed");
+			SPDLOG_WARN("objcCall: null selector passed");
 			return Ret{};
 		}
 
 		if (!sel)
 		{
-			spdlog::warn("objcCall: failed to register selector '{}'", selector);
+			SPDLOG_WARN("objcCall: failed to register selector '{}'", selector);
 			return Ret{};
 		}
 
 		const char* className{class_getName(object_getClass(obj))};
 		if (!class_respondsToSelector(object_getClass(obj), sel))
 		{
-			spdlog::warn(
+			SPDLOG_WARN(
 				"objcCall: object of class '{}' does not respond to selector '{}'",
 				className,
 				selector);

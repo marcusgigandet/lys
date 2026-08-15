@@ -76,7 +76,7 @@ namespace lys
 			throw std::runtime_error("Failed to initialize GLFW!");
 		}
 
-		spdlog::trace("Successfully initialized GLFW\n");
+		SPDLOG_TRACE("Successfully initialized GLFW\n");
 	}
 
 	void Window::destroyWindow() const

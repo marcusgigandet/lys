@@ -37,6 +37,10 @@ namespace lys::mtl
 				NS::TransferPtr(m_device.newBuffer(desc.size, toMetalEnum(desc.memoryUsage)));
 		}
 
+		/**
+		 * @brief Returns the native backend Buffer.
+		 * @return Native metal Buffer.
+		 */
 		[[nodiscard]] MTL::Buffer* buffer() const noexcept { return m_buffer.get(); }
 
 		Result<void> upload(const void* pData, std::uint32_t size, std::uint32_t offset) override;

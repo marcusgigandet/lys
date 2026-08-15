@@ -26,11 +26,42 @@ import :error;
 
 namespace lys::mtl
 {
+	namespace
+	{
+		Result<void> loadSource(
+			Shader&																   shader,
+			const std::variant<std::span<const std::byte>, std::filesystem::path>& source)
+		{
+			if (const auto* byteCode = std::get_if<std::span<const std::byte>>(&source))
+			{
+				return shader.load(*byteCode);
+			}
+
+			if (const auto* path = std::get_if<std::filesystem::path>(&source))
+			{
+				return shader.load(*path);
+			}
+
+			SPDLOG_ERROR("Unsupported source type!");
+			return makeUnexpected(ErrorCode::Unsupported);
+		}
+	} // namespace
+
+	Shader::Shader(MTL::Device& device, const rhi::ShaderDesc& desc) :
+		Object(device), rhi::Shader(desc)
+	{
+		if (const auto result = loadSource(*this, desc.source); !result.has_value())
+		{
+			SPDLOG_ERROR("Failed to load Metal shader source: {}", result.error().message);
+			return;
+		}
+	}
+
 	Shader::~Shader()
 	{
 	}
 
-	Result<void> Shader::load(std::span<const std::byte> byteCode)
+	Result<void> Shader::load(const std::span<const std::byte> byteCode)
 	{
 		const std::string source{
 			reinterpret_cast<const char*>(byteCode.data()),
@@ -42,6 +73,8 @@ namespace lys::mtl
 		{
 			return makeUnexpected(status);
 		}
+
+		return {};
 	}
 
 	Result<void> Shader::load(const std::filesystem::path& path)
@@ -58,7 +91,7 @@ namespace lys::mtl
 		else
 		{
 			// An error occurred when reading the file
-			spdlog::warn(
+			SPDLOG_WARN(
 				std::format(
 					"An error occurred when loading {} : {}",
 					file.path().string(),
@@ -70,6 +103,8 @@ namespace lys::mtl
 		{
 			return makeUnexpected(status);
 		}
+
+		return {};
 	}
 
 	void Shader::reload()
@@ -84,7 +119,7 @@ namespace lys::mtl
 		m_library = NS::TransferPtr(m_device.newLibrary(nsString, nullptr, &nsError));
 		if (!m_library)
 		{
-			spdlog::error(
+			SPDLOG_WARN(
 				"MetalShader::loadLibrary: Failed to create library {}",
 				nsError->description()->cString(NS::UTF8StringEncoding));
 			return ErrorCode::Unknown;
@@ -99,7 +134,7 @@ namespace lys::mtl
 		MTL::Function* function{m_library->newFunction(nsEntryPoint)};
 		if (!function)
 		{
-			spdlog::error(
+			SPDLOG_WARN(
 				"MetalShader::loadFunction: Failed to create Metal function: '{}'",
 				entryPoint);
 			return ErrorCode::Unknown;

@@ -34,6 +34,10 @@ namespace lys::mtl
 	public:
 		explicit CommandQueue(MTL::Device& device, rhi::CommandQueueType type);
 
+		/**
+		 * @brief Returns the native backend CommandQueue.
+		 * @return Native metal CommandQueue.
+		 */
 		[[nodiscard]] MTL4::CommandQueue* commandQueue() const noexcept
 		{
 			return m_commandQueue.get();

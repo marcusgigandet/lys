@@ -187,7 +187,7 @@ namespace lys::mtl
 
 		if (nsError)
 		{
-			spdlog::debug(
+			SPDLOG_DEBUG(
 				std::format(
 					"An error occurred when constructing an MTL4::ArgumentTable : {}",
 					nsError->description()->cString(NS::UTF8StringEncoding)));

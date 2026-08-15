@@ -25,6 +25,8 @@ module;
 export module lys:metal_device;
 
 import :rhi_device;
+import :rhi_swapchain;
+import :window;
 import std;
 
 namespace lys::mtl
@@ -57,5 +59,10 @@ namespace lys::mtl
 
 		[[nodiscard]] std::unique_ptr<rhi::ComputePipelineState>
 		createComputePipeline(const rhi::ComputePipelineDesc& desc) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::Surface> createSurface(const Window& window) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::Swapchain>
+		createSwapchain(rhi::Surface& surface, const rhi::SwapchainDesc& desc) override;
 	};
 } // namespace lys::mtl

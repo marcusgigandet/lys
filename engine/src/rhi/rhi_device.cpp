@@ -41,7 +41,7 @@ namespace lys::rhi
 		// Check if the queue is null
 		if (!queue)
 		{
-			// Creat a new queue instance
+			// Create a new queue instance
 			queue = createCommandQueue(type);
 		}
 

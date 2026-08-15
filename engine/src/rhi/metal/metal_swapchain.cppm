@@ -15,33 +15,31 @@
  */
 
 module;
-#include <Metal/Metal.hpp>
-export module lys:metal_texture;
+#include <QuartzCore/CAMetalLayer.hpp>
+export module lys:metal_swapchain;
 
-import :error;
-import :metal_object;
-import :rhi_texture;
+import :metal_surface;
+import :rhi_swapchain;
 import std;
 
 namespace lys::mtl
 {
-	export class Texture : public Object, public rhi::Texture
+	export class Swapchain final : public rhi::Swapchain
 	{
-		NS::SharedPtr<MTL::Texture> m_texture;
+		NS::SharedPtr<CA::MetalDrawable> m_drawable{};
 
 	public:
-		explicit Texture(MTL::Device& device, const rhi::TextureDesc& desc);
+		explicit Swapchain(rhi::Surface& surface, const rhi::SwapchainDesc& desc);
 
-		/**
-		 * @brief Returns the native backend Texture.
-		 * @return Native metal Texture.
-		 */
-		[[nodiscard]] MTL::Texture* texture() const noexcept { return m_texture.get(); }
+		~Swapchain() override = default;
 
-		Result<void>
-		upload(std::span<const std::byte> data, std::size_t bytesPerRow) noexcept override;
+		void resize(std::uint32_t width, std::uint32_t height) override;
+		void acquireNextImage() override;
+		void present() override;
+
+		[[nodiscard]] CA::MetalDrawable* drawable() const noexcept { return m_drawable.get(); }
 
 	private:
-		void createTexture();
+		void configureLayer() const;
 	};
 } // namespace lys::mtl

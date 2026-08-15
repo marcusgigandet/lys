@@ -65,6 +65,6 @@ namespace lys::mtl
 
 	private:
 		MTL4::ArgumentTable* makeArgumentTable() const;
-		bool isEncoderValid(rhi::ShaderStage stage) const;
+		bool				 isEncoderValid(rhi::ShaderStage stage) const;
 	};
 } // namespace lys::mtl

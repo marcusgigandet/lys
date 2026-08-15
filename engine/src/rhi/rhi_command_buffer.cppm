@@ -63,7 +63,7 @@ namespace lys::rhi
 		virtual void generateMipmaps(const Texture& texture) = 0;
 
 		/**
-		 * @brief Binds a buffer resource to the render pipeline.
+		 * @brief Binds a buffer resource.
 		 *
 		 * @param stage Shader stage to bind the resource to.
 		 * @param buffer Buffer to bind.
@@ -75,7 +75,7 @@ namespace lys::rhi
 		setResource(ShaderStage stage, const Buffer& buffer, const std::string& name) = 0;
 
 		/**
-		 * @brief Binds a texture resource to the render pipeline.
+		 * @brief Binds a texture resource.
 		 *
 		 * @param stage Shader stage to bind the resource to.
 		 * @param texture Texture to bind.
@@ -87,7 +87,7 @@ namespace lys::rhi
 		setResource(ShaderStage stage, const Texture& texture, const std::string& name) = 0;
 
 		/**
-		 * @brief Binds a buffer resource at a specific index, stage, and offset.
+		 * @brief Binds a buffer resource.
 		 *
 		 * @param stage Shader stage to bind the resource to.
 		 * @param buffer Buffer to bind.
@@ -99,7 +99,7 @@ namespace lys::rhi
 		setResource(ShaderStage stage, const Buffer& buffer, std::uint32_t index) = 0;
 
 		/**
-		 * @brief Binds a texture resource at a specific index and stage.
+		 * @brief Binds a texture resource.
 		 *
 		 * @param stage Shader stage to bind the resource to.
 		 * @param texture texture to bind.

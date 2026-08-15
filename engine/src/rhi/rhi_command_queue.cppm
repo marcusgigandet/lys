@@ -27,7 +27,7 @@ namespace lys::rhi
 	 */
 	export enum class CommandQueueType
 	{
-		Graphics,
+		Render,
 		Compute,
 		Transfer
 	};
@@ -47,8 +47,18 @@ namespace lys::rhi
 
 		virtual ~CommandQueue() = default;
 
+		/**
+		 * @brief Submits multiple CommandBuffers at once to the CommandQueue.
+		 *
+		 * @param commandBuffers Span of CommandBuffers to submit.
+		 */
 		virtual void submit(std::span<CommandBuffer* const> commandBuffers) = 0;
 
+		/**
+		 * @brief Submits a single CommandBuffer to the CommandQueue.
+		 *
+		 * @param commandBuffer CommandBuffer instance to submit.
+		 */
 		void submit(CommandBuffer& commandBuffer)
 		{
 			CommandBuffer* buffers[] = {&commandBuffer};

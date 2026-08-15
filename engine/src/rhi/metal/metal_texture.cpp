@@ -60,6 +60,8 @@ namespace lys::mtl
 			m_width,
 			m_height,
 			m_mipLevels > 1)};
+
+		// Todo: Expose the usage in the RHI
 		mtlTexDesc->setUsage(MTL::TextureUsageShaderRead | MTL::TextureUsageShaderWrite);
 		mtlTexDesc->setMipmapLevelCount(m_mipLevels);
 		m_texture = NS::TransferPtr(m_device.newTexture(mtlTexDesc));
