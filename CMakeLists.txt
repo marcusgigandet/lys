@@ -103,6 +103,7 @@ endif ()
 
 find_package(glfw3 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(Stb REQUIRED)
 
 ##################
 # Subdirectories #

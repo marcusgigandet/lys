@@ -24,7 +24,7 @@ import :rhi_shader;
 
 namespace lys::mtl
 {
-	export class Shader : public Object, rhi::Shader
+	export class Shader final : public Object, public rhi::Shader
 	{
 		NS::SharedPtr<MTL::Library>										 m_library;
 		std::map<std::string, NS::SharedPtr<MTL::Function>, std::less<>> m_functions;
@@ -35,10 +35,17 @@ namespace lys::mtl
 		{
 		}
 
-	private:
-		void loadLibrary();
-		void unloadLibrary() { m_library.reset(); }
+		~Shader() override;
 
-		Result<void> loadFunction(const std::string& entryPoint);
+		Result<void> load(std::span<const std::byte> byteCode) override;
+		Result<void> load(const std::filesystem::path& path) override;
+		void		 reload() override;
+
+	private:
+		ErrorCode loadLibrary(const NS::String* nsString);
+		void	  unloadLibrary() { m_library.reset(); }
+
+		ErrorCode				 loadFunction(const std::string& entryPoint);
+		std::vector<std::string> functionNames() const;
 	};
 } // namespace lys::mtl

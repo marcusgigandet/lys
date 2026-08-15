@@ -40,12 +40,13 @@ namespace lys::rhi
 		std::uint32_t height{1};
 		std::uint32_t depthOrLayers{1};
 		std::uint32_t mipLevels{1};
-		PixelFormat	  pixelFormat{PixelFormat::Undefined};
-		DepthFormat	  depthFormat{DepthFormat::Undefined};
+		PixelFormat	  pixelFormat{PixelFormat::BGRA8_sRGB};
+		DepthFormat	  depthFormat{DepthFormat::Depth32_Float};
 	};
 
 	export class Texture
 	{
+	protected:
 		TextureType	  m_type;
 		std::uint32_t m_width;
 		std::uint32_t m_height;
@@ -70,5 +71,8 @@ namespace lys::rhi
 		[[nodiscard]] std::uint32_t mipLevels() const noexcept { return m_mipLevels; }
 		[[nodiscard]] PixelFormat	pixelFormat() const noexcept { return m_pixelFormat; }
 		[[nodiscard]] DepthFormat	depthFormat() const noexcept { return m_depthFormat; }
+
+		virtual Result<void>
+		upload(std::span<const std::byte> data, std::size_t bytesPerRow) noexcept = 0;
 	};
 } // namespace lys::rhi

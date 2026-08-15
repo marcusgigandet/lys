@@ -30,7 +30,7 @@ namespace lys::mtl
 		NS::SharedPtr<MTL::Buffer> m_buffer;
 
 	public:
-		explicit Buffer(const rhi::BufferDesc& desc, MTL::Device& device) :
+		explicit Buffer(MTL::Device& device, const rhi::BufferDesc& desc) :
 			Object(device), rhi::Buffer(desc)
 		{
 			m_buffer =

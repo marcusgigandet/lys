@@ -18,8 +18,12 @@ module;
 #include <Metal/Metal.hpp>
 module lys:metal_device.impl;
 
-import :metal_device;
+import :metal_buffer;
+import :metal_command_buffer;
 import :metal_command_queue;
+import :metal_device;
+import :metal_shader;
+import :metal_texture;
 import std;
 
 namespace lys::mtl
@@ -36,17 +40,20 @@ namespace lys::mtl
 
 	std::unique_ptr<rhi::Buffer> Device::createBuffer(const rhi::BufferDesc& desc)
 	{
-		return nullptr;
+		return std::make_unique<Buffer>(*m_device.get(), desc);
 	}
 
 	std::unique_ptr<rhi::Texture> Device::createTexture(const rhi::TextureDesc& desc)
 	{
-		return nullptr;
+		return std::make_unique<Texture>(
+			*m_device.get(),
+			*static_cast<CommandQueue&>(transferQueue()).commandQueue(),
+			desc);
 	}
 
 	std::unique_ptr<rhi::Shader> Device::createShader(const rhi::ShaderDesc& desc)
 	{
-		return nullptr;
+		return std::make_unique<Shader>(*m_device.get(), desc);
 	}
 
 	std::unique_ptr<rhi::GraphicsPipelineState>

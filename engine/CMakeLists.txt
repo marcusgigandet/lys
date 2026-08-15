@@ -32,6 +32,7 @@ target_sources(lys_engine
 target_include_directories(lys_engine
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${Stb_INCLUDE_DIR}
 )
 
 # Add reflection if using GCC

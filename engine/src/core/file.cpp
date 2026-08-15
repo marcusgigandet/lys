@@ -68,7 +68,7 @@ namespace lys
 
 	Result<std::string> File::readText() const
 	{
-		const auto bytesResult{readBytes()};
+		const Result<std::vector<std::byte>> bytesResult{readBytes()};
 		if (!bytesResult)
 		{
 			return std::unexpected(bytesResult.error());

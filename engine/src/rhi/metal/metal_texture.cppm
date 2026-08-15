@@ -16,35 +16,28 @@
 
 module;
 #include <Metal/Metal.hpp>
-export module lys:metal_pipeline_state;
+export module lys:metal_texture;
 
-import :rhi_pipeline_state;
+import :error;
 import :metal_object;
+import :rhi_texture;
 import std;
 
 namespace lys::mtl
 {
-	export class GraphicsPipelineState final : public Object, public rhi::GraphicsPipelineState
+	export class Texture : public Object, public rhi::Texture
 	{
-		NS::SharedPtr<MTL4::RenderCommandEncoder> m_commandEncoder;
-		NS::SharedPtr<MTL::DepthStencilState>	  m_depthStencilState;
+		NS::SharedPtr<MTL::Texture> m_texture;
+		MTL4::CommandQueue&			m_commandQueue;
 
 	public:
-		explicit GraphicsPipelineState(const rhi::GraphicsPipelineDesc& desc, MTL::Device& device);
+		explicit Texture(
+			MTL::Device& device, MTL4::CommandQueue& queue, const rhi::TextureDesc& desc);
 
-		[[nodiscard]] MTL4::RenderCommandEncoder* renderCommandEncoder() const noexcept
-		{
-			return m_commandEncoder.get();
-		}
-
-		[[nodiscard]] MTL::DepthStencilState* depthStencilState() const noexcept
-		{
-			return m_depthStencilState.get();
-		}
+		Result<void>
+		upload(std::span<const std::byte> data, std::size_t bytesPerRow) noexcept override;
 
 	private:
-		void configureEncoder() const;
-
-		void setDepthStencilState();
+		void createTexture();
 	};
 } // namespace lys::mtl

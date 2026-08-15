@@ -15,7 +15,7 @@
  */
 
 module;
-#include <typedefs.hpp>
+#include "typedefs.hpp"
 export module lys:error;
 
 import std;
@@ -24,6 +24,7 @@ namespace lys
 {
 	export enum class ErrorCode : std::uint16_t
 	{
+		NoError,
 		Unknown,
 		InvalidArgument,
 		Unsupported,

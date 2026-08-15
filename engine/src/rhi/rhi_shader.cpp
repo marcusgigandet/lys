@@ -20,53 +20,13 @@ import :rhi_shader;
 
 namespace lys::rhi
 {
-	Shader::Shader(const ShaderDesc& desc) : m_stage(desc.stage), m_entryPoint(desc.entryPoint)
+	Shader::Shader(const ShaderDesc& desc) :
+		m_stage(desc.stage), m_entryPoint(desc.entryPoint), m_source(desc.source)
 	{
-		if (desc.byteCode.has_value())
-		{
-			setByteCode(*desc.byteCode);
-		}
-
-		if (desc.file.has_value())
-		{
-			setFile(*desc.file);
-		}
 	}
 
 	Result<void> Shader::load(const std::string_view file)
 	{
-		return load(std::variant<std::string, std::filesystem::path>{std::string(file)});
-	}
-
-	Result<void> Shader::load(const std::filesystem::path& file)
-	{
-		return load(std::variant<std::string, std::filesystem::path>{file});
-	}
-
-	Result<void> Shader::reload()
-	{
-		if (m_file.has_value())
-		{
-			return load(*m_file);
-		}
-
-		if (!m_byteCode.empty())
-		{
-			return load(std::span<const std::byte>{m_byteCode});
-		}
-
-		return makeUnexpected(
-			ErrorCode::InvalidArgument,
-			"Cannot reload shader without source file or bytecode.");
-	}
-
-	void Shader::setByteCode(const std::span<const std::byte> byteCode)
-	{
-		m_byteCode.assign(byteCode.begin(), byteCode.end());
-	}
-
-	void Shader::setFile(std::filesystem::path file)
-	{
-		m_file = std::move(file);
+		return load(std::filesystem::path{std::string(file)});
 	}
 } // namespace lys::rhi

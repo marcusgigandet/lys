@@ -36,19 +36,18 @@ namespace lys::rhi
 
 	export struct ShaderDesc
 	{
-		ShaderStage								  stage;
-		ShaderLanguage							  language;
-		std::string								  entryPoint{"main"};
-		std::optional<std::span<const std::byte>> byteCode;
-		std::optional<std::string>				  file;
+		ShaderStage														stage;
+		ShaderLanguage													language;
+		std::string														entryPoint{"main"};
+		std::variant<std::span<const std::byte>, std::filesystem::path> source;
 	};
 
 	export class Shader
 	{
-		ShaderStage							 m_stage;
-		std::string							 m_entryPoint;
-		std::vector<std::byte>				 m_byteCode;
-		std::optional<std::filesystem::path> m_file;
+	protected:
+		ShaderStage														m_stage;
+		std::string														m_entryPoint;
+		std::variant<std::span<const std::byte>, std::filesystem::path> m_source;
 
 	public:
 		explicit Shader(const ShaderDesc& desc);
@@ -59,24 +58,12 @@ namespace lys::rhi
 		Shader(Shader&&)				 = default;
 		Shader& operator=(Shader&&)		 = default;
 
-		virtual Result<void>	   load(std::span<const std::byte> byteCode)				   = 0;
-		virtual Result<void>	   load(std::variant<std::string, std::filesystem::path> file) = 0;
-		[[nodiscard]] Result<void> load(std::string_view file);
-		[[nodiscard]] Result<void> load(const std::filesystem::path& file);
-		[[nodiscard]] Result<void> reload();
+		virtual Result<void> load(std::span<const std::byte> byteCode) = 0;
+		virtual Result<void> load(const std::filesystem::path& file)   = 0;
+		virtual void		 reload()								   = 0;
+		Result<void>		 load(std::string_view file);
 
 		[[nodiscard]] ShaderStage	   stage() const noexcept { return m_stage; }
 		[[nodiscard]] std::string_view entryPoint() const noexcept { return m_entryPoint; }
-		[[nodiscard]] bool			   hasByteCode() const noexcept { return !m_byteCode.empty(); }
-		[[nodiscard]] std::span<const std::byte> byteCode() const noexcept { return m_byteCode; }
-		[[nodiscard]] bool hasFile() const noexcept { return m_file.has_value(); }
-		[[nodiscard]] const std::optional<std::filesystem::path>& file() const noexcept
-		{
-			return m_file;
-		}
-
-	protected:
-		void setByteCode(std::span<const std::byte> byteCode);
-		void setFile(std::filesystem::path file);
 	};
 } // namespace lys::rhi
