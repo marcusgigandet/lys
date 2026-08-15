@@ -22,6 +22,7 @@ import :metal_buffer;
 import :metal_command_buffer;
 import :metal_command_queue;
 import :metal_device;
+import :metal_pipeline_state;
 import :metal_shader;
 import :metal_texture;
 import std;
@@ -60,15 +61,15 @@ namespace lys::mtl
 		return std::make_unique<Shader>(*m_device.get(), desc);
 	}
 
-	std::unique_ptr<rhi::GraphicsPipelineState>
-	Device::createGraphicsPipeline(const rhi::GraphicsPipelineDesc& desc)
+	std::unique_ptr<rhi::RenderPipelineState>
+	Device::createRenderPipeline(const rhi::RenderPipelineDesc& desc)
 	{
-		return nullptr;
+		return std::make_unique<RenderPipelineState>(*m_device.get(), desc);
 	}
 
 	std::unique_ptr<rhi::ComputePipelineState>
 	Device::createComputePipeline(const rhi::ComputePipelineDesc& desc)
 	{
-		return nullptr;
+		return std::make_unique<ComputePipelineState>(*m_device.get(), desc);
 	}
 } // namespace lys::mtl

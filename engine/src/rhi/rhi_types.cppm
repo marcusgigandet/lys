@@ -106,6 +106,18 @@ namespace lys::rhi
 		Never,
 	};
 
+	export enum class IndexType : std::uint8_t
+	{
+		UInt16,
+		UInt32,
+	};
+
+	export enum class LoadAction : std::uint8_t
+	{
+		Clear,
+		Store,
+	};
+
 
 	/**
 	 * @brief Memory management of GPU resources.

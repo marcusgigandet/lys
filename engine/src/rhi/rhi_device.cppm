@@ -83,8 +83,8 @@ namespace lys::rhi
 
 		[[nodiscard]] virtual std::unique_ptr<Shader> createShader(const ShaderDesc& desc) = 0;
 
-		[[nodiscard]] virtual std::unique_ptr<GraphicsPipelineState>
-		createGraphicsPipeline(const GraphicsPipelineDesc& desc) = 0;
+		[[nodiscard]] virtual std::unique_ptr<RenderPipelineState>
+		createRenderPipeline(const RenderPipelineDesc& desc) = 0;
 
 		[[nodiscard]] virtual std::unique_ptr<ComputePipelineState>
 		createComputePipeline(const ComputePipelineDesc& desc) = 0;

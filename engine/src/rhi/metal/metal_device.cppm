@@ -52,8 +52,8 @@ namespace lys::mtl
 		[[nodiscard]] std::unique_ptr<rhi::Shader>
 		createShader(const rhi::ShaderDesc& desc) override;
 
-		[[nodiscard]] std::unique_ptr<rhi::GraphicsPipelineState>
-		createGraphicsPipeline(const rhi::GraphicsPipelineDesc& desc) override;
+		[[nodiscard]] std::unique_ptr<rhi::RenderPipelineState>
+		createRenderPipeline(const rhi::RenderPipelineDesc& desc) override;
 
 		[[nodiscard]] std::unique_ptr<rhi::ComputePipelineState>
 		createComputePipeline(const rhi::ComputePipelineDesc& desc) override;

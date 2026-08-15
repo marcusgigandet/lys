@@ -18,8 +18,10 @@ module;
 #include <Metal/Metal.hpp>
 export module lys:metal_command_buffer.impl;
 
-import :rhi_command_buffer;
 import :metal_command_buffer;
+import :metal_pipeline_state;
+import :metal_types;
+import :rhi_command_buffer;
 import std;
 
 namespace lys::mtl
@@ -39,6 +41,44 @@ namespace lys::mtl
 	void CommandBuffer::end()
 	{
 		m_commandBuffer->endCommandBuffer();
+	}
+
+	void CommandBuffer::beginComputePass()
+	{
+		m_computeCommandEncoder = NS::TransferPtr(m_commandBuffer->computeCommandEncoder());
+	}
+
+	void CommandBuffer::beginRenderPass(const rhi::RenderPassDesc& desc)
+	{
+		const auto descriptor{NS::TransferPtr(MTL4::RenderPassDescriptor::alloc()->init())};
+
+		// Configure the depth attachment
+		if (desc.depthAttachmentDesc.has_value())
+		{
+			const auto [loadAction]{desc.depthAttachmentDesc.value()};
+			const auto depthDescriptor{
+				NS::TransferPtr(MTL::RenderPassDepthAttachmentDescriptor::alloc()->init())};
+			depthDescriptor->setLoadAction(toMetalEnum(loadAction));
+
+			// Set the depth attachment on the render pass
+			descriptor->setDepthAttachment(depthDescriptor.get());
+		}
+
+		// Configure the render pass
+		m_renderCommandEncoder =
+			NS::TransferPtr(m_commandBuffer->renderCommandEncoder(descriptor.get()));
+	}
+
+	void CommandBuffer::setComputePipelineState(const rhi::ComputePipelineState& state)
+	{
+		m_computeCommandEncoder->setComputePipelineState(
+			static_cast<const ComputePipelineState&>(state).computePipelineState());
+	}
+
+	void CommandBuffer::setRenderPipelineState(const rhi::RenderPipelineState& state)
+	{
+		m_renderCommandEncoder->setRenderPipelineState(
+			static_cast<const RenderPipelineState&>(state).renderPipelineState());
 	}
 
 	void CommandBuffer::generateMipmaps(const rhi::Texture& texture)

@@ -20,7 +20,7 @@ import :rhi_pipeline_state;
 
 namespace lys::rhi
 {
-	GraphicsPipelineState::GraphicsPipelineState(const GraphicsPipelineDesc& desc) :
+	RenderPipelineState::RenderPipelineState(const RenderPipelineDesc& desc) :
 		PipelineState(), m_desc(desc)
 	{
 	}

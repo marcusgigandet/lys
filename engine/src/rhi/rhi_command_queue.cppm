@@ -49,6 +49,12 @@ namespace lys::rhi
 
 		virtual void submit(std::span<CommandBuffer* const> commandBuffers) = 0;
 
+		void submit(CommandBuffer& commandBuffer)
+		{
+			CommandBuffer* buffers[] = {&commandBuffer};
+			submit(buffers);
+		}
+
 		virtual void wait() = 0;
 	};
 } // namespace lys::rhi

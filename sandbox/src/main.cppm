@@ -50,10 +50,6 @@ namespace
 	private:
 		void init()
 		{
-			m_device = rhi::createDevice({
-				.backend = rhi::Backend::Auto,
-			});
-
 			const WindowDesc windowDesc{
 				.title		= "Lys Sandbox",
 				.dimensions = {100, 100},
@@ -68,7 +64,7 @@ namespace
 				.backend		   = rhi::Backend::Auto,
 				.maxFramesInFlight = 3,
 			};
-			m_device = createDevice(deviceDesc);
+			m_device = rhi::createDevice(deviceDesc);
 
 			register_callbacks();
 		}
@@ -93,8 +89,15 @@ namespace
 
 		void render()
 		{
-			auto& graphicsQueue{m_device->graphicsQueue()};
-			auto  commandBuffer{m_device->createCommandBuffer()};
+			auto&	   graphicsQueue{m_device->graphicsQueue()};
+			const auto renderPipelineState{m_device->createRenderPipeline({})};
+			const auto commandBuffer{m_device->createCommandBuffer()};
+
+			commandBuffer->begin();
+
+			commandBuffer->end();
+
+			graphicsQueue.submit(*commandBuffer);
 		}
 	};
 } // namespace

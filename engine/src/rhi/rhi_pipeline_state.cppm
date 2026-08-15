@@ -22,7 +22,7 @@ import :rhi_shader;
 
 namespace lys::rhi
 {
-	export struct GraphicsPipelineDesc
+	export struct RenderPipelineDesc
 	{
 		const Shader*	vertexShader{nullptr};
 		const Shader*	fragmentShader{nullptr};
@@ -52,20 +52,20 @@ namespace lys::rhi
 		PipelineState& operator=(PipelineState&&)	   = default;
 	};
 
-	export class GraphicsPipelineState : public PipelineState
+	export class RenderPipelineState : public PipelineState
 	{
 	protected:
-		GraphicsPipelineDesc m_desc;
+		RenderPipelineDesc m_desc;
 
 	public:
-		explicit GraphicsPipelineState(const GraphicsPipelineDesc& desc);
+		explicit RenderPipelineState(const RenderPipelineDesc& desc);
 
-		GraphicsPipelineState(const GraphicsPipelineState&)			   = delete;
-		GraphicsPipelineState& operator=(const GraphicsPipelineState&) = delete;
-		GraphicsPipelineState(GraphicsPipelineState&&)				   = default;
-		GraphicsPipelineState& operator=(GraphicsPipelineState&&)	   = default;
+		RenderPipelineState(const RenderPipelineState&)			   = delete;
+		RenderPipelineState& operator=(const RenderPipelineState&) = delete;
+		RenderPipelineState(RenderPipelineState&&)				   = default;
+		RenderPipelineState& operator=(RenderPipelineState&&)	   = default;
 
-		[[nodiscard]] const GraphicsPipelineDesc& desc() const noexcept { return m_desc; }
+		[[nodiscard]] const RenderPipelineDesc& desc() const noexcept { return m_desc; }
 	};
 
 	export class ComputePipelineState : public PipelineState

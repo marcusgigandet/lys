@@ -25,21 +25,21 @@ import std;
 
 namespace lys::mtl
 {
-	GraphicsPipelineState::GraphicsPipelineState(
-		const rhi::GraphicsPipelineDesc& desc, MTL::Device& device) :
-		Object(device), rhi::GraphicsPipelineState(desc)
+	RenderPipelineState::RenderPipelineState(
+		MTL::Device& device, const rhi::RenderPipelineDesc& desc) :
+		Object(device), rhi::RenderPipelineState(desc)
 	{
 		configureEncoder();
 		setDepthStencilState();
 	}
 
-	void GraphicsPipelineState::configureEncoder() const
+	void RenderPipelineState::configureEncoder() const
 	{
 		m_commandEncoder->setCullMode(toMetalEnum(m_desc.cullMode));
 		m_commandEncoder->setFrontFacingWinding(toMetalEnum(m_desc.winding));
 	}
 
-	void GraphicsPipelineState::setDepthStencilState()
+	void RenderPipelineState::setDepthStencilState()
 	{
 		const auto depthStencilDesc{NS::TransferPtr(MTL::DepthStencilDescriptor::alloc()->init())};
 
@@ -49,5 +49,11 @@ namespace lys::mtl
 		m_depthStencilState =
 			NS::TransferPtr(m_device.newDepthStencilState(depthStencilDesc.get()));
 		m_commandEncoder->setDepthStencilState(m_depthStencilState.get());
+	}
+
+	ComputePipelineState::ComputePipelineState(
+		MTL::Device& device, const rhi::ComputePipelineDesc& desc) :
+		Object(device), rhi::ComputePipelineState(desc)
+	{
 	}
 } // namespace lys::mtl

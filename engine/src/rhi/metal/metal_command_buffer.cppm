@@ -26,9 +26,11 @@ namespace lys::mtl
 {
 	export class CommandBuffer final : public Object, public rhi::CommandBuffer
 	{
-		MTL4::CommandQueue&					  m_commandQueue;
-		NS::SharedPtr<MTL4::CommandBuffer>	  m_commandBuffer;
-		NS::SharedPtr<MTL4::CommandAllocator> m_commandAllocator;
+		MTL4::CommandQueue&						   m_commandQueue;
+		NS::SharedPtr<MTL4::CommandBuffer>		   m_commandBuffer;
+		NS::SharedPtr<MTL4::CommandAllocator>	   m_commandAllocator;
+		NS::SharedPtr<MTL4::ComputeCommandEncoder> m_computeCommandEncoder;
+		NS::SharedPtr<MTL4::RenderCommandEncoder>  m_renderCommandEncoder;
 
 	public:
 		explicit CommandBuffer(MTL::Device& device, MTL4::CommandQueue& commandQueue);
@@ -40,6 +42,12 @@ namespace lys::mtl
 
 		void begin() override;
 		void end() override;
+
+		void beginComputePass() override;
+		void beginRenderPass(const rhi::RenderPassDesc& desc) override;
+
+		void setComputePipelineState(const rhi::ComputePipelineState& state) override;
+		void setRenderPipelineState(const rhi::RenderPipelineState& state) override;
 
 		void generateMipmaps(const rhi::Texture& texture) override;
 	};

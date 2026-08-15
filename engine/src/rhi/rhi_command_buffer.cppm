@@ -17,10 +17,25 @@
 export module lys:rhi_command_buffer;
 
 import std;
+import :rhi_pipeline_state;
 import :rhi_texture;
+import :rhi_types;
+import mag;
 
 namespace lys::rhi
 {
+	export struct DepthAttachmentDesc
+	{
+		LoadAction loadAction{LoadAction::Clear};
+	};
+
+	export struct RenderPassDesc
+	{
+		Vec4f							   clearColor{0.05f, 0.05f, 0.05f, 1.0f};
+		LoadAction						   loadAction{LoadAction::Clear};
+		std::optional<DepthAttachmentDesc> depthAttachmentDesc{std::nullopt};
+	};
+
 	// Forward-declare class
 	export class CommandQueue;
 
@@ -37,6 +52,12 @@ namespace lys::rhi
 
 		virtual void begin() = 0;
 		virtual void end()	 = 0;
+
+		virtual void beginComputePass()							 = 0;
+		virtual void beginRenderPass(const RenderPassDesc& desc) = 0;
+
+		virtual void setComputePipelineState(const ComputePipelineState& state) = 0;
+		virtual void setRenderPipelineState(const RenderPipelineState& state)	= 0;
 
 		virtual void generateMipmaps(const Texture& texture) = 0;
 	};

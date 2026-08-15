@@ -101,12 +101,12 @@ namespace lys::mtl
 	};
 
 
-	inline constexpr std::array DepthFormatToMetal{
+	constexpr std::array DepthFormatToMetal{
 		MTL::PixelFormatDepth16Unorm,
 		MTL::PixelFormatDepth32Float,
 	};
 
-	inline constexpr std::array StencilFormatToMetal{
+	constexpr std::array StencilFormatToMetal{
 		MTL::PixelFormatStencil8,
 	};
 
@@ -114,7 +114,6 @@ namespace lys::mtl
 		MTL::IndexTypeUInt16,
 		MTL::IndexTypeUInt32,
 	};
-
 
 	[[nodiscard]] constexpr MTL::Winding toMetalEnum(const rhi::Winding value) noexcept
 	{
@@ -168,5 +167,10 @@ namespace lys::mtl
 	[[nodiscard]] constexpr MTL::PixelFormat toMetalEnum(const rhi::StencilFormat value) noexcept
 	{
 		return enumLookup(value, StencilFormatToMetal, MTL::PixelFormatInvalid);
+	}
+
+	[[nodiscard]] constexpr MTL::LoadAction toMetalEnum(const rhi::LoadAction value) noexcept
+	{
+		return enumLookup(value, LoadActionToMetal, MTL::LoadActionDontCare);
 	}
 } // namespace lys::mtl
