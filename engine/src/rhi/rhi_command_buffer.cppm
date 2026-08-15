@@ -17,6 +17,7 @@
 export module lys:rhi_command_buffer;
 
 import std;
+import :rhi_texture;
 
 namespace lys::rhi
 {
@@ -37,5 +38,7 @@ namespace lys::rhi
 		virtual void begin()  = 0;
 		virtual void end()	  = 0;
 		virtual void commit() = 0;
+
+		virtual void generateMipmaps(const Texture& texture) = 0;
 	};
 } // namespace lys::rhi

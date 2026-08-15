@@ -45,10 +45,7 @@ namespace lys::mtl
 
 	std::unique_ptr<rhi::Texture> Device::createTexture(const rhi::TextureDesc& desc)
 	{
-		return std::make_unique<Texture>(
-			*m_device.get(),
-			*static_cast<CommandQueue&>(transferQueue()).commandQueue(),
-			desc);
+		return std::make_unique<Texture>(*m_device.get(), desc);
 	}
 
 	std::unique_ptr<rhi::Shader> Device::createShader(const rhi::ShaderDesc& desc)

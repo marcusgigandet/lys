@@ -46,4 +46,27 @@ namespace lys::mtl
 		const MTL4::CommandBuffer* buf{m_commandBuffer.get()};
 		m_commandQueue.commit(&buf, 1);
 	}
+
+	void CommandBuffer::generateMipmaps(const rhi::Texture& texture)
+	{
+		// Generate mipmaps
+		const auto commandAllocator{m_device.newCommandAllocator()};
+		const auto commandBuffer{m_device.newCommandBuffer()};
+		commandBuffer->beginCommandBuffer(commandAllocator);
+
+		// Use an encoder to generate mipmaps
+		const auto computeCommandEncoder{commandBuffer->computeCommandEncoder()};
+		computeCommandEncoder->generateMipmaps(static_cast<const Texture&>(texture).texture());
+		computeCommandEncoder->endEncoding();
+
+		// Commit the command buffer to the command queue
+		commandBuffer->endCommandBuffer();
+		m_commandQueue.commit(&commandBuffer, 1);
+
+
+		// Free memory
+		computeCommandEncoder->release();
+		commandBuffer->release();
+		commandAllocator->release();
+	}
 } // namespace lys::mtl

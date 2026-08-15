@@ -28,11 +28,11 @@ namespace lys::mtl
 	export class Texture : public Object, public rhi::Texture
 	{
 		NS::SharedPtr<MTL::Texture> m_texture;
-		MTL4::CommandQueue&			m_commandQueue;
 
 	public:
-		explicit Texture(
-			MTL::Device& device, MTL4::CommandQueue& queue, const rhi::TextureDesc& desc);
+		explicit Texture(MTL::Device& device, const rhi::TextureDesc& desc);
+
+		[[nodiscard]] MTL::Texture* texture() const noexcept { return m_texture.get(); }
 
 		Result<void>
 		upload(std::span<const std::byte> data, std::size_t bytesPerRow) noexcept override;

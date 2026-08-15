@@ -20,6 +20,7 @@ export module lys:metal_command_buffer;
 
 import :rhi_command_buffer;
 import :metal_object;
+import :metal_texture;
 
 namespace lys::mtl
 {
@@ -40,5 +41,7 @@ namespace lys::mtl
 		void begin() override;
 		void end() override;
 		void commit() override;
+
+		void generateMipmaps(const rhi::Texture& texture) override;
 	};
 } // namespace lys::mtl

@@ -26,8 +26,8 @@ import std;
 
 namespace lys::mtl
 {
-	Texture::Texture(MTL::Device& device, MTL4::CommandQueue& queue, const rhi::TextureDesc& desc) :
-		Object(device), rhi::Texture(desc), m_commandQueue(queue)
+	Texture::Texture(MTL::Device& device, const rhi::TextureDesc& desc) :
+		Object(device), rhi::Texture(desc)
 	{
 		createTexture();
 	}
@@ -63,11 +63,5 @@ namespace lys::mtl
 		mtlTexDesc->setUsage(MTL::TextureUsageShaderRead | MTL::TextureUsageShaderWrite);
 		mtlTexDesc->setMipmapLevelCount(m_mipLevels);
 		m_texture = NS::TransferPtr(m_device.newTexture(mtlTexDesc));
-
-		// Generate mipmaps
-		if (m_mipLevels > 1)
-		{
-			// blitEncoder->generateMipmaps(m_texture.get());
-		}
 	}
 } // namespace lys::mtl
