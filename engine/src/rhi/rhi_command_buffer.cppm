@@ -16,11 +16,12 @@
 
 export module lys:rhi_command_buffer;
 
-import std;
+import :rhi_buffer;
 import :rhi_pipeline_state;
 import :rhi_texture;
 import :rhi_types;
 import mag;
+import std;
 
 namespace lys::rhi
 {
@@ -60,5 +61,53 @@ namespace lys::rhi
 		virtual void setRenderPipelineState(const RenderPipelineState& state)	= 0;
 
 		virtual void generateMipmaps(const Texture& texture) = 0;
+
+		/**
+		 * @brief Binds a buffer resource to the render pipeline.
+		 *
+		 * @param stage Shader stage to bind the resource to.
+		 * @param buffer Buffer to bind.
+		 * @param name Name of the resource in the shader.
+		 *
+		 * @return Reference to this for chaining.
+		 */
+		virtual CommandBuffer&
+		setResource(ShaderStage stage, const Buffer& buffer, const std::string& name) = 0;
+
+		/**
+		 * @brief Binds a texture resource to the render pipeline.
+		 *
+		 * @param stage Shader stage to bind the resource to.
+		 * @param texture Texture to bind.
+		 * @param name Name of the resource in the shader.
+		 *
+		 * @return Reference to this for chaining.
+		 */
+		virtual CommandBuffer&
+		setResource(ShaderStage stage, const Texture& texture, const std::string& name) = 0;
+
+		/**
+		 * @brief Binds a buffer resource at a specific index, stage, and offset.
+		 *
+		 * @param stage Shader stage to bind the resource to.
+		 * @param buffer Buffer to bind.
+		 * @param index Binding index.
+		 *
+		 * @return Reference to this for chaining.
+		 */
+		virtual CommandBuffer&
+		setResource(ShaderStage stage, const Buffer& buffer, std::uint32_t index) = 0;
+
+		/**
+		 * @brief Binds a texture resource at a specific index and stage.
+		 *
+		 * @param stage Shader stage to bind the resource to.
+		 * @param texture texture to bind.
+		 * @param index Binding index.
+		 *
+		 * @return Reference to this for chaining.
+		 */
+		virtual CommandBuffer&
+		setResource(ShaderStage stage, const Texture& texture, std::uint32_t index) = 0;
 	};
 } // namespace lys::rhi

@@ -16,6 +16,7 @@
 
 module;
 #include <Metal/Metal.hpp>
+#include <spdlog/spdlog.h>
 export module lys:metal_command_buffer.impl;
 
 import :metal_command_buffer;
@@ -71,12 +72,22 @@ namespace lys::mtl
 
 	void CommandBuffer::setComputePipelineState(const rhi::ComputePipelineState& state)
 	{
+		if (!m_computeCommandEncoder)
+		{
+			return;
+		}
+
 		m_computeCommandEncoder->setComputePipelineState(
 			static_cast<const ComputePipelineState&>(state).computePipelineState());
 	}
 
 	void CommandBuffer::setRenderPipelineState(const rhi::RenderPipelineState& state)
 	{
+		if (!m_renderCommandEncoder)
+		{
+			return;
+		}
+
 		m_renderCommandEncoder->setRenderPipelineState(
 			static_cast<const RenderPipelineState&>(state).renderPipelineState());
 	}
@@ -102,5 +113,100 @@ namespace lys::mtl
 		computeCommandEncoder->release();
 		commandBuffer->release();
 		commandAllocator->release();
+	}
+
+	CommandBuffer& CommandBuffer::setResource(
+		const rhi::ShaderStage stage, const rhi::Buffer& buffer, const std::string& name)
+	{
+		// Return early if the encoder is null
+		if (!isEncoderValid(stage))
+		{
+			return *this;
+		}
+
+		return *this;
+	}
+
+	CommandBuffer& CommandBuffer::setResource(
+		const rhi::ShaderStage stage, const rhi::Texture& texture, const std::string& name)
+	{
+		// Return early if the encoder is null
+		if (!isEncoderValid(stage))
+		{
+			return *this;
+		}
+
+		return *this;
+	}
+
+	CommandBuffer& CommandBuffer::setResource(
+		const rhi::ShaderStage stage, const rhi::Buffer& buffer, std::uint32_t index)
+	{
+		// Return early if the encoder is null
+		if (!isEncoderValid(stage))
+		{
+			return *this;
+		}
+
+		return *this;
+	}
+
+	CommandBuffer& CommandBuffer::setResource(
+		const rhi::ShaderStage stage, const rhi::Texture& texture, std::uint32_t index)
+	{
+		// Return early if the encoder is null
+		if (!isEncoderValid(stage))
+		{
+			return *this;
+		}
+
+		switch (stage)
+		{
+		case rhi::ShaderStage::Compute:
+			break;
+		case rhi::ShaderStage::Fragment:
+			break;
+		case rhi::ShaderStage::Vertex:
+			break;
+		}
+
+		return *this;
+	}
+
+	MTL4::ArgumentTable* CommandBuffer::makeArgumentTable() const
+	{
+		NS::Error* nsError;
+		const auto argumentTableDescriptor{MTL4::ArgumentTableDescriptor::alloc()->init()};
+
+		// Todo: Make this use maxFramesInFlight
+		argumentTableDescriptor->setMaxBufferBindCount(1);
+
+		// Create the argument table
+		const auto argumentTable{m_device.newArgumentTable(argumentTableDescriptor, &nsError)};
+		argumentTableDescriptor->release();
+
+		if (nsError)
+		{
+			spdlog::debug(
+				std::format(
+					"An error occurred when constructing an MTL4::ArgumentTable : {}",
+					nsError->description()->cString(NS::UTF8StringEncoding)));
+			argumentTable->release();
+			return nullptr;
+		}
+
+		return argumentTable;
+	}
+
+	bool CommandBuffer::isEncoderValid(const rhi::ShaderStage stage) const
+	{
+		if (rhi::ShaderStage::Compute == stage)
+		{
+			return nullptr != m_computeCommandEncoder.get();
+		}
+		else
+		{
+			return nullptr != m_renderCommandEncoder.get();
+		}
 	}
 } // namespace lys::mtl

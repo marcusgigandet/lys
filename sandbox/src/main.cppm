@@ -23,10 +23,58 @@ using namespace lys;
 
 namespace
 {
+	class Renderer
+	{
+		std::unique_ptr<rhi::Device> m_device;
+		std::unique_ptr<rhi::Shader> m_vertShader;
+		std::unique_ptr<rhi::Shader> m_fragShader;
+
+	public:
+		Renderer()
+		{
+			constexpr rhi::DeviceDesc deviceDesc{
+				.backend		   = rhi::Backend::Auto,
+				.maxFramesInFlight = 3,
+			};
+			m_device = rhi::createDevice(deviceDesc);
+
+			m_vertShader = m_device->createShader({
+				.stage		= rhi::ShaderStage::Vertex,
+				.language	= rhi::ShaderLanguage::Metal,
+				.entryPoint = "vertexMain",
+				.source		= std::filesystem::path("shaders/generic_shader.metal"),
+			});
+			m_fragShader = m_device->createShader({
+				.stage		= rhi::ShaderStage::Vertex,
+				.language	= rhi::ShaderLanguage::Metal,
+				.entryPoint = "fragmentMain",
+				.source		= std::filesystem::path("shaders/generic_shader.metal"),
+			});
+			m_vertShader->reload();
+			m_fragShader->reload();
+		}
+
+		void render() const
+		{
+			auto&	   graphicsQueue{m_device->graphicsQueue()};
+			const auto commandBuffer{m_device->createCommandBuffer()};
+			const auto renderPipelineState{m_device->createRenderPipeline({
+				.vertexShader	= m_vertShader.get(),
+				.fragmentShader = m_fragShader.get(),
+			})};
+
+			commandBuffer->begin();
+			commandBuffer->setRenderPipelineState(*renderPipelineState);
+			commandBuffer->end();
+
+			graphicsQueue.submit(*commandBuffer);
+		}
+	};
+
 	class Application
 	{
-		std::unique_ptr<Window>		 m_window;
-		std::unique_ptr<rhi::Device> m_device;
+		std::unique_ptr<Window>	  m_window;
+		std::unique_ptr<Renderer> m_renderer;
 
 	public:
 		~Application() { shutdown(); }
@@ -41,7 +89,7 @@ namespace
 			{
 				Window::pollEvents();
 
-				render();
+				m_renderer->render();
 
 				m_window->update();
 			}
@@ -60,13 +108,7 @@ namespace
 			};
 			m_window = std::make_unique<Window>(windowDesc);
 
-			constexpr rhi::DeviceDesc deviceDesc{
-				.backend		   = rhi::Backend::Auto,
-				.maxFramesInFlight = 3,
-			};
-			m_device = rhi::createDevice(deviceDesc);
-
-			register_callbacks();
+			registerCallbacks();
 		}
 
 		void shutdown()
@@ -75,7 +117,7 @@ namespace
 			Window::terminate();
 		}
 
-		void register_callbacks() const
+		void registerCallbacks() const
 		{
 			m_window->inputManager().addKeyEventListener(
 				[this](const KeyInputEvent& event)
@@ -85,19 +127,6 @@ namespace
 						m_window->close();
 					}
 				});
-		}
-
-		void render()
-		{
-			auto&	   graphicsQueue{m_device->graphicsQueue()};
-			const auto renderPipelineState{m_device->createRenderPipeline({})};
-			const auto commandBuffer{m_device->createCommandBuffer()};
-
-			commandBuffer->begin();
-
-			commandBuffer->end();
-
-			graphicsQueue.submit(*commandBuffer);
 		}
 	};
 } // namespace

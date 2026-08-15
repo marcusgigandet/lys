@@ -50,5 +50,21 @@ namespace lys::mtl
 		void setRenderPipelineState(const rhi::RenderPipelineState& state) override;
 
 		void generateMipmaps(const rhi::Texture& texture) override;
+
+		CommandBuffer& setResource(
+			rhi::ShaderStage stage, const rhi::Buffer& buffer, const std::string& name) override;
+
+		CommandBuffer& setResource(
+			rhi::ShaderStage stage, const rhi::Texture& texture, const std::string& name) override;
+
+		CommandBuffer& setResource(
+			rhi::ShaderStage stage, const rhi::Buffer& buffer, std::uint32_t index) override;
+
+		CommandBuffer& setResource(
+			rhi::ShaderStage stage, const rhi::Texture& texture, std::uint32_t index) override;
+
+	private:
+		MTL4::ArgumentTable* makeArgumentTable() const;
+		bool isEncoderValid(rhi::ShaderStage stage) const;
 	};
 } // namespace lys::mtl

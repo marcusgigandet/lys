@@ -26,3 +26,10 @@ extensions = [".cpp", ".cppm", ".hpp"]
 block_start = "/*"
 line_prefix = " * "
 block_end = " */"
+
+[languages.metal]
+extensions = [".metal"]
+block_start = "/*"
+line_prefix = " * "
+block_end = " */"
+
