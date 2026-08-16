@@ -77,15 +77,21 @@ namespace
 			m_swapchain->resize(size.x, size.y);
 			m_swapchain->acquireNextImage();
 
-			auto&	   graphicsQueue{m_device->renderQueue()};
-			const auto commandBuffer{m_device->createCommandBuffer()};
-			const auto renderPipelineState{m_device->createRenderPipeline({
+			static auto& graphicsQueue{m_device->renderQueue()};
+			const auto	 commandBuffer{m_device->createCommandBuffer()};
+			const auto	 renderPipelineState{m_device->createRenderPipeline({
 				.vertexShader	= m_vertShader.get(),
 				.fragmentShader = m_fragShader.get(),
 			})};
 
 			commandBuffer->begin();
 			commandBuffer->setRenderPipelineState(*renderPipelineState);
+			constexpr rhi::RenderPassDesc renderPassDesc{
+				.clearColor = {1.0f, 0.0f, 0.0f, 1.0f},
+				.loadAction = rhi::LoadAction::Clear,
+			};
+			commandBuffer->beginRenderPass(renderPassDesc);
+			commandBuffer->endRenderPass();
 			commandBuffer->end();
 
 			graphicsQueue.submit(*commandBuffer);

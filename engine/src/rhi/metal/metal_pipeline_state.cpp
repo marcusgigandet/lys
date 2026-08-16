@@ -16,9 +16,11 @@
 
 module;
 #include <Metal/Metal.hpp>
+#include <spdlog/spdlog.h>
 export module lys:metal_pipeline_state.impl;
 
 import :metal_pipeline_state;
+import :metal_shader;
 import :metal_types;
 import :rhi_pipeline_state;
 import std;
@@ -29,17 +31,44 @@ namespace lys::mtl
 		MTL::Device& device, const rhi::RenderPipelineDesc& desc) :
 		Object(device), rhi::RenderPipelineState(desc)
 	{
-		configureEncoder();
-		setDepthStencilState();
+		createRenderPipelineState();
+		createDepthStencilState();
 	}
 
-	void RenderPipelineState::configureEncoder() const
+	void RenderPipelineState::createRenderPipelineState()
 	{
-		m_commandEncoder->setCullMode(toMetalEnum(m_desc.cullMode));
-		m_commandEncoder->setFrontFacingWinding(toMetalEnum(m_desc.winding));
+		const auto pipelineDesc{NS::TransferPtr(MTL::RenderPipelineDescriptor::alloc()->init())};
+
+		if (m_desc.vertexShader)
+		{
+			const auto fn{static_cast<const Shader&>(*m_desc.vertexShader)
+							  .function(m_desc.vertexShader->entryPoint())};
+			pipelineDesc->setVertexFunction(fn);
+		}
+
+		if (m_desc.fragmentShader)
+		{
+			const auto fn{static_cast<const Shader&>(*m_desc.fragmentShader)
+							  .function(m_desc.fragmentShader->entryPoint())};
+			pipelineDesc->setFragmentFunction(fn);
+		}
+
+		pipelineDesc->colorAttachments()->object(0)->setPixelFormat(
+			toMetalEnum(m_desc.colorPixelFormat));
+
+		NS::Error* error{};
+		m_renderPipelineState =
+			NS::TransferPtr(m_device.newRenderPipelineState(pipelineDesc.get(), &error));
+
+		if (!m_renderPipelineState)
+		{
+			SPDLOG_ERROR(
+				"Failed to create Metal render pipeline state: {}",
+				error ? error->description()->cString(NS::UTF8StringEncoding) : "unknown error");
+		}
 	}
 
-	void RenderPipelineState::setDepthStencilState()
+	void RenderPipelineState::createDepthStencilState()
 	{
 		const auto depthStencilDesc{NS::TransferPtr(MTL::DepthStencilDescriptor::alloc()->init())};
 
@@ -48,7 +77,6 @@ namespace lys::mtl
 
 		m_depthStencilState =
 			NS::TransferPtr(m_device.newDepthStencilState(depthStencilDesc.get()));
-		m_commandEncoder->setDepthStencilState(m_depthStencilState.get());
 	}
 
 	ComputePipelineState::ComputePipelineState(

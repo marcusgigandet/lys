@@ -55,6 +55,11 @@ namespace lys::mtl
 			SPDLOG_ERROR("Failed to load Metal shader source: {}", result.error().message);
 			return;
 		}
+
+		if (const ErrorCode status = loadFunction(m_entryPoint); ErrorCode::NoError != status)
+		{
+			SPDLOG_ERROR("Failed to load Metal shader entry point: '{}'", m_entryPoint);
+		}
 	}
 
 	Shader::~Shader()
@@ -126,6 +131,17 @@ namespace lys::mtl
 		}
 
 		return ErrorCode::NoError;
+	}
+
+	MTL::Function* Shader::function(const std::string_view entryPoint) const
+	{
+		const auto it = m_functions.find(entryPoint);
+		if (it == m_functions.end())
+		{
+			return nullptr;
+		}
+
+		return it->second.get();
 	}
 
 	ErrorCode Shader::loadFunction(const std::string& entryPoint)

@@ -57,6 +57,9 @@ namespace lys::rhi
 		virtual void beginComputePass()							 = 0;
 		virtual void beginRenderPass(const RenderPassDesc& desc) = 0;
 
+		virtual void endComputePass() = 0;
+		virtual void endRenderPass()  = 0;
+
 		virtual void setComputePipelineState(const ComputePipelineState& state) = 0;
 		virtual void setRenderPipelineState(const RenderPipelineState& state)	= 0;
 

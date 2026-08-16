@@ -37,7 +37,7 @@ namespace lys::mtl
 			attachToWindow(m_window);
 		}
 
-		~Surface() = default;
+		~Surface() override = default;
 
 		[[nodiscard]] CA::MetalLayer* layer() const noexcept { return m_layer.get(); }
 

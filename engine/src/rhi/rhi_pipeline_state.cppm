@@ -30,6 +30,7 @@ namespace lys::rhi
 		FillMode		fillMode{FillMode::Fill};
 		CullMode		cullMode{CullMode::Back};
 		Winding			winding{Winding::CounterClockwise};
+		PixelFormat		colorPixelFormat{PixelFormat::BGRA8_sRGB};
 		CompareFunction depthCompareFunction{CompareFunction::Less};
 		bool			depthTestEnabled{true};
 		bool			depthWriteEnabled{true};

@@ -19,8 +19,10 @@ module;
 #include <spdlog/spdlog.h>
 export module lys:metal_command_buffer.impl;
 
+import :metal_buffer;
 import :metal_command_buffer;
 import :metal_pipeline_state;
+import :metal_texture;
 import :metal_types;
 import :rhi_command_buffer;
 import std;
@@ -70,6 +72,16 @@ namespace lys::mtl
 			NS::TransferPtr(m_commandBuffer->renderCommandEncoder(descriptor.get()));
 	}
 
+	void CommandBuffer::endComputePass()
+	{
+		m_computeCommandEncoder->endEncoding();
+	}
+
+	void CommandBuffer::endRenderPass()
+	{
+		m_renderCommandEncoder->endEncoding();
+	}
+
 	void CommandBuffer::setComputePipelineState(const rhi::ComputePipelineState& state)
 	{
 		if (!m_computeCommandEncoder)
@@ -88,8 +100,16 @@ namespace lys::mtl
 			return;
 		}
 
-		m_renderCommandEncoder->setRenderPipelineState(
-			static_cast<const RenderPipelineState&>(state).renderPipelineState());
+		const auto& mtlState = static_cast<const RenderPipelineState&>(state);
+
+		m_renderCommandEncoder->setRenderPipelineState(mtlState.renderPipelineState());
+		m_renderCommandEncoder->setCullMode(toMetalEnum(mtlState.desc().cullMode));
+		m_renderCommandEncoder->setFrontFacingWinding(toMetalEnum(mtlState.desc().winding));
+
+		if (mtlState.depthStencilState())
+		{
+			m_renderCommandEncoder->setDepthStencilState(mtlState.depthStencilState());
+		}
 	}
 
 	void CommandBuffer::generateMipmaps(const rhi::Texture& texture)
@@ -148,6 +168,12 @@ namespace lys::mtl
 			return *this;
 		}
 
+		const auto argumentTable{makeArgumentTable()};
+		argumentTable->setAddress(static_cast<const Buffer&>(buffer).buffer()->gpuAddress(), index);
+		m_renderCommandEncoder->setArgumentTable(
+			argumentTable,
+			MTL::RenderStageFragment | MTL::RenderStageVertex);
+
 		return *this;
 	}
 
@@ -160,15 +186,13 @@ namespace lys::mtl
 			return *this;
 		}
 
-		switch (stage)
-		{
-		case rhi::ShaderStage::Compute:
-			break;
-		case rhi::ShaderStage::Fragment:
-			break;
-		case rhi::ShaderStage::Vertex:
-			break;
-		}
+		const auto argumentTable{makeArgumentTable()};
+		argumentTable->setTexture(
+			static_cast<const Texture&>(texture).texture()->gpuResourceID(),
+			index);
+		m_renderCommandEncoder->setArgumentTable(
+			argumentTable,
+			MTL::RenderStageFragment | MTL::RenderStageVertex);
 
 		return *this;
 	}
@@ -179,7 +203,7 @@ namespace lys::mtl
 		const auto argumentTableDescriptor{MTL4::ArgumentTableDescriptor::alloc()->init()};
 
 		// Todo: Make this use maxFramesInFlight
-		argumentTableDescriptor->setMaxBufferBindCount(1);
+		argumentTableDescriptor->setMaxBufferBindCount(3);
 
 		// Create the argument table
 		const auto argumentTable{m_device.newArgumentTable(argumentTableDescriptor, &nsError)};

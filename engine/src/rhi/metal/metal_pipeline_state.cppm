@@ -26,9 +26,8 @@ namespace lys::mtl
 {
 	export class RenderPipelineState final : public Object, public rhi::RenderPipelineState
 	{
-		NS::SharedPtr<MTL::RenderPipelineState>	  m_renderPipelineState;
-		NS::SharedPtr<MTL4::RenderCommandEncoder> m_commandEncoder;
-		NS::SharedPtr<MTL::DepthStencilState>	  m_depthStencilState;
+		NS::SharedPtr<MTL::RenderPipelineState> m_renderPipelineState;
+		NS::SharedPtr<MTL::DepthStencilState>	m_depthStencilState;
 
 	public:
 		explicit RenderPipelineState(MTL::Device& device, const rhi::RenderPipelineDesc& desc);
@@ -38,26 +37,19 @@ namespace lys::mtl
 			return m_renderPipelineState.get();
 		}
 
-		[[nodiscard]] MTL4::RenderCommandEncoder* renderCommandEncoder() const noexcept
-		{
-			return m_commandEncoder.get();
-		}
-
 		[[nodiscard]] MTL::DepthStencilState* depthStencilState() const noexcept
 		{
 			return m_depthStencilState.get();
 		}
 
 	private:
-		void configureEncoder() const;
-
-		void setDepthStencilState();
+		void createRenderPipelineState();
+		void createDepthStencilState();
 	};
 
 	export class ComputePipelineState final : public Object, public rhi::ComputePipelineState
 	{
-		NS::SharedPtr<MTL::ComputePipelineState>   m_computePipelineState;
-		NS::SharedPtr<MTL4::ComputeCommandEncoder> m_commandEncoder;
+		NS::SharedPtr<MTL::ComputePipelineState> m_computePipelineState;
 
 	public:
 		explicit ComputePipelineState(MTL::Device& device, const rhi::ComputePipelineDesc& desc);
@@ -65,11 +57,6 @@ namespace lys::mtl
 		[[nodiscard]] MTL::ComputePipelineState* computePipelineState() const noexcept
 		{
 			return m_computePipelineState.get();
-		}
-
-		[[nodiscard]] MTL4::ComputeCommandEncoder* computeCommandEncoder() const noexcept
-		{
-			return m_commandEncoder.get();
 		}
 	};
 } // namespace lys::mtl

@@ -84,5 +84,6 @@ namespace lys::mtl
 
 		layer->setMaximumDrawableCount(m_desc.imageCount);
 		layer->setPixelFormat(toMetalEnum(m_desc.pixelFormat));
+		layer->setDisplaySyncEnabled(m_desc.vsync);
 	}
 } // namespace lys::mtl

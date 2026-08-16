@@ -46,6 +46,9 @@ namespace lys::mtl
 		void beginComputePass() override;
 		void beginRenderPass(const rhi::RenderPassDesc& desc) override;
 
+		void endComputePass() override;
+		void endRenderPass() override;
+
 		void setComputePipelineState(const rhi::ComputePipelineState& state) override;
 		void setRenderPipelineState(const rhi::RenderPipelineState& state) override;
 

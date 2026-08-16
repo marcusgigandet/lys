@@ -38,6 +38,8 @@ namespace lys::mtl
 		Result<void> load(const std::filesystem::path& path) override;
 		void		 reload() override;
 
+		[[nodiscard]] MTL::Function* function(std::string_view entryPoint) const;
+
 	private:
 		ErrorCode loadLibrary(const NS::String* nsString);
 		void	  unloadLibrary() { m_library.reset(); }
