@@ -17,6 +17,7 @@
 export module lys:rhi_swapchain;
 
 import :rhi_surface;
+import :rhi_texture;
 import :rhi_types;
 import std;
 
@@ -49,9 +50,10 @@ namespace lys::rhi
 		Swapchain(Swapchain&&)				   = delete;
 		Swapchain& operator=(Swapchain&&)	   = delete;
 
-		virtual void resize(std::uint32_t width, std::uint32_t height) = 0;
-		virtual void acquireNextImage()								   = 0;
-		virtual void present()										   = 0;
+		virtual void						 resize(std::uint32_t width, std::uint32_t height) = 0;
+		virtual void						 acquireNextImage()								   = 0;
+		virtual void						 present()										   = 0;
+		[[nodiscard]] virtual const Texture* currentTexture() const noexcept				   = 0;
 
 		[[nodiscard]] const SwapchainDesc& desc() const noexcept { return m_desc; }
 		[[nodiscard]] Surface&			   surface() noexcept { return m_surface; }

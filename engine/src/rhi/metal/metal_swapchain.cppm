@@ -19,6 +19,7 @@ module;
 export module lys:metal_swapchain;
 
 import :metal_surface;
+import :metal_texture;
 import :rhi_swapchain;
 import std;
 
@@ -27,6 +28,7 @@ namespace lys::mtl
 	export class Swapchain final : public rhi::Swapchain
 	{
 		NS::SharedPtr<CA::MetalDrawable> m_drawable{};
+		std::unique_ptr<Texture>		 m_texture{};
 
 	public:
 		explicit Swapchain(rhi::Surface& surface, const rhi::SwapchainDesc& desc);
@@ -36,6 +38,10 @@ namespace lys::mtl
 		void resize(std::uint32_t width, std::uint32_t height) override;
 		void acquireNextImage() override;
 		void present() override;
+		[[nodiscard]] const rhi::Texture* currentTexture() const noexcept override
+		{
+			return m_texture.get();
+		}
 
 		[[nodiscard]] CA::MetalDrawable* drawable() const noexcept { return m_drawable.get(); }
 

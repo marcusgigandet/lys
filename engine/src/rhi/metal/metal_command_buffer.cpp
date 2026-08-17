@@ -16,12 +16,11 @@
 
 module;
 #include <Metal/Metal.hpp>
-#include <spdlog/spdlog.h>
-export module lys:metal_command_buffer.impl;
+module lys:metal_command_buffer.impl;
 
-import :metal_buffer;
 import :metal_command_buffer;
-import :metal_pipeline_state;
+import :metal_compute_pass_encoder;
+import :metal_render_pass_encoder;
 import :metal_texture;
 import :metal_types;
 import :rhi_command_buffer;
@@ -43,194 +42,85 @@ namespace lys::mtl
 
 	void CommandBuffer::end()
 	{
+		endActivePass();
 		m_commandBuffer->endCommandBuffer();
 	}
 
-	void CommandBuffer::beginComputePass()
+	rhi::ComputePassEncoder& CommandBuffer::beginComputePass()
 	{
-		m_computeCommandEncoder = NS::TransferPtr(m_commandBuffer->computeCommandEncoder());
+		endActivePass();
+		m_computePassEncoder = std::make_unique<ComputePassEncoder>(
+			m_device,
+			m_commandBuffer->computeCommandEncoder());
+		return *m_computePassEncoder;
 	}
 
-	void CommandBuffer::beginRenderPass(const rhi::RenderPassDesc& desc)
+	rhi::RenderPassEncoder& CommandBuffer::beginRenderPass(const rhi::RenderPassDesc& desc)
 	{
-		const auto descriptor{NS::TransferPtr(MTL4::RenderPassDescriptor::alloc()->init())};
+		if (!desc.colorAttachment)
+		{
+			throw std::invalid_argument("A render pass requires a color attachment");
+		}
 
-		// Configure the depth attachment
+		endActivePass();
+		const auto descriptor{NS::TransferPtr(MTL4::RenderPassDescriptor::alloc()->init())};
+		const auto colorAttachment{descriptor->colorAttachments()->object(0)};
+		colorAttachment->setTexture(static_cast<const Texture&>(*desc.colorAttachment).texture());
+		colorAttachment->setLoadAction(toMetalEnum(desc.loadAction));
+		colorAttachment->setStoreAction(MTL::StoreActionStore);
+		colorAttachment->setClearColor(
+			MTL::ClearColor{
+				desc.clearColor.x,
+				desc.clearColor.y,
+				desc.clearColor.z,
+				desc.clearColor.w,
+			});
+
 		if (desc.depthAttachmentDesc.has_value())
 		{
 			const auto [loadAction]{desc.depthAttachmentDesc.value()};
 			const auto depthDescriptor{
 				NS::TransferPtr(MTL::RenderPassDepthAttachmentDescriptor::alloc()->init())};
 			depthDescriptor->setLoadAction(toMetalEnum(loadAction));
-
-			// Set the depth attachment on the render pass
 			descriptor->setDepthAttachment(depthDescriptor.get());
 		}
 
-		// Configure the render pass
-		m_renderCommandEncoder =
-			NS::TransferPtr(m_commandBuffer->renderCommandEncoder(descriptor.get()));
-	}
-
-	void CommandBuffer::endComputePass()
-	{
-		m_computeCommandEncoder->endEncoding();
-	}
-
-	void CommandBuffer::endRenderPass()
-	{
-		m_renderCommandEncoder->endEncoding();
-	}
-
-	void CommandBuffer::setComputePipelineState(const rhi::ComputePipelineState& state)
-	{
-		if (!m_computeCommandEncoder)
-		{
-			return;
-		}
-
-		m_computeCommandEncoder->setComputePipelineState(
-			static_cast<const ComputePipelineState&>(state).computePipelineState());
-	}
-
-	void CommandBuffer::setRenderPipelineState(const rhi::RenderPipelineState& state)
-	{
-		if (!m_renderCommandEncoder)
-		{
-			return;
-		}
-
-		const auto& mtlState = static_cast<const RenderPipelineState&>(state);
-
-		m_renderCommandEncoder->setRenderPipelineState(mtlState.renderPipelineState());
-		m_renderCommandEncoder->setCullMode(toMetalEnum(mtlState.desc().cullMode));
-		m_renderCommandEncoder->setFrontFacingWinding(toMetalEnum(mtlState.desc().winding));
-
-		if (mtlState.depthStencilState())
-		{
-			m_renderCommandEncoder->setDepthStencilState(mtlState.depthStencilState());
-		}
+		m_renderPassEncoder = std::make_unique<RenderPassEncoder>(
+			m_device,
+			m_commandBuffer->renderCommandEncoder(descriptor.get()));
+		return *m_renderPassEncoder;
 	}
 
 	void CommandBuffer::generateMipmaps(const rhi::Texture& texture)
 	{
-		// Generate mipmaps
 		const auto commandAllocator{m_device.newCommandAllocator()};
 		const auto commandBuffer{m_device.newCommandBuffer()};
 		commandBuffer->beginCommandBuffer(commandAllocator);
 
-		// Use an encoder to generate mipmaps
 		const auto computeCommandEncoder{commandBuffer->computeCommandEncoder()};
 		computeCommandEncoder->generateMipmaps(static_cast<const Texture&>(texture).texture());
 		computeCommandEncoder->endEncoding();
 
-		// Commit the command buffer to the command queue
 		commandBuffer->endCommandBuffer();
 		m_commandQueue.commit(&commandBuffer, 1);
 
-
-		// Free memory
 		computeCommandEncoder->release();
 		commandBuffer->release();
 		commandAllocator->release();
 	}
 
-	CommandBuffer& CommandBuffer::setResource(
-		const rhi::ShaderStage stage, const rhi::Buffer& buffer, const std::string& name)
+	void CommandBuffer::endActivePass()
 	{
-		// Return early if the encoder is null
-		if (!isEncoderValid(stage))
+		if (m_renderPassEncoder)
 		{
-			return *this;
+			m_renderPassEncoder->end();
+			m_renderPassEncoder.reset();
 		}
 
-		return *this;
-	}
-
-	CommandBuffer& CommandBuffer::setResource(
-		const rhi::ShaderStage stage, const rhi::Texture& texture, const std::string& name)
-	{
-		// Return early if the encoder is null
-		if (!isEncoderValid(stage))
+		if (m_computePassEncoder)
 		{
-			return *this;
-		}
-
-		return *this;
-	}
-
-	CommandBuffer& CommandBuffer::setResource(
-		const rhi::ShaderStage stage, const rhi::Buffer& buffer, std::uint32_t index)
-	{
-		// Return early if the encoder is null
-		if (!isEncoderValid(stage))
-		{
-			return *this;
-		}
-
-		const auto argumentTable{makeArgumentTable()};
-		argumentTable->setAddress(static_cast<const Buffer&>(buffer).buffer()->gpuAddress(), index);
-		m_renderCommandEncoder->setArgumentTable(
-			argumentTable,
-			MTL::RenderStageFragment | MTL::RenderStageVertex);
-
-		return *this;
-	}
-
-	CommandBuffer& CommandBuffer::setResource(
-		const rhi::ShaderStage stage, const rhi::Texture& texture, std::uint32_t index)
-	{
-		// Return early if the encoder is null
-		if (!isEncoderValid(stage))
-		{
-			return *this;
-		}
-
-		const auto argumentTable{makeArgumentTable()};
-		argumentTable->setTexture(
-			static_cast<const Texture&>(texture).texture()->gpuResourceID(),
-			index);
-		m_renderCommandEncoder->setArgumentTable(
-			argumentTable,
-			MTL::RenderStageFragment | MTL::RenderStageVertex);
-
-		return *this;
-	}
-
-	MTL4::ArgumentTable* CommandBuffer::makeArgumentTable() const
-	{
-		NS::Error* nsError;
-		const auto argumentTableDescriptor{MTL4::ArgumentTableDescriptor::alloc()->init()};
-
-		// Todo: Make this use maxFramesInFlight
-		argumentTableDescriptor->setMaxBufferBindCount(3);
-
-		// Create the argument table
-		const auto argumentTable{m_device.newArgumentTable(argumentTableDescriptor, &nsError)};
-		argumentTableDescriptor->release();
-
-		if (nsError)
-		{
-			SPDLOG_DEBUG(
-				std::format(
-					"An error occurred when constructing an MTL4::ArgumentTable : {}",
-					nsError->description()->cString(NS::UTF8StringEncoding)));
-			argumentTable->release();
-			return nullptr;
-		}
-
-		return argumentTable;
-	}
-
-	bool CommandBuffer::isEncoderValid(const rhi::ShaderStage stage) const
-	{
-		if (rhi::ShaderStage::Compute == stage)
-		{
-			return nullptr != m_computeCommandEncoder.get();
-		}
-		else
-		{
-			return nullptr != m_renderCommandEncoder.get();
+			m_computePassEncoder->end();
+			m_computePassEncoder.reset();
 		}
 	}
 } // namespace lys::mtl

@@ -16,28 +16,12 @@
 
 export module lys:rhi_command_buffer;
 
-import :rhi_buffer;
-import :rhi_pipeline_state;
+import :rhi_compute_pass_encoder;
+import :rhi_render_pass_encoder;
 import :rhi_texture;
-import :rhi_types;
-import mag;
-import std;
 
 namespace lys::rhi
 {
-	export struct DepthAttachmentDesc
-	{
-		LoadAction loadAction{LoadAction::Clear};
-	};
-
-	export struct RenderPassDesc
-	{
-		Vec4f							   clearColor{0.05f, 0.05f, 0.05f, 1.0f};
-		LoadAction						   loadAction{LoadAction::Clear};
-		std::optional<DepthAttachmentDesc> depthAttachmentDesc{std::nullopt};
-	};
-
-	// Forward-declare class
 	export class CommandQueue;
 
 	export class CommandBuffer
@@ -54,63 +38,9 @@ namespace lys::rhi
 		virtual void begin() = 0;
 		virtual void end()	 = 0;
 
-		virtual void beginComputePass()							 = 0;
-		virtual void beginRenderPass(const RenderPassDesc& desc) = 0;
-
-		virtual void endComputePass() = 0;
-		virtual void endRenderPass()  = 0;
-
-		virtual void setComputePipelineState(const ComputePipelineState& state) = 0;
-		virtual void setRenderPipelineState(const RenderPipelineState& state)	= 0;
+		[[nodiscard]] virtual ComputePassEncoder& beginComputePass()						  = 0;
+		[[nodiscard]] virtual RenderPassEncoder&  beginRenderPass(const RenderPassDesc& desc) = 0;
 
 		virtual void generateMipmaps(const Texture& texture) = 0;
-
-		/**
-		 * @brief Binds a buffer resource.
-		 *
-		 * @param stage Shader stage to bind the resource to.
-		 * @param buffer Buffer to bind.
-		 * @param name Name of the resource in the shader.
-		 *
-		 * @return Reference to this for chaining.
-		 */
-		virtual CommandBuffer&
-		setResource(ShaderStage stage, const Buffer& buffer, const std::string& name) = 0;
-
-		/**
-		 * @brief Binds a texture resource.
-		 *
-		 * @param stage Shader stage to bind the resource to.
-		 * @param texture Texture to bind.
-		 * @param name Name of the resource in the shader.
-		 *
-		 * @return Reference to this for chaining.
-		 */
-		virtual CommandBuffer&
-		setResource(ShaderStage stage, const Texture& texture, const std::string& name) = 0;
-
-		/**
-		 * @brief Binds a buffer resource.
-		 *
-		 * @param stage Shader stage to bind the resource to.
-		 * @param buffer Buffer to bind.
-		 * @param index Binding index.
-		 *
-		 * @return Reference to this for chaining.
-		 */
-		virtual CommandBuffer&
-		setResource(ShaderStage stage, const Buffer& buffer, std::uint32_t index) = 0;
-
-		/**
-		 * @brief Binds a texture resource.
-		 *
-		 * @param stage Shader stage to bind the resource to.
-		 * @param texture texture to bind.
-		 * @param index Binding index.
-		 *
-		 * @return Reference to this for chaining.
-		 */
-		virtual CommandBuffer&
-		setResource(ShaderStage stage, const Texture& texture, std::uint32_t index) = 0;
 	};
 } // namespace lys::rhi

@@ -31,6 +31,7 @@ namespace lys::mtl
 
 	public:
 		explicit Texture(MTL::Device& device, const rhi::TextureDesc& desc);
+		Texture(MTL::Device& device, MTL::Texture& texture, const rhi::TextureDesc& desc);
 
 		/**
 		 * @brief Returns the native backend Texture.

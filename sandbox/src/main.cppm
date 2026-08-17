@@ -25,14 +25,29 @@ using namespace lys;
 
 namespace
 {
+	struct Vertex
+	{
+		[[maybe_unused]] Vec3f position;
+		[[maybe_unused]] Vec3f color;
+	};
+
+	const std::vector<Vertex> vertices{
+		{.position = {-0.5f, -0.5f, 0.0f}, .color = {1.0f, 0.0f, 0.0f}},
+		{.position = {0.5f, -0.5f, 0.0f}, .color = {0.0f, 1.0f, 0.0f}},
+		{.position = {0.0f, 0.5f, 0.0f}, .color = {0.0f, 0.0f, 1.0f}},
+	};
+
+
 	class Renderer
 	{
-		std::unique_ptr<rhi::Device>	m_device;
-		std::unique_ptr<rhi::Shader>	m_vertShader;
-		std::unique_ptr<rhi::Shader>	m_fragShader;
-		std::unique_ptr<rhi::Surface>	m_surface;
-		std::unique_ptr<rhi::Swapchain> m_swapchain;
-		Window&							m_window;
+		std::unique_ptr<rhi::Device>			  m_device;
+		std::unique_ptr<rhi::Shader>			  m_vertShader;
+		std::unique_ptr<rhi::Shader>			  m_fragShader;
+		std::unique_ptr<rhi::RenderPipelineState> m_renderPipelineState;
+		std::unique_ptr<rhi::Buffer>			  m_vertexBuffer;
+		std::unique_ptr<rhi::Surface>			  m_surface;
+		std::unique_ptr<rhi::Swapchain>			  m_swapchain;
+		Window&									  m_window;
 
 	public:
 		explicit Renderer(Window& window) : m_window(window)
@@ -43,18 +58,30 @@ namespace
 			};
 			m_device = rhi::createDevice(deviceDesc);
 
-			m_vertShader = m_device->createShader({
+			m_vertShader		  = m_device->createShader({
 				.stage		= rhi::ShaderStage::Vertex,
 				.language	= rhi::ShaderLanguage::Metal,
 				.entryPoint = "vertexMain",
-				.source		= std::filesystem::path("shaders/generic_shader.metal"),
+				.source		= std::filesystem::path("shaders/triangle.metal"),
 			});
-			m_fragShader = m_device->createShader({
+			m_fragShader		  = m_device->createShader({
 				.stage		= rhi::ShaderStage::Fragment,
 				.language	= rhi::ShaderLanguage::Metal,
 				.entryPoint = "fragmentMain",
-				.source		= std::filesystem::path("shaders/generic_shader.metal"),
+				.source		= std::filesystem::path("shaders/triangle.metal"),
 			});
+			m_renderPipelineState = m_device->createRenderPipeline({
+				.vertexShader	   = m_vertShader.get(),
+				.fragmentShader	   = m_fragShader.get(),
+				.depthTestEnabled  = false,
+				.depthWriteEnabled = false,
+			});
+			m_vertexBuffer		  = m_device->createBuffer({
+				.size		 = sizeof(Vertex) * vertices.size(),
+				.usage		 = rhi::BufferUsage::Vertex,
+				.memoryUsage = rhi::MemoryUsage::Shared,
+			});
+			m_vertexBuffer->upload(vertices.data(), sizeof(Vertex) * vertices.size(), 0);
 
 			m_surface = m_device->createSurface(m_window);
 
@@ -70,28 +97,37 @@ namespace
 
 		~Renderer() = default;
 
+		void renderPass(rhi::CommandBuffer& commandBuffer) const
+		{
+			const rhi::RenderPassDesc renderPassDesc{
+				.colorAttachment = m_swapchain->currentTexture(),
+				.clearColor		 = {1.0f, 0.0f, 0.0f, 1.0f},
+				.loadAction		 = rhi::LoadAction::Clear,
+			};
+			auto& passEncoder{commandBuffer.beginRenderPass(renderPassDesc)};
+			passEncoder.setPipeline(*m_renderPipelineState);
+			passEncoder.setResource(rhi::ShaderStage::Vertex, *m_vertexBuffer, 0);
+			passEncoder.draw(
+				rhi::PrimitiveType::Triangle,
+				{.vertexCount = static_cast<std::uint32_t>(vertices.size())});
+			passEncoder.end();
+		}
+
 		void render() const
 		{
 			// Update the swapchain
 			const Vec2i size{m_window.framebufferDimensions()};
 			m_swapchain->resize(size.x, size.y);
 			m_swapchain->acquireNextImage();
+			if (!m_swapchain->currentTexture())
+			{
+				return;
+			}
 
 			static auto& graphicsQueue{m_device->renderQueue()};
 			const auto	 commandBuffer{m_device->createCommandBuffer()};
-			const auto	 renderPipelineState{m_device->createRenderPipeline({
-				.vertexShader	= m_vertShader.get(),
-				.fragmentShader = m_fragShader.get(),
-			})};
-
 			commandBuffer->begin();
-			commandBuffer->setRenderPipelineState(*renderPipelineState);
-			constexpr rhi::RenderPassDesc renderPassDesc{
-				.clearColor = {1.0f, 0.0f, 0.0f, 1.0f},
-				.loadAction = rhi::LoadAction::Clear,
-			};
-			commandBuffer->beginRenderPass(renderPassDesc);
-			commandBuffer->endRenderPass();
+			renderPass(*commandBuffer);
 			commandBuffer->end();
 
 			graphicsQueue.submit(*commandBuffer);

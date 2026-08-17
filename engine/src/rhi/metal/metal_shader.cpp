@@ -114,6 +114,7 @@ namespace lys::mtl
 
 	void Shader::reload()
 	{
+		// Todo
 	}
 
 	ErrorCode Shader::loadLibrary(const NS::String* nsString)

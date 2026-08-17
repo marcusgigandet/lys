@@ -62,6 +62,20 @@ namespace lys::mtl
 		}
 
 		m_drawable = NS::RetainPtr(layer->nextDrawable());
+		if (!m_drawable)
+		{
+			m_texture.reset();
+			return;
+		}
+
+		m_texture = std::make_unique<Texture>(
+			*m_drawable->texture()->device(),
+			*m_drawable->texture(),
+			rhi::TextureDesc{
+				.width		 = m_desc.width,
+				.height		 = m_desc.height,
+				.pixelFormat = m_desc.pixelFormat,
+			});
 	}
 
 	void Swapchain::present()
@@ -69,6 +83,8 @@ namespace lys::mtl
 		if (m_drawable)
 		{
 			m_drawable->present();
+			m_texture.reset();
+			m_drawable.reset();
 		}
 	}
 

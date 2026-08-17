@@ -32,6 +32,11 @@ namespace lys::mtl
 		createTexture();
 	}
 
+	Texture::Texture(MTL::Device& device, MTL::Texture& texture, const rhi::TextureDesc& desc) :
+		Object(device), rhi::Texture(desc), m_texture(NS::RetainPtr(&texture))
+	{
+	}
+
 	Result<void>
 	Texture::upload(const std::span<const std::byte> data, const std::size_t bytesPerRow) noexcept
 	{
