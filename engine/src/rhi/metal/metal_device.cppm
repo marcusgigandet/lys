@@ -15,23 +15,54 @@
  */
 
 module;
+#define NS_PRIVATE_IMPLEMENTATION
+#define CA_PRIVATE_IMPLEMENTATION
+#define MTL_PRIVATE_IMPLEMENTATION
+
+#include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
+#include <QuartzCore/QuartzCore.hpp>
 export module lys:metal_device;
 
 import :rhi_device;
+import :rhi_swapchain;
+import :window;
 import std;
 
 namespace lys::mtl
 {
 	export class Device final : public rhi::Device
 	{
-		NS::SharedPtr<MTL::Device> m_device{};
+		NS::SharedPtr<MTL::Device> m_device;
 
 	public:
-		explicit Device(const rhi::DeviceDesc& desc) : rhi::Device(desc) {}
+		explicit Device(const rhi::DeviceDesc& desc);
 
-	protected:
+		[[nodiscard]] MTL::Device* device() const noexcept { return m_device.get(); }
+
 		[[nodiscard]] std::unique_ptr<rhi::CommandQueue>
 		createCommandQueue(rhi::CommandQueueType type) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::CommandBuffer> createCommandBuffer() override;
+
+		[[nodiscard]] std::unique_ptr<rhi::Buffer>
+		createBuffer(const rhi::BufferDesc& desc) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::Texture>
+		createTexture(const rhi::TextureDesc& desc) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::Shader>
+		createShader(const rhi::ShaderDesc& desc) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::RenderPipelineState>
+		createRenderPipeline(const rhi::RenderPipelineDesc& desc) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::ComputePipelineState>
+		createComputePipeline(const rhi::ComputePipelineDesc& desc) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::Surface> createSurface(const Window& window) override;
+
+		[[nodiscard]] std::unique_ptr<rhi::Swapchain>
+		createSwapchain(rhi::Surface& surface, const rhi::SwapchainDesc& desc) override;
 	};
 } // namespace lys::mtl

@@ -19,26 +19,31 @@ module;
 export module lys:metal_buffer;
 
 import :rhi_buffer;
-import :rhi_error;
+import :error;
 import :metal_types;
+import :metal_object;
 
 namespace lys::mtl
 {
-	export class Buffer final : public rhi::Buffer
+	export class Buffer final : public Object, public rhi::Buffer
 	{
-		MTL::Device&			   m_device;
 		NS::SharedPtr<MTL::Buffer> m_buffer;
 
 	public:
-		explicit Buffer(const rhi::BufferDesc& desc, MTL::Device& device) :
-			rhi::Buffer(desc), m_device(device)
+		explicit Buffer(MTL::Device& device, const rhi::BufferDesc& desc) :
+			Object(device), rhi::Buffer(desc)
 		{
 			m_buffer =
 				NS::TransferPtr(m_device.newBuffer(desc.size, toMetalEnum(desc.memoryUsage)));
 		}
 
-		rhi::Result<void>
-		upload(const void* pData, std::uint32_t size, std::uint32_t offset) override;
+		/**
+		 * @brief Returns the native backend Buffer.
+		 * @return Native metal Buffer.
+		 */
+		[[nodiscard]] MTL::Buffer* buffer() const noexcept { return m_buffer.get(); }
+
+		Result<void> upload(const void* pData, std::uint32_t size, std::uint32_t offset) override;
 
 		std::span<const std::byte> data() const override;
 

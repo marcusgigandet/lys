@@ -16,7 +16,7 @@
 
 export module lys:rhi_buffer;
 
-import :rhi_error;
+import :error;
 import :rhi_types;
 import std;
 
@@ -41,9 +41,9 @@ namespace lys::rhi
 	export class Buffer
 	{
 	protected:
-		std::size_t m_size;
-		BufferUsage m_usage;
-		MemoryUsage m_memoryUsage;
+		std::size_t m_size;		   ///< Allocated buffer size.
+		BufferUsage m_usage;	   ///< Intended usage of the buffer by the graphics API.
+		MemoryUsage m_memoryUsage; ///< Memory allocation policy for the graphics backend.
 
 	public:
 		explicit Buffer(const BufferDesc& desc);

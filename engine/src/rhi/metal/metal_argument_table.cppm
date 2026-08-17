@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-module lys:rhi_pipeline_state.impl;
+module;
+#include <Metal/Metal.hpp>
+export module lys:metal_argument_table;
 
-import :rhi_pipeline_state;
-
-namespace lys::rhi
+namespace lys::mtl
 {
-	RenderPipelineState::RenderPipelineState(const RenderPipelineDesc& desc) :
-		PipelineState(), m_desc(desc)
-	{
-	}
-
-	ComputePipelineState::ComputePipelineState(const ComputePipelineDesc& desc) : m_desc(desc)
-	{
-	}
-} // namespace lys::rhi
+	export [[nodiscard]] NS::SharedPtr<MTL4::ArgumentTable>
+	createArgumentTable(MTL::Device& device);
+} // namespace lys::mtl

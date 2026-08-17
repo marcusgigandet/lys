@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-module lys:rhi_pipeline_state.impl;
+export module lys:rhi_surface;
 
-import :rhi_pipeline_state;
+import :window;
 
 namespace lys::rhi
 {
-	RenderPipelineState::RenderPipelineState(const RenderPipelineDesc& desc) :
-		PipelineState(), m_desc(desc)
+	export class Surface
 	{
-	}
+	protected:
+		const Window& m_window;
 
-	ComputePipelineState::ComputePipelineState(const ComputePipelineDesc& desc) : m_desc(desc)
-	{
-	}
+	public:
+		explicit Surface(const Window& window) : m_window(window) {}
+		virtual ~Surface() = default;
+
+		Surface(const Surface&)			   = delete;
+		Surface& operator=(const Surface&) = delete;
+		Surface(Surface&&)				   = delete;
+		Surface& operator=(Surface&&)	   = delete;
+
+		[[nodiscard]] const Window& window() const noexcept { return m_window; }
+	};
 } // namespace lys::rhi

@@ -20,7 +20,13 @@ import :rhi_shader;
 
 namespace lys::rhi
 {
-	Shader::Shader(const ShaderDesc& desc) : m_stage(desc.stage), m_entryPoint(desc.entryPoint)
+	Shader::Shader(const ShaderDesc& desc) :
+		m_stage(desc.stage), m_entryPoint(desc.entryPoint), m_source(desc.source)
 	{
+	}
+
+	Result<void> Shader::load(const std::string_view file)
+	{
+		return load(std::filesystem::path{std::string(file)});
 	}
 } // namespace lys::rhi

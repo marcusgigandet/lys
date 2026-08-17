@@ -16,7 +16,7 @@
 
 export module lys:rhi_command_queue;
 
-import :rhi_error;
+import :error;
 import :rhi_command_buffer;
 import std;
 
@@ -27,13 +27,14 @@ namespace lys::rhi
 	 */
 	export enum class CommandQueueType
 	{
-		Graphics,
+		Render,
 		Compute,
 		Transfer
 	};
 
 	export class CommandQueue
 	{
+	protected:
 		CommandQueueType m_type;
 
 	public:
@@ -46,9 +47,24 @@ namespace lys::rhi
 
 		virtual ~CommandQueue() = default;
 
-	protected:
-		virtual void submitImpl(std::span<CommandBuffer* const> commandBuffers) = 0;
+		/**
+		 * @brief Submits multiple CommandBuffers at once to the CommandQueue.
+		 *
+		 * @param commandBuffers Span of CommandBuffers to submit.
+		 */
+		virtual void submit(std::span<CommandBuffer* const> commandBuffers) = 0;
 
-		virtual void waitIdleImpl() = 0;
+		/**
+		 * @brief Submits a single CommandBuffer to the CommandQueue.
+		 *
+		 * @param commandBuffer CommandBuffer instance to submit.
+		 */
+		void submit(CommandBuffer& commandBuffer)
+		{
+			CommandBuffer* buffers[] = {&commandBuffer};
+			submit(buffers);
+		}
+
+		virtual void wait() = 0;
 	};
 } // namespace lys::rhi

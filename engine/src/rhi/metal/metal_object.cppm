@@ -15,11 +15,21 @@
  */
 
 module;
-#define NS_PRIVATE_IMPLEMENTATION
-#define CA_PRIVATE_IMPLEMENTATION
-#define MTL_PRIVATE_IMPLEMENTATION
-
-#include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
-#include <QuartzCore/QuartzCore.hpp>
-export module lys:metal;
+export module lys:metal_object;
+
+import std;
+
+namespace lys::mtl
+{
+	export class Object
+	{
+	protected:
+		MTL::Device& m_device;
+
+	public:
+		explicit Object(MTL::Device& device) noexcept : m_device(device) {}
+
+		[[nodiscard]] MTL::Device& device() const noexcept { return m_device; }
+	};
+} // namespace lys::mtl

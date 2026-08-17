@@ -16,11 +16,12 @@
 
 export module lys:rhi_command_buffer;
 
-import std;
+import :rhi_compute_pass_encoder;
+import :rhi_render_pass_encoder;
+import :rhi_texture;
 
 namespace lys::rhi
 {
-	// Forward-declare class
 	export class CommandQueue;
 
 	export class CommandBuffer
@@ -33,5 +34,13 @@ namespace lys::rhi
 		CommandBuffer& operator=(const CommandBuffer&) = delete;
 		CommandBuffer(CommandBuffer&&)				   = default;
 		CommandBuffer& operator=(CommandBuffer&&)	   = default;
+
+		virtual void begin() = 0;
+		virtual void end()	 = 0;
+
+		[[nodiscard]] virtual ComputePassEncoder& beginComputePass()						  = 0;
+		[[nodiscard]] virtual RenderPassEncoder&  beginRenderPass(const RenderPassDesc& desc) = 0;
+
+		virtual void generateMipmaps(const Texture& texture) = 0;
 	};
 } // namespace lys::rhi

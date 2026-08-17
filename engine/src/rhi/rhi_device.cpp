@@ -33,33 +33,6 @@ namespace lys::rhi
 	{
 	}
 
-	std::unique_ptr<Buffer> Device::createBufferImpl([[maybe_unused]] const BufferDesc& desc)
-	{
-		throw std::runtime_error("Unimplemented function");
-	}
-
-	std::unique_ptr<Texture> Device::createTextureImpl([[maybe_unused]] const TextureDesc& desc)
-	{
-		throw std::runtime_error("Unimplemented function");
-	}
-
-	std::unique_ptr<Shader> Device::createShaderImpl([[maybe_unused]] const ShaderDesc& desc)
-	{
-		throw std::runtime_error("Unimplemented function");
-	}
-
-	std::unique_ptr<GraphicsPipelineState>
-	Device::createGraphicsPipelineImpl([[maybe_unused]] const GraphicsPipelineDesc& desc)
-	{
-		throw std::runtime_error("Unimplemented function");
-	}
-
-	std::unique_ptr<ComputePipelineState>
-	Device::createComputePipelineImpl([[maybe_unused]] const ComputePipelineDesc& desc)
-	{
-		throw std::runtime_error("Unimplemented function");
-	}
-
 	CommandQueue& Device::queue(const CommandQueueType type)
 	{
 		const auto index{static_cast<std::size_t>(type)};
@@ -68,7 +41,7 @@ namespace lys::rhi
 		// Check if the queue is null
 		if (!queue)
 		{
-			// Creat a new queue instance
+			// Create a new queue instance
 			queue = createCommandQueue(type);
 		}
 

@@ -32,12 +32,8 @@ target_sources(lys_engine
 target_include_directories(lys_engine
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${Stb_INCLUDE_DIR}
 )
-
-# Add reflection if using GCC
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_compile_options(lys_engine PRIVATE -freflection)
-endif ()
 
 target_compile_definitions(lys_engine
         PRIVATE
@@ -59,6 +55,15 @@ if (${LYS_VULKAN})
 else ()
     link_metal(TARGET lys_engine)
 endif ()
+
+####################
+# Configure Spdlog #
+####################
+
+target_compile_definitions(lys_engine
+        PUBLIC
+        SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE
+)
 
 #################
 # Configure MAG #

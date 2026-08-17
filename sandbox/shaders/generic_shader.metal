@@ -14,18 +14,32 @@
  * limitations under the License.
  */
 
-module lys:rhi_pipeline_state.impl;
+#include <metal_stdlib>
+using namespace metal;
 
-import :rhi_pipeline_state;
-
-namespace lys::rhi
+struct VertexOut
 {
-	RenderPipelineState::RenderPipelineState(const RenderPipelineDesc& desc) :
-		PipelineState(), m_desc(desc)
-	{
-	}
+	float4 position [[position]];
+	float2 texCoord;
+};
 
-	ComputePipelineState::ComputePipelineState(const ComputePipelineDesc& desc) : m_desc(desc)
-	{
-	}
-} // namespace lys::rhi
+struct Vertex
+{
+	float3 position;
+	float2 texCoord;
+};
+
+vertex VertexOut
+vertexMain(const device Vertex* vertices [[buffer(0)]], uint vertexID [[vertex_id]])
+{
+	VertexOut out;
+	out.position = float4(vertices[vertexID].position, 1.0);
+	out.texCoord = vertices[vertexID].texCoord;
+	return out;
+}
+
+fragment float4 fragmentMain(
+	VertexOut in [[stage_in]], texture2d<float> tex [[texture(0)]], sampler smp [[sampler(0)]])
+{
+	return tex.sample(smp, in.texCoord);
+}

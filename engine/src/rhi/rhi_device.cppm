@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-module;
-#include <typedefs.hpp>
 export module lys:rhi_device;
 
 import :rhi_buffer;
-import :rhi_error;
 import :rhi_command_queue;
+import :error;
 import :rhi_pipeline_state;
 import :rhi_shader;
+import :rhi_surface;
+import :rhi_swapchain;
 import :rhi_texture;
+import :window;
 import std;
 
 namespace lys::rhi
@@ -31,7 +32,7 @@ namespace lys::rhi
 	/**
 	 * @brief RHI backend options.
 	 */
-	export enum class Backend
+	export enum class Backend : std::uint8_t
 	{
 		Auto,	///< Automatically decide which backend to use at runtime
 		Vulkan, ///< Cross-platform
@@ -40,7 +41,8 @@ namespace lys::rhi
 
 	export struct DeviceDesc
 	{
-		Backend backend{Backend::Auto};
+		Backend		 backend{Backend::Auto};
+		std::uint8_t maxFramesInFlight{3};
 	};
 
 	export class Device
@@ -62,38 +64,10 @@ namespace lys::rhi
 
 		[[nodiscard]] CommandQueue& queue(CommandQueueType type);
 
-		[[nodiscard]] CommandQueue& graphicsQueue() { return queue(CommandQueueType::Graphics); }
+		[[nodiscard]] CommandQueue& renderQueue() { return queue(CommandQueueType::Render); }
 		[[nodiscard]] CommandQueue& computeQueue() { return queue(CommandQueueType::Compute); }
 		[[nodiscard]] CommandQueue& transferQueue() { return queue(CommandQueueType::Transfer); }
 
-		[[nodiscard]] LYS_INLINE std::unique_ptr<Buffer> createBuffer(const BufferDesc& desc)
-		{
-			return createBufferImpl(desc);
-		}
-
-		[[nodiscard]] LYS_INLINE std::unique_ptr<Texture> createTexture(const TextureDesc& desc)
-		{
-			return createTextureImpl(desc);
-		}
-
-		[[nodiscard]] LYS_INLINE std::unique_ptr<Shader> createShader(const ShaderDesc& desc)
-		{
-			return createShaderImpl(desc);
-		}
-
-		[[nodiscard]] LYS_INLINE std::unique_ptr<GraphicsPipelineState>
-								 createGraphicsPipeline(const GraphicsPipelineDesc& desc)
-		{
-			return createGraphicsPipelineImpl(desc);
-		}
-
-		[[nodiscard]] LYS_INLINE std::unique_ptr<ComputePipelineState>
-								 createComputePipeline(const ComputePipelineDesc& desc)
-		{
-			return createComputePipelineImpl(desc);
-		}
-
-	protected:
 		/**
 		 * @brief Creates a new instance of a CommandQueue.
 		 *
@@ -104,17 +78,24 @@ namespace lys::rhi
 		[[nodiscard]] virtual std::unique_ptr<CommandQueue>
 		createCommandQueue(CommandQueueType type) = 0;
 
-		[[nodiscard]] virtual std::unique_ptr<Buffer> createBufferImpl(const BufferDesc& desc);
+		[[nodiscard]] virtual std::unique_ptr<CommandBuffer> createCommandBuffer() = 0;
 
-		[[nodiscard]] virtual std::unique_ptr<Texture> createTextureImpl(const TextureDesc& desc);
+		[[nodiscard]] virtual std::unique_ptr<Buffer> createBuffer(const BufferDesc& desc) = 0;
 
-		[[nodiscard]] virtual std::unique_ptr<Shader> createShaderImpl(const ShaderDesc& desc);
+		[[nodiscard]] virtual std::unique_ptr<Texture> createTexture(const TextureDesc& desc) = 0;
 
-		[[nodiscard]] virtual std::unique_ptr<GraphicsPipelineState>
-		createGraphicsPipelineImpl(const GraphicsPipelineDesc& desc);
+		[[nodiscard]] virtual std::unique_ptr<Shader> createShader(const ShaderDesc& desc) = 0;
+
+		[[nodiscard]] virtual std::unique_ptr<RenderPipelineState>
+		createRenderPipeline(const RenderPipelineDesc& desc) = 0;
 
 		[[nodiscard]] virtual std::unique_ptr<ComputePipelineState>
-		createComputePipelineImpl(const ComputePipelineDesc& desc);
+		createComputePipeline(const ComputePipelineDesc& desc) = 0;
+
+		[[nodiscard]] virtual std::unique_ptr<Surface> createSurface(const Window& window) = 0;
+
+		[[nodiscard]] virtual std::unique_ptr<Swapchain>
+		createSwapchain(Surface& surface, const SwapchainDesc& desc) = 0;
 	};
 
 	export [[nodiscard]] std::unique_ptr<Device> createDevice(const DeviceDesc& desc);

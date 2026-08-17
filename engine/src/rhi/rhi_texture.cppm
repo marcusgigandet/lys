@@ -16,7 +16,7 @@
 
 export module lys:rhi_texture;
 
-import :rhi_error;
+import :error;
 import :rhi_types;
 import std;
 
@@ -40,12 +40,13 @@ namespace lys::rhi
 		std::uint32_t height{1};
 		std::uint32_t depthOrLayers{1};
 		std::uint32_t mipLevels{1};
-		PixelFormat	  pixelFormat{PixelFormat::Undefined};
-		DepthFormat	  depthFormat{DepthFormat::Undefined};
+		PixelFormat	  pixelFormat{PixelFormat::BGRA8_sRGB};
+		DepthFormat	  depthFormat{DepthFormat::Depth32_Float};
 	};
 
 	export class Texture
 	{
+	protected:
 		TextureType	  m_type;
 		std::uint32_t m_width;
 		std::uint32_t m_height;
@@ -62,6 +63,9 @@ namespace lys::rhi
 		Texture& operator=(const Texture&) = delete;
 		Texture(Texture&&)				   = default;
 		Texture& operator=(Texture&&)	   = default;
+
+		virtual Result<void>
+		upload(std::span<const std::byte> data, std::size_t bytesPerRow) noexcept = 0;
 
 		[[nodiscard]] TextureType	type() const noexcept { return m_type; }
 		[[nodiscard]] std::uint32_t width() const noexcept { return m_width; }

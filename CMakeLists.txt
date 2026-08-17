@@ -84,6 +84,10 @@ if (PROJECT_IS_TOP_LEVEL)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif ()
 
+##############################
+# Check for a valid compiler #
+##############################
+
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 21)
         message(FATAL_ERROR
@@ -103,6 +107,7 @@ endif ()
 
 find_package(glfw3 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(Stb REQUIRED)
 
 ##################
 # Subdirectories #

@@ -16,13 +16,13 @@
 
 export module lys:rhi_pipeline_state;
 
-import :rhi_error;
+import :error;
 import :rhi_types;
 import :rhi_shader;
 
 namespace lys::rhi
 {
-	export struct GraphicsPipelineDesc
+	export struct RenderPipelineDesc
 	{
 		const Shader*	vertexShader{nullptr};
 		const Shader*	fragmentShader{nullptr};
@@ -30,6 +30,7 @@ namespace lys::rhi
 		FillMode		fillMode{FillMode::Fill};
 		CullMode		cullMode{CullMode::Back};
 		Winding			winding{Winding::CounterClockwise};
+		PixelFormat		colorPixelFormat{PixelFormat::BGRA8_sRGB};
 		CompareFunction depthCompareFunction{CompareFunction::Less};
 		bool			depthTestEnabled{true};
 		bool			depthWriteEnabled{true};
@@ -52,23 +53,25 @@ namespace lys::rhi
 		PipelineState& operator=(PipelineState&&)	   = default;
 	};
 
-	export class GraphicsPipelineState final : public PipelineState
+	export class RenderPipelineState : public PipelineState
 	{
-		GraphicsPipelineDesc m_desc;
+	protected:
+		RenderPipelineDesc m_desc;
 
 	public:
-		explicit GraphicsPipelineState(const GraphicsPipelineDesc& desc);
+		explicit RenderPipelineState(const RenderPipelineDesc& desc);
 
-		GraphicsPipelineState(const GraphicsPipelineState&)			   = delete;
-		GraphicsPipelineState& operator=(const GraphicsPipelineState&) = delete;
-		GraphicsPipelineState(GraphicsPipelineState&&)				   = default;
-		GraphicsPipelineState& operator=(GraphicsPipelineState&&)	   = default;
+		RenderPipelineState(const RenderPipelineState&)			   = delete;
+		RenderPipelineState& operator=(const RenderPipelineState&) = delete;
+		RenderPipelineState(RenderPipelineState&&)				   = default;
+		RenderPipelineState& operator=(RenderPipelineState&&)	   = default;
 
-		[[nodiscard]] const GraphicsPipelineDesc& desc() const noexcept { return m_desc; }
+		[[nodiscard]] const RenderPipelineDesc& desc() const noexcept { return m_desc; }
 	};
 
-	export class ComputePipelineState final : public PipelineState
+	export class ComputePipelineState : public PipelineState
 	{
+	protected:
 		ComputePipelineDesc m_desc;
 
 	public:

@@ -21,26 +21,27 @@ export module lys:metal_buffer.impl;
 import :metal_buffer;
 import :metal_types;
 import :rhi_buffer;
-import :rhi_error;
+import :error;
 
 namespace lys::mtl
 {
-	rhi::Result<void>
+	Result<void>
 	Buffer::upload(const void* pData, const std::uint32_t size, const std::uint32_t offset)
 	{
 		// Check for nullptr
 		if (!pData)
 		{
-			return rhi::makeUnexpected(rhi::ErrorCode::InvalidArgument);
+			return makeUnexpected(ErrorCode::InvalidArgument);
 		}
 
+		// Upload data based on the storage mode
 		switch (m_buffer->storageMode())
 		{
 		case MTL::StorageModeShared:
 			uploadToCPUAccessibleBuffer(pData, size, offset);
 			break;
 		default:
-			return rhi::makeUnexpected(rhi::ErrorCode::NotImplemented);
+			return makeUnexpected(ErrorCode::NotImplemented);
 		}
 
 		return {};
@@ -48,6 +49,7 @@ namespace lys::mtl
 
 	std::span<const std::byte> Buffer::data() const
 	{
+		// Todo: make functional for private memory
 		return std::span{
 			static_cast<const std::byte*>(m_buffer->contents()),
 			m_buffer->allocatedSize(),
@@ -59,7 +61,7 @@ namespace lys::mtl
 	{
 		// Cast buffer to bytes and copy data directly to buffer
 		void* dst{static_cast<std::byte*>(m_buffer->contents()) + offset};
-		memcpy(dst, pData, size);
+		(void)memcpy(dst, pData, size);
 
 		if (m_buffer->storageMode() == MTL::StorageModeManaged)
 		{
